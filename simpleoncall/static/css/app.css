@@ -1,14 +1,42 @@
 .icon {
     width: 2rem;
-    fill: white;
+    fill: rgb(225, 225, 225);
 }
 
 .icon:hover {
-    fill: grey;
+    fill: rgb(0, 102, 102);
 }
 
-#header {
-    max-height: 30vh;
+a:hover {
+    color: rgb(0, 102, 102);
+}
+
+a {
+    text-decoration: none;
+}
+
+#header, #header a {
+    max-height: 4rem;
+    padding-left: 1em;
+    background-color: rgb(30, 30, 30);
+    color: rgb(225, 225, 225);
+}
+
+#header #logo h1 {
+    margin: 0;
+    padding: 0;
+    font-size: 2rem;
+}
+
+#header #account {
+    float: right;
+    padding-right: 1rem;
+}
+
+#header #account .avatar {
+    width: 2rem;
+    height: 2rem;
+    margin-top: 1rem;
 }
 
 #footer {
@@ -24,20 +52,25 @@
 }
 
 #menu {
-    background-color: black;
-    min-height: 80vh;
+    background-color: rgb(30, 30, 30);
+    min-height: 95vh;
+    height: 100%;
 }
 
-#menu, #menu nav, #menu ul {
+#menu, #menu nav, #menu ul, #menu .menu-label {
     padding: 0;
     margin: 0;
+    color: rgb(225, 225, 225);
+    font-size: 1vw;
+    font-weight: 100;
+    text-align: center;
 }
 
 #menu ul {
-    padding: 0;
     margin: 0 auto;
     width: 2rem;
 }
+
 
 /** SMALL **/
 @media screen and (min-width: 35.5em) {

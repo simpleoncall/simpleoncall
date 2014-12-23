@@ -2,9 +2,36 @@
 <nav>
   <ul>
     <li>
-      <a href="{% url 'index' %}">
+      <a href="{% url 'dashboard' %}">
         {% evil_icon ei-chart %}
       </a>
+      <span class="menu-label">
+        Dashboard
+      </span>
+    </li>
+    <li>
+      <a href="{% url 'settings' %}">
+        {% evil_icon ei-gear %}
+      </a>
+      <span class="menu-label">
+        Settings
+      </span>
+    </li>
+    <li>
+      <a href="{% url 'account' %}">
+        {% evil_icon ei-user %}
+      </a>
+      <span class="menu-label">
+        Account
+      </span>
+    </li>
+    <li>
+      <a href="{% url 'logout' %}">
+        {% evil_icon ei-close-o %}
+      </a>
+      <span class="menu-label">
+        Logout
+      </span>
     </li>
   </ul>
 </nav>

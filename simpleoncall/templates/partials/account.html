@@ -1,0 +1,8 @@
+{% if user.is_authenticated %}
+<div id="account">
+  {% load gravatar %}
+  <a href="{% url 'account' %}">
+    {{ user.email|gravatar_url|safe }}
+  </a>
+</div>
+{% endif %}

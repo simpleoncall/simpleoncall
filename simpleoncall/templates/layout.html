@@ -25,14 +25,16 @@
     {% evil_icons %}
     {% endblock %}
     <div id="wrapper" class="pure-g">
+      {% block header %}
       <div id="header" class="pure-u-1">
-        {% block header %}
-        <h1>SimpleOnCall</h1>
-        {% endblock %}
+        {% include "partials/header.html" %}
       </div>
+      {% endblock %}
+      {% block menu %}
       <div id="menu" class="pure-u-2-24">
         {% include "partials/menu.html" %}
       </div>
+      {% endblock %}
       <div id="content-wrapper" class="pure-u-22-24">
         <div id="content">
           {% block content %}
