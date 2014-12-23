@@ -1,0 +1,33 @@
+body {
+    background-color: rgb(225, 225, 225);
+}
+
+.icon {
+    width: 2rem;
+    fill: rgb(225, 225, 225);
+}
+
+.icon:hover {
+    fill: rgb(0, 102, 102);
+}
+
+a:hover {
+    color: rgb(0, 102, 102);
+}
+
+a {
+    text-decoration: none;
+}
+
+#content-wrapper {
+    min-height: 80vh;
+}
+
+#content {
+    margin-left: 1rem;
+    text-transform: uppercase;
+}
+
+#footer {
+    max-height: 30vh;
+}

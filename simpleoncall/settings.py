@@ -90,6 +90,8 @@ STYLESHEETS = {
     'css/core.min.css': (
         'css/pure/pure.css',
         'css/pure/grids-responsive.css',
-        'css/app.css',
+        'css/base.css',
+        'css/menu.css',
+        'css/header.css',
     ),
 }

@@ -1,0 +1,35 @@
+#menu {
+    background-color: rgb(30, 30, 30);
+    min-height: 95vh;
+    height: 100%;
+}
+
+#menu, #menu nav, #menu ul, #menu .menu-label {
+    padding: 0;
+    margin: 0;
+    color: rgb(225, 225, 225);
+    font-size: 1vw;
+    font-weight: 100;
+    text-align: center;
+}
+
+#menu ul {
+    margin: 0 auto;
+    width: 2rem;
+}
+
+
+/** SMALL **/
+@media screen and (min-width: 35.5em) {
+    .icon, #menu ul {
+        width: 3rem;
+    }
+}
+
+
+/** MEDIUM **/
+@media screen and (min-width: 48em) {
+    .icon, #menu ul {
+        width: 4rem;
+    }
+}
