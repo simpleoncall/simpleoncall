@@ -1,0 +1,65 @@
+.icon {
+    width: 2rem;
+    fill: white;
+}
+
+.icon:hover {
+    fill: grey;
+}
+
+#header {
+    max-height: 30vh;
+}
+
+#footer {
+    max-height: 30vh;
+}
+
+#content-wrapper {
+    min-height: 80vh;
+}
+
+#content {
+    margin-left: 1rem;
+}
+
+#menu {
+    background-color: black;
+    min-height: 80vh;
+}
+
+#menu, #menu nav, #menu ul {
+    padding: 0;
+    margin: 0;
+}
+
+#menu ul {
+    padding: 0;
+    margin: 0 auto;
+    width: 2rem;
+}
+
+/** SMALL **/
+@media screen and (min-width: 35.5em) {
+    .icon, #menu ul {
+        width: 3rem;
+    }
+}
+
+
+/** MEDIUM **/
+@media screen and (min-width: 48em) {
+    .icon, #menu ul {
+        width: 4rem;
+    }
+}
+
+
+/** LARGE **/
+@media screen and (min-width: 64em) {
+}
+
+
+/** EXTRA-LARGE **/
+@media screen and (min-width: 80em) {
+}
