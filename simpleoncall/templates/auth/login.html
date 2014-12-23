@@ -4,10 +4,59 @@
 {% endblock %}
 
 {% block content %}
-<h1> Login </h1>
-<form class="pure-form pure-form-stacked" action="/login" method="POST">
-  {% csrf_token %}
-  {{ form }}
-  <input type="submit" value="Login" />
-</form>
+<article class="pure-u-1">
+  <ul class="tabs">
+    <li class="login {% if login %} selected {% endif %}">
+      Login
+    </li>
+    <li class="register {% if register %} selected {% endif %}">
+      Register
+    </li>
+  </ul>
+
+  <section id="login" class="pure-u-1 {% if login %} selected {% endif %}">
+    <p>
+      Login to your SimpleOnCall account.
+    </p>
+    <form class="pure-form pure-form-stacked" action="/login" method="POST">
+      {% csrf_token %}
+      <fieldset class="pure-group">
+        {{ login_form }}
+      </fieldset>
+      <input type="submit" value="Login" />
+    </form>
+  </section>
+  <section id="register" class="pure-u-1 {% if register %} selected {% endif %}">
+    <p>
+      Register for a SimpleOnCall account.
+    </p>
+    <form class="pure-form pure-form-stacked" action="/register" method="POST">
+      {% csrf_token %}
+      <fieldset class="pure-group">
+        {{ register_form }}
+      </fieldset>
+      <input type="submit" value="Register" />
+    </form>
+  </section>
+</article>
+{% endblock %}
+
+{% block endjs %}
+{{ block.super }}
+<script type="text/javascript">
+  var tabs = document.querySelector('.tabs');
+  tabs.addEventListener('click', function(e){
+  if(e.target.matches('li.register')){
+    document.querySelector('#register').className = 'pure-u-1 selected';
+    document.querySelector('#login').className = 'pure-u-1';
+    e.target.className += ' selected';
+    document.querySelector('li.login').className = 'login';
+  } else if(e.target.matches('li.login')){
+    document.querySelector('#login').className = 'pure-u-1 selected';
+    document.querySelector('#register').className = 'pure-u-1';
+    e.target.className += ' selected';
+    document.querySelector('li.register').className = 'register';
+  }
+  });
+</script>
 {% endblock %}

@@ -1,0 +1,18 @@
+.tabs {
+    list-style: none;
+    background-color: rgb(30, 30, 30);
+    color: rgb(225, 225, 225);
+    padding: .25rem 0 0 1rem;
+}
+
+.tabs li {
+    display: inline-block;
+    padding: .25rem .25rem .25rem .25rem;
+    margin: 0;
+}
+
+.tabs li.selected, .tabs li:hover {
+    background-color: rgb(225, 225, 225);
+    color: rgb(30, 30, 30);
+    cursor: pointer;
+}

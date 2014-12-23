@@ -1,0 +1,11 @@
+#login, #register {
+    display: none;
+}
+
+#login.selected, #register.selected {
+    display: block;
+}
+
+#login label, #register label {
+    display: none
+}

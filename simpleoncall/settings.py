@@ -51,10 +51,15 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
 
+AUTHENTICATION_BACKENDS = (
+    'simpleoncall.auth.EmailAuthBackend',
+)
+
 ROOT_URLCONF = 'simpleoncall.urls'
 
 WSGI_APPLICATION = 'simpleoncall.wsgi.application'
 
+AUTH_USER_MODEL = 'simpleoncall.User'
 
 # Database
 # https://docs.djangoproject.com/en/1.7/ref/settings/#databases
@@ -93,5 +98,7 @@ STYLESHEETS = {
         'css/base.css',
         'css/menu.css',
         'css/header.css',
+        'css/forms.css',
+        'css/tabs.css',
     ),
 }
