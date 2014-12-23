@@ -18,6 +18,10 @@
     width: 2rem;
 }
 
+.menu-label {
+    display: none;
+}
+
 
 /** SMALL **/
 @media screen and (min-width: 35.5em) {
@@ -31,5 +35,9 @@
 @media screen and (min-width: 48em) {
     .icon, #menu ul {
         width: 4rem;
+    }
+
+    .menu-label {
+        display: inline;
     }
 }
