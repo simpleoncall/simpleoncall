@@ -1,3 +1,7 @@
+body {
+    background-color: rgb(225, 225, 225);
+}
+
 .icon {
     width: 2rem;
     fill: rgb(225, 225, 225);
