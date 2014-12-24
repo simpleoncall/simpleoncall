@@ -58,6 +58,12 @@ AUTHENTICATION_BACKENDS = (
     'simpleoncall.auth.EmailAuthBackend',
 )
 
+TEMPLATE_CONTEXT_PROCESSORS = (
+    'django.contrib.auth.context_processors.auth',
+    'django.core.context_processors.debug',
+    'django.core.context_processors.request',
+)
+
 ROOT_URLCONF = 'simpleoncall.urls'
 
 WSGI_APPLICATION = 'simpleoncall.wsgi.application'
