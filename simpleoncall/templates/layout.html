@@ -8,6 +8,11 @@
     <meta http-equiv="content-type" content="text/html; charset=utf-8">
     {% endblock %}
 
+    {% load title %}
+    {% block title %}
+    {{ title|title|safe }}
+    {% endblock %}
+
     {% block css %}
     {% stylesheet css/core.min.css %}
     <!--[if lte IE 8]>

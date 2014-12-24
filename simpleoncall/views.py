@@ -22,7 +22,7 @@ def require_authentication():
 
 @require_authentication()
 def dashboard(request):
-    return render(request, 'index.html', {'text': 'dashboard'})
+    return render(request, 'index.html', {'title': 'Dashboard'})
 
 
 def login(request):
@@ -43,6 +43,7 @@ def login(request):
         'login_form': login_form,
         'register_form': RegistrationForm(),
         'login': True,
+        'title': 'Login',
     }
     return render(request, 'auth/login.html', context)
 
@@ -63,6 +64,7 @@ def register(request):
         'login_form': AuthenticationForm(),
         'register_form': register_form,
         'register': True,
+        'title': 'Register',
     }
     return render(request, 'auth/login.html', context)
 
@@ -74,9 +76,9 @@ def logout(request):
 
 @require_authentication()
 def settings(request):
-    return render(request, 'index.html', {'text': 'settings'})
+    return render(request, 'index.html', {'title': 'Settings'})
 
 
 @require_authentication()
 def account(request):
-    return render(request, 'index.html', {'text': 'account'})
+    return render(request, 'account.html', {'title': 'Account'})
