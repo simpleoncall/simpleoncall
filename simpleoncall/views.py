@@ -171,7 +171,8 @@ def schedule(request):
 def create_team(request):
     create_team_form = CreateTeamForm(request.POST or None)
     if create_team_form.is_valid():
-        create_team_form.save(request.user)
+        create_team_form.save(request)
+        return HttpResponseRedirect(reverse('dashboard'))
 
     context = {
         'title': 'Create New Team',

@@ -8,15 +8,19 @@ class CreateTeamForm(forms.ModelForm):
         fields = ('name', )
         model = Team
 
-    def save(self, user, commit=True):
+    def save(self, request, commit=True):
         team = super(CreateTeamForm, self).save(commit=False)
 
-        team.owner = user
+        team.owner = request.user
         if commit:
             team.save()
+            request.session['team'] = {
+                'id': team.id,
+                'name': team.name,
+            }
 
         tm = TeamMember()
-        tm.user = user
+        tm.user = request.user
         tm.team = team
         if commit:
             tm.save()
