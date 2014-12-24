@@ -5,8 +5,8 @@ from simpleoncall.models import User
 
 class AuthenticationForm(forms.Form):
     username = forms.CharField(
-        label='Username or Email', max_length=100, required=True,
-        widget=forms.TextInput(attrs={'placeholder': 'Username or Email'})
+        label='Email', max_length=100, required=True,
+        widget=forms.TextInput(attrs={'placeholder': 'Email'})
     )
     password = forms.CharField(
         label='Password', required=True,
