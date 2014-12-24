@@ -1,5 +1,3 @@
-from functools import wraps
-
 from django.contrib.auth import login as login_user, authenticate
 from django.contrib.auth import logout as logout_user
 from django.core.urlresolvers import reverse
@@ -9,26 +7,12 @@ from django.shortcuts import render
 
 from simpleoncall.forms.auth import AuthenticationForm, RegistrationForm
 from simpleoncall.forms.account import EditAccountForm, ChangePasswordForm
-from simpleoncall.forms.team import CreateTeamForm
-from simpleoncall.models import TeamMember
-
-
-def require_authentication(require_team=True):
-    def wrapped(func):
-        @wraps(func)
-        def _wrapped(request, *args, **kwargs):
-            if not request.user.is_authenticated():
-                return HttpResponseRedirect(reverse('login'))
-            if require_team:
-                teams = TeamMember.objects.filter(user=request.user)
-                if not teams:
-                    return HttpResponseRedirect(reverse('create-team'))
-            return func(request, *args, **kwargs)
-        return _wrapped
-    return wrapped
+from simpleoncall.forms.team import CreateTeamForm, SelectTeamForm
+from simpleoncall.decorators import require_authentication, require_selected_team
 
 
 @require_authentication()
+@require_selected_team()
 def dashboard(request):
     return render(request, 'dashboard.html', {'title': 'Dashboard'})
 
@@ -86,6 +70,7 @@ def logout(request):
 
 
 @require_authentication()
+@require_selected_team()
 def settings(request):
     return render(request, 'settings.html', {'title': 'Settings'})
 
@@ -120,11 +105,13 @@ def account(request):
 
 
 @require_authentication()
+@require_selected_team()
 def alerts(request):
     return render(request, 'alerts.html', {'title': 'Alerts'})
 
 
 @require_authentication()
+@require_selected_team()
 def schedule(request):
     oncall_schedule = {
         'labels': [
@@ -190,4 +177,18 @@ def create_team(request):
         'title': 'Create New Team',
         'create_team_form': create_team_form,
     }
-    return render(request, 'create_team.html', context)
+    return render(request, 'team/create.html', context)
+
+
+@require_authentication()
+def select_team(request):
+    select_team_form = SelectTeamForm(request.POST or None, request.user)
+    if select_team_form.is_valid():
+        select_team_form.save(request)
+        return HttpResponseRedirect(reverse('dashboard'))
+
+    context = {
+        'title': 'Select Team',
+        'select_team_form': select_team_form,
+    }
+    return render(request, 'team/select.html', context)

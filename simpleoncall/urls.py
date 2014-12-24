@@ -14,6 +14,7 @@ urlpatterns = patterns(
     url(r'^schedule', 'simpleoncall.views.schedule', name='schedule'),
     url(r'^alerts', 'simpleoncall.views.alerts', name='alerts'),
     url(r'^team/create', 'simpleoncall.views.create_team', name='create-team'),
+    url(r'^team/select', 'simpleoncall.views.select_team', name='select-team'),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^api/', include(api.urlpatterns, namespace='api')),
 )

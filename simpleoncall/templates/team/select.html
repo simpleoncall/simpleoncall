@@ -1,0 +1,12 @@
+{% extends "layout.html" %}
+{% block menu %}{% endblock %}
+{% block content %}
+<article id="select-team">
+  <h3>Select Active Team</h3>
+  <form class="pure-form pure-form-stacked" action="{% url 'select-team' %}" method="POST">
+    {% csrf_token %}
+    {{ select_team_form }}
+    <input type="submit" value="Select" />
+  </form>
+</article>
+{% endblock %}
