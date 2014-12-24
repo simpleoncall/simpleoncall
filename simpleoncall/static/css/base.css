@@ -1,6 +1,6 @@
 body {
-    background-color: rgb(225, 225, 225);
     font-family: 'Lato', sans-serif;
+    background-color: rgb(30, 30, 30);
 }
 
 html, button, input, select, textarea,
@@ -28,6 +28,7 @@ a {
 
 #content-wrapper {
     min-height: 80vh;
+    background-color: rgb(225, 225, 225);
 }
 
 #content {
