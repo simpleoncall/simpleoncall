@@ -2,6 +2,8 @@ from django.contrib.auth.models import AbstractBaseUser, UserManager
 from django.db import models
 from django.utils import timezone
 
+from django.conf import settings
+
 
 class User(AbstractBaseUser):
     username = models.CharField('username', max_length=128, unique=True)
@@ -30,3 +32,30 @@ class User(AbstractBaseUser):
 
     def get_full_name(self):
         return '%s %s' % (self.first_name, self.last_name)
+
+
+class TeamMember(models.Model):
+    team = models.ForeignKey('simpleoncall.Team', related_name='team_set')
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL, null=True, blank=True, related_name='team_user_set'
+    )
+    email = models.EmailField(null=True, blank=True)
+    date_added = models.DateTimeField(default=timezone.now)
+
+    class Meta:
+        app_label = 'simpleoncall'
+        db_table = 'team_member'
+        unique_together = (('team', 'user'), ('team', 'email'))
+
+
+class Team(models.Model):
+    name = models.CharField('name', max_length=128)
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL)
+    date_added = models.DateTimeField(default=timezone.now)
+    users = models.ManyToManyField(
+        settings.AUTH_USER_MODEL, through='simpleoncall.TeamMember', related_name='team_users'
+    )
+
+    class Meta:
+        app_label = 'simpleoncall'
+        db_table = 'team'

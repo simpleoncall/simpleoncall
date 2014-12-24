@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 
 from django.db import models, migrations
 import django.utils.timezone
+from django.conf import settings
 
 
 class Migration(migrations.Migration):
@@ -31,5 +32,42 @@ class Migration(migrations.Migration):
                 'verbose_name_plural': 'users',
             },
             bases=(models.Model,),
+        ),
+        migrations.CreateModel(
+            name='Team',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('name', models.CharField(max_length=128, verbose_name=b'name')),
+                ('date_added', models.DateTimeField(default=django.utils.timezone.now)),
+                ('owner', models.ForeignKey(to=settings.AUTH_USER_MODEL)),
+            ],
+            options={
+                'db_table': 'team',
+            },
+            bases=(models.Model,),
+        ),
+        migrations.CreateModel(
+            name='TeamMember',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('email', models.EmailField(max_length=75, null=True, blank=True)),
+                ('date_added', models.DateTimeField(default=django.utils.timezone.now)),
+                ('team', models.ForeignKey(related_name='team_set', to='simpleoncall.Team')),
+                ('user', models.ForeignKey(related_name='team_user_set', blank=True, to=settings.AUTH_USER_MODEL, null=True)),
+            ],
+            options={
+                'db_table': 'team_member',
+            },
+            bases=(models.Model,),
+        ),
+        migrations.AlterUniqueTogether(
+            name='teammember',
+            unique_together=set([('team', 'user'), ('team', 'email')]),
+        ),
+        migrations.AddField(
+            model_name='team',
+            name='users',
+            field=models.ManyToManyField(related_name='team_users', through='simpleoncall.TeamMember', to=settings.AUTH_USER_MODEL),
+            preserve_default=True,
         ),
     ]
