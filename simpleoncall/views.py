@@ -9,14 +9,19 @@ from django.shortcuts import render
 
 from simpleoncall.forms.auth import AuthenticationForm, RegistrationForm
 from simpleoncall.forms.account import EditAccountForm, ChangePasswordForm
+from simpleoncall.models import TeamMember
 
 
-def require_authentication():
+def require_authentication(require_team=True):
     def wrapped(func):
         @wraps(func)
         def _wrapped(request, *args, **kwargs):
             if not request.user.is_authenticated():
                 return HttpResponseRedirect(reverse('login'))
+            if require_team:
+                teams = TeamMember.objects.filter(user=request.user)
+                if not teams:
+                    return HttpResponseRedirect(reverse('create-team'))
             return func(request, *args, **kwargs)
         return _wrapped
     return wrapped
@@ -172,3 +177,8 @@ def schedule(request):
         'schedule': oncall_schedule,
     }
     return render(request, 'schedule.html', context)
+
+
+@require_authentication(require_team=False)
+def create_team(request):
+    return render(request, 'create_team.html', {'title': 'Create New Team'})
