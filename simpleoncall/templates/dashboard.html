@@ -1,6 +1,77 @@
 {% extends "layout.html" %}
 {% block content %}
-<article id="dashboard">
-  <h1>Dashboard</h1>
+<article id="dashboard" class="pure-g">
+  <section class="pure-u-1 pure-u-md-3-5">
+    <h3>Events Timeseries</h3>
+    <canvas id="events_timeseries" class="graph"></canvas>
+  </section>
+  <section class="pure-u-1-2 pure-u-md-2-5">
+    <h3>Event Types</h3>
+    <canvas id="events_doughnut" class="graph"></canvas>
+  </section>
+  <section class="pure-u-1">
+    <h3>Recent Events</h3>
+    <table id="events_table" class="pure-table pure-table-horizontal">
+      <thead>
+        <tr>
+          <th>Event</th>
+          <th>Date</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="resolved">
+          <td>
+            Service Alert 4
+          </td>
+          <td>
+            Tue Dec 23 2014 21:55:48 GMT-0500 (EST)
+          </td>
+          <td>
+            Resolved
+          </td>
+        </tr>
+        <tr class="resolved">
+          <td>
+            Service Alert 3
+          </td>
+          <td>
+            Tue Dec 23 2014 19:53:34 GMT-0500 (EST)
+          </td>
+          <td>
+            Resolved
+          </td>
+        </tr>
+        <tr class="unresolved">
+          <td>
+            Service Alert 2
+          </td>
+          <td>
+            Tue Dec 23 2014 12:10:14 GMT-0500 (EST)
+          </td>
+          <td>
+            Unresolved
+          </td>
+        </tr>
+        <tr class="acknowledged">
+          <td>
+            Service Alert 1
+          </td>
+          <td>
+            Tue Dec 23 2014 10:45:23 GMT-0500 (EST)
+          </td>
+          <td>
+            Acknowledged
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
 </article>
+{% endblock %}
+
+{% block endjs %}
+{{ block.super}}
+{% load bundles %}
+{% script js/dashboard.min.js %}
 {% endblock %}

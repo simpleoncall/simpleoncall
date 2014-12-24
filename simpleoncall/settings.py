@@ -100,12 +100,12 @@ STYLESHEETS = {
         'css/header.css',
         'css/forms.css',
         'css/tabs.css',
+        'css/graphs.css',
     ),
 }
 SCRIPTS = {
     'js/dashboard.min.js': (
-        'js/d3/d3.min.js',
-        'js/epoch/epoch.min.js',
+        'js/dashboard/Chart.min.js',
         'js/dashboard/dashboard.js',
     ),
 }
