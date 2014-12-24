@@ -3,6 +3,7 @@ from functools import wraps
 from django.contrib.auth import login as login_user, authenticate
 from django.contrib.auth import logout as logout_user
 from django.core.urlresolvers import reverse
+from django.forms.utils import ErrorList
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 
@@ -38,6 +39,9 @@ def login(request):
         if user_cache:
             login_user(request, user_cache)
             return HttpResponseRedirect(reverse('dashboard'))
+        else:
+            errors = login_form._errors.setdefault('username', ErrorList())
+            errors.append('Incorrect Username or Password')
 
     context = {
         'login_form': login_form,
