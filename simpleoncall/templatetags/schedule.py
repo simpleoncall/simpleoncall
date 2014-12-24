@@ -89,7 +89,7 @@ class ScheduleUserRowNode(template.Node):
     def user_info(self):
         return ''.join([
             '<td>',
-            '<div class="pure-g">',
+            '<div class="pure-g user-info">',
             '<div class="pure-u-1 pure-u-lg-1-5">', gravatar_url(self.user.email), '</div>',
             '<div class="pure-u-1 pure-u-lg-4-5">',
             '<div class="user-full-name pure-u-1 pure-u-lg-4-5">', self.user.get_full_name(), '</div>',

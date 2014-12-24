@@ -102,7 +102,7 @@ def schedule(request):
                 'long_name': 'Monday',
             },
             {
-                'short_name': 'Tues',
+                'short_name': 'Tue',
                 'long_name': 'Tuesday',
             },
             {
@@ -110,7 +110,7 @@ def schedule(request):
                 'long_name': 'Wednesday',
             },
             {
-                'short_name': 'Thur',
+                'short_name': 'Thu',
                 'long_name': 'Thursday',
             },
             {
