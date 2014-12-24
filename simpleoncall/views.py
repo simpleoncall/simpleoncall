@@ -22,7 +22,7 @@ def require_authentication():
 
 @require_authentication()
 def dashboard(request):
-    return render(request, 'index.html', {'title': 'Dashboard'})
+    return render(request, 'dashboard.html', {'title': 'Dashboard'})
 
 
 def login(request):
@@ -76,7 +76,7 @@ def logout(request):
 
 @require_authentication()
 def settings(request):
-    return render(request, 'index.html', {'title': 'Settings'})
+    return render(request, 'settings.html', {'title': 'Settings'})
 
 
 @require_authentication()
