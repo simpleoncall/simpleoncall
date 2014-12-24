@@ -20,5 +20,8 @@ clean-css:
 
 clean: clean-css
 
-runserver:
+runserver: migrate
 	$(PYTHON) manage.py runserver
+
+migrate:
+	$(PYTHON) manage.py migrate
