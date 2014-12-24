@@ -1,5 +1,12 @@
 body {
     background-color: rgb(225, 225, 225);
+    font-family: 'Lato', sans-serif;
+}
+
+html, button, input, select, textarea,
+.pure-g [class *= "pure-u"] {
+    /* Set your content font stack here: */
+    font-family: 'Lato', sans-serif;
 }
 
 .icon {
