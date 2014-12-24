@@ -82,3 +82,13 @@ def settings(request):
 @require_authentication()
 def account(request):
     return render(request, 'account.html', {'title': 'Account'})
+
+
+@require_authentication()
+def alerts(request):
+    return render(request, 'alerts.html', {'title': 'Alerts'})
+
+
+@require_authentication()
+def schedule(request):
+    return render(request, 'schedule.html', {'title': 'Schedule'})
