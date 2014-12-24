@@ -7,6 +7,7 @@ urlpatterns = patterns(
     '',
     url(r'^$', 'simpleoncall.views.dashboard', name='dashboard'),
     url(r'^login', 'simpleoncall.views.login', name='login'),
+    url(r'^register', 'simpleoncall.views.register', name='register'),
     url(r'^logout', 'simpleoncall.views.logout', name='logout'),
     url(r'^settings', 'simpleoncall.views.settings', name='settings'),
     url(r'^account', 'simpleoncall.views.account', name='account'),
