@@ -18,7 +18,7 @@
     <p>
       Login to your SimpleOnCall account.
     </p>
-    <form class="pure-form pure-form-stacked" action="/login" method="POST">
+    <form class="pure-form pure-form-stacked" action="{% url 'login' %}" method="POST">
       {% csrf_token %}
       <fieldset class="pure-group">
         {{ login_form }}
@@ -30,7 +30,7 @@
     <p>
       Register for a SimpleOnCall account.
     </p>
-    <form class="pure-form pure-form-stacked" action="/register" method="POST">
+    <form class="pure-form pure-form-stacked" action="{% url 'register' %}" method="POST">
       {% csrf_token %}
       <fieldset class="pure-group">
         {{ register_form }}
