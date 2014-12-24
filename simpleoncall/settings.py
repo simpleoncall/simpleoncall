@@ -102,3 +102,10 @@ STYLESHEETS = {
         'css/tabs.css',
     ),
 }
+SCRIPTS = {
+    'js/dashboard.min.js': (
+        'js/d3/d3.min.js',
+        'js/epoch/epoch.min.js',
+        'js/dashboard/dashboard.js',
+    ),
+}

@@ -1,5 +1,6 @@
 STATIC=./simpleoncall/static
 CLEANCSS=./node_modules/.bin/cleancss --s0 --source-map --output
+UGLIFYJS=./node_modules/.bin/uglifyjs --source-map
 PYTHON=/usr/bin/env python
 
 deps:
@@ -17,6 +18,15 @@ css: core-css
 
 clean-css:
 	rm $(STATIC)/css/core.min.*
+
+js: core-js
+
+core-js:
+	$(PYTHON) -c 'from simpleoncall.utils import print_scripts; print_scripts()' | xargs -t -L 1 $(UGLIFYJS)
+
+clean-js:
+	rm $(STATIC)/js/core.min.*
+	rm $(STATIC)/js/dashboard.min.*
 
 clean: clean-css
 
