@@ -8,6 +8,7 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render
 
 from simpleoncall.forms.auth import AuthenticationForm, RegistrationForm
+from simpleoncall.forms.account import EditAccountForm, ChangePasswordForm
 
 
 def require_authentication():
@@ -85,7 +86,31 @@ def settings(request):
 
 @require_authentication()
 def account(request):
-    return render(request, 'account.html', {'title': 'Account'})
+    password_form = request.POST and request.POST.get('password_form') is not None
+    change_password_form_data = request.POST if password_form else None
+    edit_account_form_data = request.POST if not password_form else None
+
+    edit_account_form = EditAccountForm(edit_account_form_data or None, instance=request.user)
+    change_password_form = ChangePasswordForm(change_password_form_data or None, instance=request.user)
+
+    if edit_account_form.is_valid():
+        edit_account_form.save()
+    elif change_password_form.is_valid():
+        if change_password_form.cleaned_data['password_1'] == change_password_form.cleaned_data['password_2']:
+            from django.conf import settings
+            user = change_password_form.save()
+            user.backend = settings.AUTHENTICATION_BACKENDS[0]
+            login_user(request, user)
+        else:
+            errors = change_password_form._errors.setdefault('password_1', ErrorList())
+            errors.append('Passwords do not match')
+
+    context = {
+        'title': 'Account',
+        'edit_account_form': edit_account_form,
+        'change_password_form': change_password_form,
+    }
+    return render(request, 'account.html', context)
 
 
 @require_authentication()
