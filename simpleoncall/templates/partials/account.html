@@ -4,5 +4,12 @@
   <a href="{% url 'account' %}">
     {{ user.email|gravatar_url|safe }}
   </a>
+  {% if request.session.team %}
+  <span class="team-name">
+    <a href="{% url 'select-team' %}">
+      {{ request.session.team.name }}
+    </a>
+  </span>
+  {% endif %}
 </div>
 {% endif %}
