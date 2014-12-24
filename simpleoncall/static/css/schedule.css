@@ -1,0 +1,42 @@
+#schedule .on-call-now {
+    font-weight: 100;
+}
+
+#schedule table .oncall {
+    background-color: rgba(160, 250, 160, .3);
+}
+
+#schedule table .free {
+    background-color: rgba(250, 160, 160, .3);
+}
+
+#schedule table .standby {
+    background-color: rgba(255, 255, 150, .3);
+}
+
+#schedule table .long-name {
+    display: none;
+}
+
+#schedule table .user-fullname, #schedule table .user-email {
+    font-size: .5rem;
+}
+
+/** MEDIUM **/
+@media screen and (min-width: 48em) {
+    #schedule table .long-name {
+        display: inline;
+    }
+
+    #schedule table .short-name {
+        display: none;
+    }
+}
+
+
+/** LARGE **/
+@media screen and (min-width: 64em) {
+    #schedule table .user-fullname, #schedule table .user-email {
+        font-size: 1rem;
+    }
+}

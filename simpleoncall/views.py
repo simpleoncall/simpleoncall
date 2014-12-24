@@ -95,4 +95,55 @@ def alerts(request):
 
 @require_authentication()
 def schedule(request):
-    return render(request, 'schedule.html', {'title': 'Schedule'})
+    oncall_schedule = {
+        'labels': [
+            {
+                'short_name': 'Mon',
+                'long_name': 'Monday',
+            },
+            {
+                'short_name': 'Tues',
+                'long_name': 'Tuesday',
+            },
+            {
+                'short_name': 'Wed',
+                'long_name': 'Wednesday',
+            },
+            {
+                'short_name': 'Thur',
+                'long_name': 'Thursday',
+            },
+            {
+                'short_name': 'Fri',
+                'long_name': 'Friday',
+            },
+            {
+                'short_name': 'Sat',
+                'long_name': 'Saturday',
+            },
+            {
+                'short_name': 'Sun',
+                'long_name': 'Sunday',
+            }
+        ],
+        'users': [
+            {
+                'user': request.user,
+                'schedule': [
+                    'oncall',
+                    'oncall',
+                    'standby',
+                    'free',
+                    'free',
+                    'oncall',
+                    'standby',
+                ]
+            }
+        ]
+    }
+
+    context = {
+        'title': 'Schedule',
+        'schedule': oncall_schedule,
+    }
+    return render(request, 'schedule.html', context)

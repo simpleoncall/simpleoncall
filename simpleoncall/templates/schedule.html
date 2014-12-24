@@ -1,6 +1,14 @@
 {% extends "layout.html" %}
+{% load gravatar %}
+{% load schedule %}
 {% block content %}
 <article id="schedule">
-  <h1>Schedule</h1>
+  <section>
+    <h3> On-Call Now: <span class="on-call-now">{{ user.email }}</span> </h3>
+  </section>
+  <section>
+    <h3>Current Schedule</h3>
+    {{ schedule|schedule_table|safe }}
+  </section>
 </article>
 {% endblock %}
