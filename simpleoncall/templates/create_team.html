@@ -3,5 +3,10 @@
 {% block content %}
 <article id="create-team">
   <h3>Create New Team</h3>
+  <form class="pure-form pure-form-stacked" action="{% url 'create-team' %}" method="POST">
+    {% csrf_token %}
+    {{ create_team_form }}
+    <input type="submit" value="Create" />
+  </form>
 </article>
 {% endblock %}

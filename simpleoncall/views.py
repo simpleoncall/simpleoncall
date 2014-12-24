@@ -9,6 +9,7 @@ from django.shortcuts import render
 
 from simpleoncall.forms.auth import AuthenticationForm, RegistrationForm
 from simpleoncall.forms.account import EditAccountForm, ChangePasswordForm
+from simpleoncall.forms.team import CreateTeamForm
 from simpleoncall.models import TeamMember
 
 
@@ -181,4 +182,12 @@ def schedule(request):
 
 @require_authentication(require_team=False)
 def create_team(request):
-    return render(request, 'create_team.html', {'title': 'Create New Team'})
+    create_team_form = CreateTeamForm(request.POST or None)
+    if create_team_form.is_valid():
+        create_team_form.save(request.user)
+
+    context = {
+        'title': 'Create New Team',
+        'create_team_form': create_team_form,
+    }
+    return render(request, 'create_team.html', context)
