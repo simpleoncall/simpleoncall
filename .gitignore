@@ -3,3 +3,4 @@ node_modules
 **/*.map
 db.sqlite3
 dump.rb
+*.pyc
