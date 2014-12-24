@@ -27,3 +27,6 @@ class User(AbstractBaseUser):
         if not self.username:
             self.username = self.email
         return super(User, self).save(*args, **kwargs)
+
+    def get_full_name(self):
+        return '%s %s' % (self.first_name, self.last_name)
