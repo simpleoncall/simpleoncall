@@ -11,7 +11,7 @@ html, button, input, select, textarea,
 
 .icon {
     width: 2rem;
-    fill: rgb(225, 225, 225);
+    fill: rgb(238, 238, 238);
 }
 
 .icon:hover {
@@ -29,7 +29,7 @@ a {
 
 #content-wrapper {
     min-height: 80vh;
-    background-color: rgb(225, 225, 225);
+    background-color: rgb(238, 238, 238);
 }
 
 #content {
