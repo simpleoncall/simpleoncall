@@ -22,17 +22,17 @@ var events_doughnut_data = [
     {
         value: Math.floor(Math.random() * 150),
         label: 'Unresolved',
-        color: 'red',
+        color: 'rgb(250, 160, 160)',
     },
     {
         value: Math.floor(Math.random() * 150),
         label: 'Resolved',
-        color: 'green',
+        color: 'rgb(160, 250, 160)',
     },
     {
         value: Math.floor(Math.random() * 150),
         label: 'Acknowledged',
-        color: 'yellow',
+        color: 'rgb(255, 255, 150)',
     }
 ];
 
