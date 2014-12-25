@@ -8,9 +8,9 @@ from django.shortcuts import render
 
 from simpleoncall.forms.auth import AuthenticationForm, RegistrationForm
 from simpleoncall.forms.account import EditAccountForm, ChangePasswordForm
-from simpleoncall.forms.team import CreateTeamForm, SelectTeamForm
+from simpleoncall.forms.team import CreateTeamForm, SelectTeamForm, InviteTeamForm
 from simpleoncall.decorators import require_authentication, require_selected_team
-from simpleoncall.models import APIKey
+from simpleoncall.models import APIKey, TeamMember
 
 
 @require_authentication()
@@ -75,10 +75,12 @@ def logout(request):
 @require_selected_team()
 def settings(request):
     api_keys = APIKey.objects.filter(team=request.team)
+    members = TeamMember.objects.filter(team=request.team)
 
     context = {
         'title': '%s Settings' % (request.team.name, ),
         'api_keys': api_keys,
+        'members': members,
     }
     return render(request, 'settings.html', context)
 
@@ -217,3 +219,17 @@ def select_team(request):
         'select_team_form': select_team_form,
     }
     return render(request, 'team/select.html', context)
+
+
+@require_authentication()
+@require_selected_team()
+def invite_team(request):
+    invite_team_form = InviteTeamForm(request.POST or None)
+    if invite_team_form.is_valid():
+        if invite_team_form.save(request):
+            return HttpResponseRedirect(reverse('settings'))
+    context = {
+        'title': 'Invite Members',
+        'invite_team_form': invite_team_form,
+    }
+    return render(request, 'team/invite.html', context)

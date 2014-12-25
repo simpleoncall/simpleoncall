@@ -1,0 +1,12 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<article id="invite-team">
+  <h1>Invite Members</h1>
+  <form class="pure-form pure-form-stacked" action="{% url 'invite-team' %}" method="POST">
+    {% csrf_token %}
+    {{ invite_team_form }}
+    <input type="submit" value="Invite" />
+  </form>
+</article>
+{% endblock %}

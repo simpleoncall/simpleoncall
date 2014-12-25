@@ -1,7 +1,8 @@
 from django import forms
+from django.core.validators import validate_email
 
-from simpleoncall.models import Team, TeamMember, APIKey
-
+from simpleoncall.models import Team, TeamMember, APIKey, TeamInvite
+from simpleoncall.mail import send_invite_mail
 
 class CreateTeamForm(forms.ModelForm):
     class Meta:
@@ -62,3 +63,28 @@ class SelectTeamForm(forms.Form):
                 'name': team.name,
             }
         return team
+
+
+class InviteTeamForm(forms.Form):
+    emails = forms.CharField(label='Emails (separate by ",")', widget=forms.Textarea)
+
+    def clean_emails(self):
+        raw_emails = self.cleaned_data['emails'].split(',')
+        emails = []
+        for email in raw_emails:
+            email = email.strip('\r\n ')
+            validate_email(email)
+            emails.append(email)
+        return emails
+
+    def save(self, request, commit=True):
+        emails = self.cleaned_data['emails']
+
+        invites = []
+        for email in emails:
+            invite = TeamInvite(team=request.team, email=email, created_by=request.user)
+            invite.save()
+            invites.append(invite)
+
+        send_invite_mail(invites)
+        return emails

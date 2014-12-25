@@ -68,6 +68,9 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 
 MESSAGE_STORAGE = 'django.contrib.messages.storage.session.SessionStorage'
 
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_FROM_ADDRESS = 'SimpleOnCall Service <service@simpleoncall.com>'
+
 ROOT_URLCONF = 'simpleoncall.urls'
 
 WSGI_APPLICATION = 'simpleoncall.wsgi.application'

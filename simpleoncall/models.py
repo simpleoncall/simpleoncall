@@ -100,3 +100,22 @@ class APIKey(models.Model):
             self.password = self.get_random_hash()
 
         return super(APIKey, self).save()
+
+
+class TeamInvite(models.Model):
+    team = models.ForeignKey('simpleoncall.Team')
+    email = models.EmailField('email')
+    invite_code = models.CharField('invite_code', max_length=64)
+    created_by = models.ForeignKey(settings.AUTH_USER_MODEL)
+    date_added = models.DateTimeField(default=timezone.now)
+
+    class Meta:
+        app_label = 'simpleoncall'
+        db_table = 'team_invite'
+        unique_together = (('email', 'team'), )
+
+    def save(self):
+        if not self.invite_code:
+            self.invite_code = uuid.uuid4().hex
+
+        return super(TeamInvite, self).save()

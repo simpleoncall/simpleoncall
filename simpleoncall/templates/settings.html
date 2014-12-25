@@ -2,7 +2,21 @@
 
 {% block content %}
 <article id="settings">
-  <h1>Settings</h1>
+  <section id="members">
+    <h3>Members</h3>
+    <a class="pure-button button-secondary" href="{% url 'invite-team' %}">Invite Members</a>
+    <table class="pure-table pure-table-horizontal pure-table-striped">
+      <tbody>
+        {% for member in members %}
+        <tr>
+          <td>
+            {{ member.user.get_short_name }}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </section>
   <section id="api-keys">
     <h3>API Keys</h3>
     <a class="pure-button button-secondary" href="{% url 'create-key' %}">Create New Key</a>
