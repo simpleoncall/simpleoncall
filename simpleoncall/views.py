@@ -1,3 +1,5 @@
+import random
+
 from django.contrib.auth import login as login_user, authenticate
 from django.contrib.auth import logout as logout_user
 from django.contrib import messages
@@ -168,21 +170,22 @@ def schedule(request):
                 'long_name': 'Sunday',
             }
         ],
-        'users': [
-            {
-                'user': request.user,
-                'schedule': [
-                    'oncall',
-                    'oncall',
-                    'standby',
-                    'free',
-                    'free',
-                    'oncall',
-                    'standby',
-                ]
-            }
-        ]
+        'users': []
     }
+
+    users = TeamMember.objects.filter(team=request.team)
+    for user in users:
+        data = {'user': user.user, 'schedule': []}
+        for _ in oncall_schedule['labels']:
+            status = random.randint(1, 3)
+            if status == 1:
+                status = 'oncall'
+            elif status == 2:
+                status = 'standby'
+            else:
+                status = 'free'
+            data['schedule'].append(status)
+        oncall_schedule['users'].append(data)
 
     context = {
         'title': 'Schedule',
