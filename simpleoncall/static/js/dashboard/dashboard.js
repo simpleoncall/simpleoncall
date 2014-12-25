@@ -4,8 +4,8 @@ var events_timeseries_data = {
         {
             label: 'Events',
             data: [],
-            fillColor: 'rgba(30, 30, 30, .2)',
-            strokeColor: 'rgba(30, 30, 30, .8)',
+            fillColor: 'rgba(34, 34, 34, .2)',
+            strokeColor: 'rgba(34, 34, 34, .8)',
         }
     ],
 };
