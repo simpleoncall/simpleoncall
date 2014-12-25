@@ -49,6 +49,11 @@ img.avatar {
     height: 2rem;
     border-radius: .3rem;
 }
+
+#select-team a.create-team {
+    margin-top: 2rem;
+}
+
 .centered {
     text-align: center;
 }

@@ -8,11 +8,16 @@
 
 {% block content %}
 <article id="select-team">
-  <h3>Select Active Team</h3>
-  <form class="pure-form pure-form-stacked" action="{% url 'select-team' %}" method="POST">
-    {% csrf_token %}
-    {{ select_team_form }}
-    <input type="submit" value="Select" />
-  </form>
+  <section>
+    <h3>Select Active Team</h3>
+    <form class="pure-form pure-form-stacked" action="{% url 'select-team' %}" method="POST">
+      {% csrf_token %}
+      {{ select_team_form }}
+      <input type="submit" value="Select" />
+    </form>
+    <a class="create-team pure-button button-secondary" href="{% url 'create-team' %}">
+      Create New Team
+    </a>
+  </section>
 </article>
 {% endblock %}
