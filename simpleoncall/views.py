@@ -1,5 +1,6 @@
 from django.contrib.auth import login as login_user, authenticate
 from django.contrib.auth import logout as logout_user
+from django.contrib import messages
 from django.core.urlresolvers import reverse
 from django.forms.utils import ErrorList
 from django.http import HttpResponseRedirect
@@ -90,6 +91,7 @@ def create_key(request):
         created_by=request.user,
     )
     api_key.save()
+    messages.success(request, 'API key %s created' % (api_key.name, ))
     return HttpResponseRedirect(reverse('settings'))
 
 
@@ -104,12 +106,14 @@ def account(request):
 
     if edit_account_form.is_valid():
         edit_account_form.save()
+        messages.success(request, 'Account info saved')
     elif change_password_form.is_valid():
         if change_password_form.cleaned_data['password_1'] == change_password_form.cleaned_data['password_2']:
             from django.conf import settings
             user = change_password_form.save()
             user.backend = settings.AUTHENTICATION_BACKENDS[0]
             login_user(request, user)
+            messages.success(request, 'Password successfully changed')
         else:
             errors = change_password_form._errors.setdefault('password_1', ErrorList())
             errors.append('Passwords do not match')
@@ -189,7 +193,8 @@ def schedule(request):
 def create_team(request):
     create_team_form = CreateTeamForm(request.POST or None)
     if create_team_form.is_valid():
-        create_team_form.save(request)
+        team = create_team_form.save(request)
+        messages.success(request, 'New team %s created' % team.name)
         return HttpResponseRedirect(reverse('dashboard'))
 
     context = {
@@ -203,7 +208,8 @@ def create_team(request):
 def select_team(request):
     select_team_form = SelectTeamForm(request.POST or None, request.user)
     if select_team_form.is_valid():
-        select_team_form.save(request)
+        team = select_team_form.save(request)
+        messages.success(request, 'Team changed to %s' % team.name)
         return HttpResponseRedirect(reverse('dashboard'))
 
     context = {
