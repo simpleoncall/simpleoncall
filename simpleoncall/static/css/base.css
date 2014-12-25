@@ -33,7 +33,7 @@ a {
 }
 
 #content {
-    margin-left: 1rem;
+    margin-left: .5rem;
 }
 
 #content h1 {
@@ -56,4 +56,11 @@ img.avatar {
 
 .centered {
     text-align: center;
+}
+
+/** MEDIUM **/
+@media screen and (min-width: 48em) {
+    #content {
+        margin-left: 1rem;
+    }
 }

@@ -16,12 +16,13 @@
 
 #schedule table th {
     text-align: center;
+    font-size: .75rem;
 }
 
 #schedule table th, #schedule table td {
     padding: 0;
     margin: 0;
-    min-width: 3rem;
+    min-width: 2rem;
 }
 
 #schedule table .user-info {
@@ -32,18 +33,23 @@
     display: none;
 }
 
-#schedule table .user-fullname, #schedule table .user-email {
+#schedule table .user-full-name, #schedule table .user-email {
     font-size: .5rem;
 }
 
 /** MEDIUM **/
 @media screen and (min-width: 48em) {
+
     #schedule table .long-name {
         display: inline;
     }
 
     #schedule table .short-name {
         display: none;
+    }
+
+    #schedule table th {
+        font-size: 1rem;
     }
 
     #schedule table th, #schedule table td {
@@ -55,7 +61,7 @@
 
 /** LARGE **/
 @media screen and (min-width: 64em) {
-    #schedule table .user-fullname, #schedule table .user-email {
+    #schedule table .user-full-name, #schedule table .user-email {
         font-size: 1rem;
     }
 }
