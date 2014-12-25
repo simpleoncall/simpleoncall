@@ -24,12 +24,29 @@ class Migration(migrations.Migration):
                 ('email', models.EmailField(max_length=75, verbose_name=b'email address', blank=True)),
                 ('is_active', models.BooleanField(default=True, verbose_name=b'active')),
                 ('is_superuser', models.BooleanField(default=False, verbose_name=b'superuser status')),
+                ('is_staff', models.BooleanField(default=False, verbose_name=b'staff status')),
                 ('date_joined', models.DateTimeField(default=django.utils.timezone.now, verbose_name=b'date joined')),
             ],
             options={
                 'db_table': 'auth_user',
                 'verbose_name': 'user',
                 'verbose_name_plural': 'users',
+            },
+            bases=(models.Model,),
+        ),
+        migrations.CreateModel(
+            name='APIKey',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('name', models.CharField(max_length=128, verbose_name=b'name')),
+                ('username', models.CharField(max_length=128, verbose_name=b'username')),
+                ('password', models.CharField(max_length=128, verbose_name=b'password')),
+                ('is_active', models.BooleanField(default=True, verbose_name=b'active status')),
+                ('date_added', models.DateTimeField(default=django.utils.timezone.now)),
+                ('created_by', models.ForeignKey(to=settings.AUTH_USER_MODEL)),
+            ],
+            options={
+                'db_table': 'api_key',
             },
             bases=(models.Model,),
         ),
@@ -69,5 +86,15 @@ class Migration(migrations.Migration):
             name='users',
             field=models.ManyToManyField(related_name='team_users', through='simpleoncall.TeamMember', to=settings.AUTH_USER_MODEL),
             preserve_default=True,
+        ),
+        migrations.AddField(
+            model_name='apikey',
+            name='team',
+            field=models.ForeignKey(to='simpleoncall.Team'),
+            preserve_default=True,
+        ),
+        migrations.AlterUniqueTogether(
+            name='apikey',
+            unique_together=set([('username', 'password')]),
         ),
     ]
