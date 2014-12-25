@@ -111,6 +111,7 @@ STYLESHEETS = {
         'css/tabs.css',
         'css/graphs.css',
         'css/schedule.css',
+        'css/buttons.css',
     ),
 }
 SCRIPTS = {
