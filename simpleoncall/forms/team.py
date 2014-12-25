@@ -1,8 +1,9 @@
 from django import forms
 from django.core.validators import validate_email
 
-from simpleoncall.models import Team, TeamMember, APIKey, TeamInvite
+from simpleoncall.models import Team, TeamMember, APIKey, TeamInvite, User
 from simpleoncall.mail import send_invite_mail
+
 
 class CreateTeamForm(forms.ModelForm):
     class Meta:
@@ -80,11 +81,30 @@ class InviteTeamForm(forms.Form):
     def save(self, request, commit=True):
         emails = self.cleaned_data['emails']
 
-        invites = []
+        existing_invites = 0
+        new_invites = []
         for email in emails:
+            # invite already sent?
+            existing_invite = TeamInvite.objects.filter(team=request.team, email=email)
+            if existing_invite:
+                existing_invites += 1
+                continue
+
+            # user exist and already a member?
+            user = User.objects.filter(email=email)
+            if user:
+                team_member = TeamMember.objects.filter(user=user, team=request.team)
+                if team_member:
+                    existing_invite += 1
+                    continue
+
             invite = TeamInvite(team=request.team, email=email, created_by=request.user)
             invite.save()
-            invites.append(invite)
+            new_invites.append(invite)
 
-        send_invite_mail(invites)
-        return emails
+        if new_invites:
+            success_invites = send_invite_mail(new_invites)
+        else:
+            success_invites = 0
+        failed_invites = len(new_invites) - (success_invites or 0)
+        return success_invites, existing_invites, failed_invites

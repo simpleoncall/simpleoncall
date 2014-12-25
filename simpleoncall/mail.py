@@ -5,7 +5,7 @@ from django.template.loader import render_to_string
 
 def send_messages(messages):
     connection = mail.get_connection()
-    connection.send_messages(messages)
+    return connection.send_messages(messages)
 
 
 def send_invite_mail(invites):

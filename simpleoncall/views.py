@@ -226,8 +226,14 @@ def select_team(request):
 def invite_team(request):
     invite_team_form = InviteTeamForm(request.POST or None)
     if invite_team_form.is_valid():
-        if invite_team_form.save(request):
-            return HttpResponseRedirect(reverse('settings'))
+        sent, existing, failed = invite_team_form.save(request)
+        if sent:
+            messages.success(request, '%s invites sent' % (sent, ))
+        if existing:
+            messages.warning(request, '%s users already added' % (existing, ))
+        if failed:
+            messages.error(request, '%s invites failed to send' % (failed, ))
+        return HttpResponseRedirect(reverse('settings'))
     context = {
         'title': 'Invite Members',
         'invite_team_form': invite_team_form,
