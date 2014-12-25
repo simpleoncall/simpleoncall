@@ -12,6 +12,7 @@ class User(AbstractBaseUser):
     email = models.EmailField('email address', blank=True)
     is_active = models.BooleanField('active', default=True)
     is_superuser = models.BooleanField('superuser status', default=False)
+    is_staff = models.BooleanField('staff status', default=False)
     date_joined = models.DateTimeField('date joined', default=timezone.now)
 
     objects = UserManager()
@@ -32,6 +33,15 @@ class User(AbstractBaseUser):
 
     def get_full_name(self):
         return '%s %s' % (self.first_name, self.last_name)
+
+    def get_short_name(self):
+        return self.username
+
+    def has_perm(self, perm_name):
+        return self.is_superuser
+
+    def has_module_perms(self, app_label):
+        return self.is_superuser
 
 
 class TeamMember(models.Model):
