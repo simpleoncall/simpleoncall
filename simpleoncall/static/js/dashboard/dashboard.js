@@ -20,32 +20,54 @@ for(var i = -3600; i <= 0;i+=300){
 
 var events_doughnut_data = [
     {
-        value: 100,
+        value: Math.floor(Math.random() * 150),
         label: 'Unresolved',
         color: 'red',
     },
     {
-        value: 50,
+        value: Math.floor(Math.random() * 150),
         label: 'Resolved',
         color: 'green',
     },
     {
-        value: 5,
+        value: Math.floor(Math.random() * 150),
         label: 'Acknowledged',
         color: 'yellow',
     }
 ];
 
+var alerts_doughnut_data = [
+    {
+        value: Math.floor(Math.random() * 350) + 20,
+        label: 'E-Mail',
+        color: 'rgb(0,204,102)',
+    },
+    {
+        value: Math.floor(Math.random() * 150) + 10,
+        label: 'SMS',
+        color: 'rgb(51,0,255)',
+    },
+    {
+        value: Math.floor(Math.random() * 50) + 1,
+        label: 'Voice',
+        color: 'rgb(102,153,255)',
+    }
+];
+
 document.addEventListener('DOMContentLoaded', function(){
+    Chart.defaults.global.responsive = true;
+
     var ctx = document.getElementById('events_timeseries').getContext('2d');
     new Chart(ctx).Line(
         events_timeseries_data,
         {
             tooltipTemplate: "<%= value %>",
-            responsive: true,
         }
     );
 
     ctx = document.getElementById('events_doughnut').getContext('2d');
     new Chart(ctx).Doughnut(events_doughnut_data);
+
+    ctx = document.getElementById('alerts_doughnut').getContext('2d');
+    new Chart(ctx).Doughnut(alerts_doughnut_data);
 });
