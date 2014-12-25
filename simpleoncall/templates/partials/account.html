@@ -1,9 +1,6 @@
 {% if user.is_authenticated %}
 <div id="account">
   {% load gravatar %}
-  <a href="{% url 'account' %}">
-    {{ user.email|gravatar_url|safe }}
-  </a>
   {% if request.session.team %}
   <span class="team-name">
     <a href="{% url 'select-team' %}">
@@ -11,5 +8,8 @@
     </a>
   </span>
   {% endif %}
+  <a href="{% url 'account' %}">
+    {{ user.email|gravatar_url|safe }}
+  </a>
 </div>
 {% endif %}
