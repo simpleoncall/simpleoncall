@@ -3,5 +3,46 @@
 {% block content %}
 <article id="settings">
   <h1>Settings</h1>
+  <section id="api-keys">
+    <h3>API Keys</h3>
+    <a class="pure-button button-secondary" href="{% url 'create-key' %}">Create New Key</a>
+    <table class="pure-table pure-table-horizontal pure-table-striped">
+      <tbody>
+        {% for api_key in api_keys %}
+        <tr>
+          <td>
+            <span class="name">
+              {% if api_key.name %}
+              {{ api_key.name }}
+              {% else %}
+              {{ api_key.username }}
+              {% endif %}
+            </span>
+            <span class="api-url {% if not api_key.is_active %}deactive{% endif %}">
+              {{ api_key.get_api_url }}
+            </span>
+          </td>
+          <td>
+            {{ api_key.created_by.get_short_name }}
+          </td>
+          <td>
+            {{ api_key.date_added }}
+          </td>
+          <td>
+            {% if api_key.is_active %}
+            <a class="pure-button button-secondary" href="#">
+              Deactivate
+            </a>
+            {% else %}
+            <a class="pure-button button-secondary" href="#">
+              Activate
+            </a>
+            {% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </section>
 </article>
 {% endblock %}

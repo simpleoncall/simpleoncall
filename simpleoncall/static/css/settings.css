@@ -1,0 +1,20 @@
+#settings #api-keys table {
+    font-size: .75rem;
+    margin-right: .5rem;
+}
+
+#settings #api-keys table .deactive {
+    text-decoration: line-through;
+}
+
+#settings #api-keys table .name {
+    font-weight: 600;
+}
+
+#settings #api-keys table .name, #settings #api-keys table .api-url {
+    display: block;
+}
+
+#settings #api-keys .pure-button {
+    margin: .5rem;
+}

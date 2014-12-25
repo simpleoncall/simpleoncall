@@ -1,3 +1,5 @@
+import uuid
+
 from django.contrib.auth.models import AbstractBaseUser, UserManager
 from django.db import models
 from django.utils import timezone
@@ -69,3 +71,32 @@ class Team(models.Model):
     class Meta:
         app_label = 'simpleoncall'
         db_table = 'team'
+
+
+class APIKey(models.Model):
+    team = models.ForeignKey('simpleoncall.Team')
+    name = models.CharField('name', max_length=128)
+    username = models.CharField('username', max_length=128)
+    password = models.CharField('password', max_length=128)
+    is_active = models.BooleanField('active status', default=True)
+    created_by = models.ForeignKey(settings.AUTH_USER_MODEL)
+    date_added = models.DateTimeField(default=timezone.now)
+
+    class Meta:
+        app_label = 'simpleoncall'
+        db_table = 'api_key'
+        unique_together = (('username', 'password'), )
+
+    def get_random_hash(self):
+        return uuid.uuid4().hex
+
+    def get_api_url(self):
+        return '%s:%s@%s/api/' % (self.username, self.password, settings.BASE_URL)
+
+    def save(self):
+        if not self.username:
+            self.username = self.get_random_hash()
+        if not self.password:
+            self.password = self.get_random_hash()
+
+        return super(APIKey, self).save()

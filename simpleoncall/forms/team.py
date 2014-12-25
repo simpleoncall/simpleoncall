@@ -1,6 +1,6 @@
 from django import forms
 
-from simpleoncall.models import Team, TeamMember
+from simpleoncall.models import Team, TeamMember, APIKey
 
 
 class CreateTeamForm(forms.ModelForm):
@@ -24,6 +24,13 @@ class CreateTeamForm(forms.ModelForm):
         tm.team = team
         if commit:
             tm.save()
+
+        api_key = APIKey(
+            team=team,
+            created_by=request.user,
+        )
+        if commit:
+            api_key.save()
 
         return team
 

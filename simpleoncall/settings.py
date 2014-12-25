@@ -28,6 +28,7 @@ TEMPLATE_DIRS = [os.path.join(BASE_DIR, 'templates')]
 
 ALLOWED_HOSTS = ('127.0.0.1',)
 
+BASE_URL = '127.0.0.1:8000'
 
 # Application definition
 
@@ -112,6 +113,7 @@ STYLESHEETS = {
         'css/graphs.css',
         'css/schedule.css',
         'css/buttons.css',
+        'css/settings.css',
     ),
 }
 SCRIPTS = {

@@ -9,6 +9,7 @@ from simpleoncall.forms.auth import AuthenticationForm, RegistrationForm
 from simpleoncall.forms.account import EditAccountForm, ChangePasswordForm
 from simpleoncall.forms.team import CreateTeamForm, SelectTeamForm
 from simpleoncall.decorators import require_authentication, require_selected_team
+from simpleoncall.models import APIKey
 
 
 @require_authentication()
@@ -72,7 +73,24 @@ def logout(request):
 @require_authentication()
 @require_selected_team()
 def settings(request):
-    return render(request, 'settings.html', {'title': 'Settings'})
+    api_keys = APIKey.objects.filter(team=request.team)
+
+    context = {
+        'title': '%s Settings' % (request.team.name, ),
+        'api_keys': api_keys,
+    }
+    return render(request, 'settings.html', context)
+
+
+@require_authentication()
+@require_selected_team()
+def create_key(request):
+    api_key = APIKey(
+        team=request.team,
+        created_by=request.user,
+    )
+    api_key.save()
+    return HttpResponseRedirect(reverse('settings'))
 
 
 @require_authentication()
