@@ -26,7 +26,14 @@ def require_selected_team():
         @wraps(func)
         def _wrapped(request, *args, **kwargs):
             if not request.session.get('team'):
-                return HttpResponseRedirect(reverse('select-team'))
+                teams = TeamMember.objects.filter(user=request.user)
+                if teams:
+                    request.session['team'] = {
+                        'id': teams[0].team.id,
+                        'name': teams[0].team.name,
+                    }
+                else:
+                    return HttpResponseRedirect(reverse('select-team'))
 
             team_id, team_name = request.session['team'].values()
             teams = TeamMember.objects.filter(user=request.user, team_id=team_id)
