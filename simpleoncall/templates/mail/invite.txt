@@ -1,1 +1,3 @@
-Text Message
+You have been invited to join the SimpleOnCall team {{ invite.team.name }}.
+
+To accept this invitation please visit the following link: {{ invite.get_invite_url|safe }}

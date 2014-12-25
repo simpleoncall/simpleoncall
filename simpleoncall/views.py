@@ -12,7 +12,7 @@ from simpleoncall.forms.auth import AuthenticationForm, RegistrationForm
 from simpleoncall.forms.account import EditAccountForm, ChangePasswordForm
 from simpleoncall.forms.team import CreateTeamForm, SelectTeamForm, InviteTeamForm
 from simpleoncall.decorators import require_authentication, require_selected_team
-from simpleoncall.models import APIKey, TeamMember
+from simpleoncall.models import APIKey, TeamMember, TeamInvite, User
 
 
 @require_authentication()
@@ -242,3 +242,29 @@ def invite_team(request):
         'invite_team_form': invite_team_form,
     }
     return render(request, 'team/invite.html', context)
+
+
+def invite_accept(request):
+    code = request.GET.get('code')
+    email = request.GET.get('email')
+    if not code or not email:
+        return HttpResponseRedirect(reverse('dashboard'))
+
+    invite = TeamInvite.objects.filter(invite_code=code, email=email)
+    if not invite:
+        return HttpResponseRedirect(reverse('dashboard'))
+    invite = invite[0]
+
+    user = User.objects.filter(email=email)
+    if user:
+        user = user[0]
+        team_member = TeamMember.objects.filter(team=invite.team, user=user)
+        if team_member:
+            messages.warning(request, 'already a member of team %s' % (invite.team.name, ))
+        else:
+            team_member = TeamMember(team=invite.team, user=user)
+            team_member.save()
+            messages.success(request, 'added to team %s' % (invite.team.name, ))
+    else:
+        pass
+    return HttpResponseRedirect(reverse('dashboard'))

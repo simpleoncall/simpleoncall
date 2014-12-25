@@ -1,4 +1,7 @@
 {% extends "mail/layout.html" %}
 {% block content %}
+You have been invited to join the SimpleOnCall team {{ invite.team.name }}.
 
+To accept this invitation please visit the following link:
+<a href="{{ invite.get_invite_url|safe }}" target="_blank">{{ invite.get_invite_url|safe }}</a>
 {% endblock %}

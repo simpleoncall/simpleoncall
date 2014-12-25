@@ -1,10 +1,11 @@
 import uuid
 
+from django.conf import settings
 from django.contrib.auth.models import AbstractBaseUser, UserManager
+from django.core.urlresolvers import reverse
 from django.db import models
 from django.utils import timezone
-
-from django.conf import settings
+from django.utils.http import urlencode
 
 
 class User(AbstractBaseUser):
@@ -113,6 +114,13 @@ class TeamInvite(models.Model):
         app_label = 'simpleoncall'
         db_table = 'team_invite'
         unique_together = (('email', 'team'), )
+
+    def get_invite_url(self):
+        query_string = {
+            'code': self.invite_code,
+            'email': self.email
+        }
+        return 'http://%s%s?%s' % (settings.BASE_URL, reverse('invite-accept'), urlencode(query_string))
 
     def save(self):
         if not self.invite_code:
