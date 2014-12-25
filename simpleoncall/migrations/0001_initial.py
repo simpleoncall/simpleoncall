@@ -64,6 +64,21 @@ class Migration(migrations.Migration):
             bases=(models.Model,),
         ),
         migrations.CreateModel(
+            name='TeamInvite',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('email', models.EmailField(max_length=75, verbose_name=b'email')),
+                ('invite_code', models.CharField(max_length=64, verbose_name=b'invite_code')),
+                ('date_added', models.DateTimeField(default=django.utils.timezone.now)),
+                ('created_by', models.ForeignKey(to=settings.AUTH_USER_MODEL)),
+                ('team', models.ForeignKey(to='simpleoncall.Team')),
+            ],
+            options={
+                'db_table': 'team_invite',
+            },
+            bases=(models.Model,),
+        ),
+        migrations.CreateModel(
             name='TeamMember',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
@@ -80,6 +95,10 @@ class Migration(migrations.Migration):
         migrations.AlterUniqueTogether(
             name='teammember',
             unique_together=set([('team', 'user'), ('team', 'email')]),
+        ),
+        migrations.AlterUniqueTogether(
+            name='teaminvite',
+            unique_together=set([('email', 'team')]),
         ),
         migrations.AddField(
             model_name='team',
