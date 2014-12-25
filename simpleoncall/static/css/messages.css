@@ -1,0 +1,22 @@
+ul.messages {
+    list-style: none;
+    padding: 0;
+    margin: .25rem 2rem 0 2rem;
+    text-align: center;
+}
+
+ul.messages li {
+    margin: 0 0 .3rem 0;
+    padding: .25rem;
+    background-color: #e0e0e0;
+    border-radius: .25rem;
+    box-shadow: .1rem .1rem 2rem rgba(34, 34, 34, .6);
+}
+
+ul.messages li.error {
+    background-color: rgba(250, 160, 160, .3);
+}
+
+ul.messages li.success {
+    background-color: rgba(160, 250, 160, .3);
+}

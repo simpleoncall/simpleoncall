@@ -63,7 +63,10 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'django.contrib.auth.context_processors.auth',
     'django.core.context_processors.debug',
     'django.core.context_processors.request',
+    'django.contrib.messages.context_processors.messages',
 )
+
+MESSAGE_STORAGE = 'django.contrib.messages.storage.session.SessionStorage'
 
 ROOT_URLCONF = 'simpleoncall.urls'
 
@@ -114,6 +117,7 @@ STYLESHEETS = {
         'css/schedule.css',
         'css/buttons.css',
         'css/settings.css',
+        'css/messages.css',
     ),
 }
 SCRIPTS = {
