@@ -6,11 +6,11 @@
     <canvas id="events_timeseries" class="graph"></canvas>
   </section>
   <section class="pure-u-1-2 pure-u-md-1-5">
-    <h3 class="centered">Event Types</h3>
+    <h3 class="centered">Alert Status</h3>
     <canvas id="events_doughnut" class="graph"></canvas>
   </section>
   <section class="pure-u-1-2 pure-u-md-1-5">
-    <h3 class="centered">Alerts Sent</h3>
+    <h3 class="centered">Messages Sent</h3>
     <canvas id="alerts_doughnut" class="graph"></canvas>
   </section>
   <section class="pure-u-1">
@@ -19,53 +19,53 @@
       <thead>
         <tr>
           <th>Event</th>
+          <th>User</th>
           <th>Date</th>
-          <th>Status</th>
         </tr>
       </thead>
       <tbody>
         <tr class="resolved">
           <td>
-            Service Alert 4
+            Service Alert 4 - Resolved
+          </td>
+          <td>
+            {{ request.user.get_short_name }}
           </td>
           <td>
             Tue Dec 23 2014 21:55:48 GMT-0500 (EST)
           </td>
-          <td>
-            Resolved
-          </td>
         </tr>
         <tr class="resolved">
           <td>
-            Service Alert 3
+            Service Alert 3 - Resolved
+          </td>
+          <td>
+            {{ request.user.get_short_name }}
           </td>
           <td>
             Tue Dec 23 2014 19:53:34 GMT-0500 (EST)
           </td>
-          <td>
-            Resolved
-          </td>
         </tr>
         <tr class="unresolved">
           <td>
-            Service Alert 2
+            Service Alert 2 - New
+          </td>
+          <td>
+            0ee6399b5d314a97844d520ced6594d2
           </td>
           <td>
             Tue Dec 23 2014 12:10:14 GMT-0500 (EST)
           </td>
-          <td>
-            Unresolved
-          </td>
         </tr>
-        <tr class="acknowledged">
+        <tr class="">
           <td>
-            Service Alert 1
+            API Key 0ee6399b5d314a97844d520ced6594d2 Created
+          </td>
+          <td>
+            {{ request.user.get_short_name }}
           </td>
           <td>
             Tue Dec 23 2014 10:45:23 GMT-0500 (EST)
-          </td>
-          <td>
-            Acknowledged
           </td>
         </tr>
       </tbody>
