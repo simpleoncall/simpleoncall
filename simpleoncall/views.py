@@ -108,7 +108,15 @@ def create_key(request):
         created_by=request.user,
     )
     api_key.save()
-    messages.success(request, 'API key %s created' % (api_key.name, ))
+    event = Event(
+        title='API key %s created' % (api_key.get_name(), ),
+        type=EventType.AUDIT,
+        status=EventStatus.RESOLVED,
+        team=request.team,
+        created_by_user=request.user,
+    )
+    event.save()
+    messages.success(request, event.title)
     return HttpResponseRedirect(reverse('settings'))
 
 
