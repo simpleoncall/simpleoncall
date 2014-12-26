@@ -21,53 +21,30 @@
           <th>Event</th>
           <th>User</th>
           <th>Date</th>
+          <th>Status</th>
         </tr>
       </thead>
       <tbody>
-        <tr class="resolved">
+        {% for event in events %}
+        <tr class="{{ event.status }}">
           <td>
-            Service Alert 4 - Resolved
+            {{ event.title }}
           </td>
           <td>
-            {{ request.user.get_short_name }}
+            {% if event.created_by_user %}
+            {{ event.created_by_user.get_short_name }}
+            {% else %}
+            {{ event.create_by_api_key.get_name }}
+            {% endif %}
           </td>
           <td>
-            Tue Dec 23 2014 21:55:48 GMT-0500 (EST)
-          </td>
-        </tr>
-        <tr class="resolved">
-          <td>
-            Service Alert 3 - Resolved
+            {{ event.date_updated }}
           </td>
           <td>
-            {{ request.user.get_short_name }}
-          </td>
-          <td>
-            Tue Dec 23 2014 19:53:34 GMT-0500 (EST)
+            {{ event.status }}
           </td>
         </tr>
-        <tr class="unresolved">
-          <td>
-            Service Alert 2 - New
-          </td>
-          <td>
-            0ee6399b5d314a97844d520ced6594d2
-          </td>
-          <td>
-            Tue Dec 23 2014 12:10:14 GMT-0500 (EST)
-          </td>
-        </tr>
-        <tr class="">
-          <td>
-            API Key 0ee6399b5d314a97844d520ced6594d2 Created
-          </td>
-          <td>
-            {{ request.user.get_short_name }}
-          </td>
-          <td>
-            Tue Dec 23 2014 10:45:23 GMT-0500 (EST)
-          </td>
-        </tr>
+        {% endfor %}
       </tbody>
     </table>
   </section>

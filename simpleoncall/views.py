@@ -6,6 +6,7 @@ from django.contrib import messages
 from django.core.urlresolvers import reverse
 from django.forms.utils import ErrorList
 from django.http import HttpResponseRedirect
+from django.db.models import Q
 from django.shortcuts import render
 from django.utils.http import urlencode, urlquote
 
@@ -13,13 +14,19 @@ from simpleoncall.forms.auth import AuthenticationForm, RegistrationForm
 from simpleoncall.forms.account import EditAccountForm, ChangePasswordForm
 from simpleoncall.forms.team import CreateTeamForm, SelectTeamForm, InviteTeamForm
 from simpleoncall.decorators import require_authentication, require_selected_team
-from simpleoncall.models import APIKey, TeamMember, TeamInvite, User
+from simpleoncall.models import APIKey, TeamMember, TeamInvite, User, Event, EventType, EventStatus
 
 
 @require_authentication()
 @require_selected_team()
 def dashboard(request):
-    return render(request, 'dashboard.html', {'title': 'Dashboard'})
+    query = Q(team=request.team) | Q(user=request.user)
+    events = Event.objects.filter(query).order_by('-date_added')[:10]
+    context = {
+        'title': 'Dashboard',
+        'events': events,
+    }
+    return render(request, 'dashboard.html', context)
 
 
 def login(request):
