@@ -182,3 +182,35 @@ class Event(models.Model):
     class Meta:
         app_label = 'simpleoncall'
         db_table = 'event'
+
+    def last_updater(self):
+        if self.updated_by_user:
+            return self.updated_by_user.email
+        elif self.updated_by_api_key:
+            return self.updated_by_api_key.get_name()
+        elif self.created_by_user:
+            return self.created_by_user.email
+        elif self.created_by_api_key:
+            return self.created_by_api_key.get_name()
+        return 'Unknown'
+
+    def creator(self):
+        if self.created_by_user:
+            return self.created_by_user.email
+        elif self.created_by_api_key:
+            return self.created_by_api_key.get_name()
+        return 'Unknown'
+
+    def to_dict(self):
+        data = {
+            'title': self.title,
+            'body': self.body,
+            'type': self.type,
+            'status': self.status,
+            'created': self.date_added.isoformat(),
+            'created_by': self.creator(),
+            'updated': self.date_updated.isoformat(),
+            'updated_by': self.last_updater(),
+        }
+
+        return data
