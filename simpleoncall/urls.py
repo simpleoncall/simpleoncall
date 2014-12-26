@@ -18,6 +18,7 @@ urlpatterns = patterns(
     url(r'^team/invite', 'simpleoncall.views.invite_team', name='invite-team'),
     url(r'^invite/accept', 'simpleoncall.views.invite_accept', name='invite-accept'),
     url(r'^key/create', 'simpleoncall.views.create_key', name='create-key'),
+    url(r'^event/(?P<event_id>[0-9a-z]+)', 'simpleoncall.views.event', name='event'),
     url(r'^event/ack/(?P<event_id>[0-9a-z]+)', 'simpleoncall.views.event_ack', name='event-ack'),
     url(r'^event/resolve/(?P<event_id>[0-9a-z]+)', 'simpleoncall.views.event_resolve', name='event-resolve'),
     url(r'^admin/', include(admin.site.urls)),

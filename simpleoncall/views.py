@@ -333,3 +333,18 @@ def event_resolve(request, event_id):
         messages.success(request, 'Event %s was resolved' % (event_id, ))
 
     return HttpResponseRedirect(reverse('alerts'))
+
+
+@require_authentication()
+@require_selected_team()
+def event(request, event_id):
+    event = Event.objects.get(id=event_id, team=request.team)
+    if not event:
+        messages.error(request, 'Event %s was not found' % (event_id, ))
+        return HttpResponseRedirect(reverse('dashboard'))
+
+    context = {
+        'title': event.title,
+        'event': event,
+    }
+    return render(request, 'event.html', context)
