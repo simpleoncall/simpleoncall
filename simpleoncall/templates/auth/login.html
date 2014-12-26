@@ -30,7 +30,7 @@
     <p>
       Register for a SimpleOnCall account.
     </p>
-    <form class="pure-form pure-form-stacked" action="{% url 'register' %}" method="POST">
+    <form class="pure-form pure-form-stacked" action="{% url 'register' %}{% if next %}?next={{ next|safe }}{% endif %}" method="POST">
       {% csrf_token %}
       <fieldset class="pure-group">
         {{ register_form }}

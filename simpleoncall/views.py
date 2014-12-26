@@ -7,6 +7,7 @@ from django.core.urlresolvers import reverse
 from django.forms.utils import ErrorList
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
+from django.utils.http import urlencode, urlquote
 
 from simpleoncall.forms.auth import AuthenticationForm, RegistrationForm
 from simpleoncall.forms.account import EditAccountForm, ChangePasswordForm
@@ -57,13 +58,18 @@ def register(request):
         user = register_form.save()
         user.backend = settings.AUTHENTICATION_BACKENDS[0]
         login_user(request, user)
-        return HttpResponseRedirect(reverse('dashboard'))
+
+        redirect = reverse('dashboard')
+        if request.GET.get('next'):
+            redirect = request.GET.get('next')
+        return HttpResponseRedirect(redirect)
 
     context = {
         'login_form': AuthenticationForm(),
         'register_form': register_form,
         'register': True,
         'title': 'Register',
+        'next': urlquote(request.GET.get('next')),
     }
     return render(request, 'auth/login.html', context)
 
@@ -266,5 +272,12 @@ def invite_accept(request):
             team_member.save()
             messages.success(request, 'added to team %s' % (invite.team.name, ))
     else:
-        pass
+        args = {
+            'code': code,
+            'email': email,
+        }
+        next = '%s?%s' % (reverse('invite-accept'), urlencode(args))
+        redirect = '%s?next=%s' % (reverse('register'), urlquote(next))
+        return HttpResponseRedirect(redirect)
+
     return HttpResponseRedirect(reverse('dashboard'))
