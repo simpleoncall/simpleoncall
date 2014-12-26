@@ -271,15 +271,13 @@ def invite_accept(request):
     if not code or not email:
         return HttpResponseRedirect(reverse('dashboard'))
 
-    invite = TeamInvite.objects.filter(invite_code=code, email=email)
+    invite = TeamInvite.objects.get(invite_code=code, email=email)
     if not invite:
         return HttpResponseRedirect(reverse('dashboard'))
-    invite = invite[0]
 
-    user = User.objects.filter(email=email)
+    user = User.objects.get(email=email)
     if user:
-        user = user[0]
-        team_member = TeamMember.objects.filter(team=invite.team, user=user)
+        team_member = TeamMember.objects.get(team=invite.team, user=user)
         if team_member:
             messages.warning(request, 'already a member of team %s' % (invite.team.name, ))
         else:
