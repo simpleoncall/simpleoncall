@@ -34,7 +34,7 @@
             {% if event.created_by_user %}
             {{ event.created_by_user.get_short_name }}
             {% else %}
-            {{ event.create_by_api_key.get_name }}
+            {{ event.created_by_api_key.get_name }}
             {% endif %}
           </td>
           <td>
