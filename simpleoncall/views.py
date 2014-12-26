@@ -115,7 +115,7 @@ def create_key(request):
         team=request.team,
         created_by_user=request.user,
     )
-    event.save()
+    event.save(user=request.user)
     messages.success(request, event.title)
     return HttpResponseRedirect(reverse('settings'))
 

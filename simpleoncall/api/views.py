@@ -52,7 +52,7 @@ def event_create(request):
         if hasattr(event, key):
             setattr(event, key, value)
 
-    event.save()
+    event.save(api_key=request.api_key)
     return json_response({
         'result': event.id,
     })

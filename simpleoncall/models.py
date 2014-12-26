@@ -214,3 +214,9 @@ class Event(models.Model):
         }
 
         return data
+
+    def save(self, user=None, api_key=None):
+        self.updated_by_api_key = api_key
+        self.updated_by_user = user
+        self.date_updated = timezone.now()
+        super(Event, self).save()
