@@ -1,6 +1,57 @@
 {% extends "layout.html" %}
 {% block content %}
 <article id="alerts">
-  <h1>Alerts</h1>
+  <section>
+    <h3>Alerts</h3>
+    <table class="pure-table pure-table-horizontal pure-table-striped">
+      <thead>
+        <tr>
+          <th>
+            Event Title
+          </th>
+          <th>
+            Updated By
+          </th>
+          <th>
+            Updated At
+          </th>
+          <th>
+            Status
+          </th>
+          <th>
+            Actions
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for event in alerts %}
+        <tr class="{{ alert.status }}">
+          <td>
+            <a href="{% url 'event' event.id %}">
+              {{ event.title }}
+            </a>
+          </td>
+          <td>
+            {{ event.last_updater }}
+          </td>
+          <td>
+            {{ event.date_updated }}
+          </td>
+          <td>
+            {{ event.status }}
+          </td>
+          <td>
+            <a class="pure-button secondary-button" href="{% url 'event-ack' event.id %}">
+              Acknowledge
+            </a>
+            <a class="pure-button secondary-button" href="{% url 'event-resolve' event.id %}">
+              Resolve
+            </a>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </section>
 </article>
 {% endblock %}

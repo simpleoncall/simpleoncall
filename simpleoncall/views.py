@@ -154,7 +154,14 @@ def account(request):
 @require_authentication()
 @require_selected_team()
 def alerts(request):
-    return render(request, 'alerts.html', {'title': 'Alerts'})
+    alert_count = Event.objects.filter(team=request.team, type=EventType.ALERT).count()
+    alerts = Event.objects.filter(team=request.team, type=EventType.ALERT).order_by('-date_updated')[:10]
+    context = {
+        'title': 'Alerts',
+        'alert_count': alert_count,
+        'alerts': alerts,
+    }
+    return render(request, 'alerts.html', context)
 
 
 @require_authentication()
@@ -294,3 +301,35 @@ def invite_accept(request):
         return HttpResponseRedirect(redirect)
 
     return HttpResponseRedirect(reverse('dashboard'))
+
+
+@require_authentication()
+@require_selected_team()
+def event_ack(request, event_id):
+    event = Event.objects.get(id=event_id)
+    if not event:
+        messages.error(request, 'Event %s was not found' % (event_id, ))
+    elif event.status == EventStatus.ACKNOWLEDGED:
+        messages.warning(request, 'Event %s already acknowledged' % (event_id, ))
+    else:
+        event.status = EventStatus.ACKNOWLEDGED
+        event.save(user=request.user)
+        messages.success(request, 'Event %s was acknowledged' % (event_id, ))
+
+    return HttpResponseRedirect(reverse('alerts'))
+
+
+@require_authentication()
+@require_selected_team()
+def event_resolve(request, event_id):
+    event = Event.objects.get(id=event_id, team=request.team)
+    if not event:
+        messages.error(request, 'Event %s was not found' % (event_id, ))
+    elif event.status == EventStatus.RESOLVED:
+        messages.warning(request, 'Event %s already resolved' % (event_id, ))
+    else:
+        event.status = EventStatus.RESOLVED
+        event.save(user=request.user)
+        messages.success(request, 'Event %s was resolved' % (event_id, ))
+
+    return HttpResponseRedirect(reverse('alerts'))
