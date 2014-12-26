@@ -88,6 +88,9 @@ class APIKey(models.Model):
         db_table = 'api_key'
         unique_together = (('username', 'password'), )
 
+    def get_name(self):
+        return self.name or self.username
+
     def get_random_hash(self):
         return uuid.uuid4().hex
 

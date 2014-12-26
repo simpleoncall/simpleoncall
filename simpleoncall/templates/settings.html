@@ -26,11 +26,7 @@
         <tr>
           <td>
             <span class="name">
-              {% if api_key.name %}
-              {{ api_key.name }}
-              {% else %}
-              {{ api_key.username }}
-              {% endif %}
+              {{ api_key.get_name }}
             </span>
             <span class="api-url {% if not api_key.is_active %}deactive{% endif %}">
               {{ api_key.get_api_url }}
