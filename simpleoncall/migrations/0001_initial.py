@@ -51,6 +51,24 @@ class Migration(migrations.Migration):
             bases=(models.Model,),
         ),
         migrations.CreateModel(
+            name='Event',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('title', models.CharField(max_length=128, verbose_name=b'title')),
+                ('body', models.TextField(null=True, verbose_name=b'body', blank=True)),
+                ('type', models.CharField(default=b'unknown', max_length=24, verbose_name=b'type', choices=[(b'unknown', b'unknown'), (b'alert', b'alert'), (b'audit', b'audit')])),
+                ('status', models.CharField(default=b'open', max_length=24, verbose_name=b'status', choices=[(b'open', b'open'), (b'resolved', b'resolved'), (b'acknowledged', b'acknowledged')])),
+                ('date_added', models.DateTimeField(default=django.utils.timezone.now)),
+                ('date_updated', models.DateTimeField(default=django.utils.timezone.now)),
+                ('created_by_api_key', models.ForeignKey(related_name='created_by_api_key', to='simpleoncall.APIKey', null=True)),
+                ('created_by_user', models.ForeignKey(related_name='created_by_user', to=settings.AUTH_USER_MODEL, null=True)),
+            ],
+            options={
+                'db_table': 'event',
+            },
+            bases=(models.Model,),
+        ),
+        migrations.CreateModel(
             name='Team',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
@@ -104,6 +122,30 @@ class Migration(migrations.Migration):
             model_name='team',
             name='users',
             field=models.ManyToManyField(related_name='team_users', through='simpleoncall.TeamMember', to=settings.AUTH_USER_MODEL),
+            preserve_default=True,
+        ),
+        migrations.AddField(
+            model_name='event',
+            name='team',
+            field=models.ForeignKey(to='simpleoncall.Team', null=True),
+            preserve_default=True,
+        ),
+        migrations.AddField(
+            model_name='event',
+            name='updated_by_api_key',
+            field=models.ForeignKey(related_name='updated_by_api_key', to='simpleoncall.APIKey', null=True),
+            preserve_default=True,
+        ),
+        migrations.AddField(
+            model_name='event',
+            name='updated_by_user',
+            field=models.ForeignKey(related_name='updated_by_user', to=settings.AUTH_USER_MODEL, null=True),
+            preserve_default=True,
+        ),
+        migrations.AddField(
+            model_name='event',
+            name='user',
+            field=models.ForeignKey(to=settings.AUTH_USER_MODEL, null=True),
             preserve_default=True,
         ),
         migrations.AddField(
