@@ -31,7 +31,9 @@
         {% for event in events %}
         <tr class="{{ event.status }}">
           <td>
-            {{ event.title }}
+            <a href="{% url 'event_view' event.id %}">
+              {{ event.title }}
+            </a>
           </td>
           <td>
             {{ event.last_updater }}
