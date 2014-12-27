@@ -10,14 +10,6 @@ var events_timeseries_data = {
     ],
 };
 
-for(var i = -3600; i <= 0;i+=300){
-    var value = Math.floor(Math.random() * 100);
-    events_timeseries_data.datasets[0].data.push(value);
-    var now = new Date((parseInt(new Date().getTime() / 1000.0) + i) * 1000.0);
-    var label = ((now.getHours() + 1) % 12)+ ':' + now.getMinutes() + ':00';
-    events_timeseries_data.labels.push(label);
-}
-
 var alerts_doughnut_data = [
     {
         value: Math.floor(Math.random() * 350) + 20,
@@ -38,6 +30,13 @@ var alerts_doughnut_data = [
 
 document.addEventListener('DOMContentLoaded', function(){
     Chart.defaults.global.responsive = true;
+
+    for(var bucket in timeseries){
+        events_timeseries_data.datasets[0].data.push(timeseries[bucket]);
+        var time = new Date(bucket * 1000.0);
+        var label = ((time.getHours() + 1) % 12)+ ':' + time.getMinutes() + ':00';
+        events_timeseries_data.labels.push(label);
+    }
 
     var ctx = document.getElementById('events_timeseries').getContext('2d');
     new Chart(ctx).Line(

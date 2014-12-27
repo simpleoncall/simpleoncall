@@ -53,5 +53,8 @@
 {% block endjs %}
 {{ block.super}}
 {% load bundles %}
+<script type="text/javascript">
+  var timeseries = {{ timeseries|safe }};
+</script>
 {% script js/dashboard.min.js %}
 {% endblock %}

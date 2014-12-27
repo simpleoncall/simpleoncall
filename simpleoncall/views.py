@@ -1,3 +1,5 @@
+import datetime
+import json
 import random
 
 from django.contrib.auth import login as login_user, authenticate
@@ -8,6 +10,7 @@ from django.forms.utils import ErrorList
 from django.http import HttpResponseRedirect
 from django.db.models import Q, Count
 from django.shortcuts import render
+from django.utils import timezone
 from django.utils.http import urlencode, urlquote
 
 from simpleoncall.forms.auth import AuthenticationForm, RegistrationForm
@@ -24,13 +27,36 @@ def dashboard(request):
     events = Event.objects.filter(query).order_by('-date_added')[:10]
 
     event_statuses = Event.objects.filter(
-        team=request.team, type=EventType.ALERT
+        team=request.team, type=EventType.ALERT,
     ).values('status').annotate(total=Count('status'))
+
+    end = timezone.now()
+    start = end - datetime.timedelta(hours=1)
+    event_times = Event.objects.filter(
+        team=request.team, type=EventType.ALERT,
+        date_added__range=(start, end)
+    ).values('date_added').annotate(total=Count('date_added')).order_by('-date_added')
+
+    event_timeseries = {}
+    while start <= end:
+        bucket = start - datetime.timedelta(minutes=start.minute % 5,
+                                            seconds=start.second,
+                                            microseconds=start.microsecond)
+        event_timeseries[bucket.strftime('%s')] = 0
+        start += datetime.timedelta(minutes=5)
+
+    for event in event_times:
+        added = event['date_added']
+        bucket = added - datetime.timedelta(minutes=added.minute % 5,
+                                            seconds=added.second,
+                                            microseconds=added.microsecond)
+        event_timeseries[bucket.strftime('%s')] += event['total']
 
     context = {
         'title': 'Dashboard',
         'events': events,
         'statuses': dict((e['status'], e['total']) for e in event_statuses),
+        'timeseries': json.dumps(event_timeseries),
     }
     return render(request, 'dashboard.html', context)
 
