@@ -383,3 +383,12 @@ def event_view(request, event_id):
         'event': event,
     }
     return render(request, 'event.html', context)
+
+
+@require_authentication()
+@require_selected_team()
+def edit_schedule(request):
+    context = {
+        'title': 'Edit Schedule',
+    }
+    return render(request, 'edit_schedule.html', context)

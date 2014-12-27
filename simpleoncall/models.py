@@ -73,6 +73,9 @@ class Team(models.Model):
         app_label = 'simpleoncall'
         db_table = 'team'
 
+    def get_schedule(self):
+        return TeamSchedule.objects.filter(team=self)
+
 
 class APIKey(models.Model):
     team = models.ForeignKey('simpleoncall.Team')
@@ -220,3 +223,27 @@ class Event(models.Model):
         self.updated_by_user = user
         self.date_updated = timezone.now()
         super(Event, self).save()
+
+
+class TeamSchedule(models.Model):
+    team = models.ForeignKey('simpleoncall.team')
+    starting_time = models.IntegerField('starting_time', default=9)
+    date_added = models.DateTimeField(default=timezone.now)
+
+    class Meta:
+        app_label = 'simpleoncall'
+        db_table = 'team_schedule'
+
+    def get_rules(self):
+        return ScheduleRule.objects.filter(schedule=self, is_active=True)
+
+
+class ScheduleRule(models.Model):
+    schedule = models.ForeignKey('simpleoncall.TeamSchedule')
+    rule = models.CharField('rule', max_length=128)
+    is_active = models.BooleanField('is_active', default=True)
+    date_added = models.DateTimeField(default=timezone.now)
+
+    class Meta:
+        app_label = 'simpleoncall'
+        db_table = 'schedule_rule'
