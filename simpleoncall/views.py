@@ -6,7 +6,7 @@ from django.contrib import messages
 from django.core.urlresolvers import reverse
 from django.forms.utils import ErrorList
 from django.http import HttpResponseRedirect
-from django.db.models import Q
+from django.db.models import Q, Count
 from django.shortcuts import render
 from django.utils.http import urlencode, urlquote
 
@@ -22,9 +22,15 @@ from simpleoncall.models import APIKey, TeamMember, TeamInvite, User, Event, Eve
 def dashboard(request):
     query = Q(team=request.team) | Q(user=request.user)
     events = Event.objects.filter(query).order_by('-date_added')[:10]
+
+    event_statuses = Event.objects.filter(
+        team=request.team, type=EventType.ALERT
+    ).values('status').annotate(total=Count('status'))
+
     context = {
         'title': 'Dashboard',
         'events': events,
+        'statuses': dict((e['status'], e['total']) for e in event_statuses),
     }
     return render(request, 'dashboard.html', context)
 

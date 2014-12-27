@@ -18,24 +18,6 @@ for(var i = -3600; i <= 0;i+=300){
     events_timeseries_data.labels.push(label);
 }
 
-var events_doughnut_data = [
-    {
-        value: Math.floor(Math.random() * 150),
-        label: 'Unresolved',
-        color: 'rgb(250, 160, 160)',
-    },
-    {
-        value: Math.floor(Math.random() * 150),
-        label: 'Resolved',
-        color: 'rgb(160, 250, 160)',
-    },
-    {
-        value: Math.floor(Math.random() * 150),
-        label: 'Acknowledged',
-        color: 'rgb(255, 255, 150)',
-    }
-];
-
 var alerts_doughnut_data = [
     {
         value: Math.floor(Math.random() * 350) + 20,
@@ -65,8 +47,25 @@ document.addEventListener('DOMContentLoaded', function(){
         }
     );
 
-    ctx = document.getElementById('events_doughnut').getContext('2d');
-    new Chart(ctx).Doughnut(events_doughnut_data);
+    var alert_count = document.getElementById('alert_count');
+    var data = [
+        {
+            value: parseInt(alert_count.dataset.openCount),
+            label: 'Open',
+            color: 'rgb(250, 160, 160)',
+        },
+        {
+            value: parseInt(alert_count.dataset.resolvedCount),
+            label: 'Resolved',
+            color: 'rgb(160, 250, 160)',
+        },
+        {
+            value: parseInt(alert_count.dataset.ackCount),
+            label: 'Acknowledged',
+            color: 'rgb(255, 255, 150)',
+        }
+    ];
+    new Chart(alert_count.getContext('2d')).Doughnut(data);
 
     ctx = document.getElementById('alerts_doughnut').getContext('2d');
     new Chart(ctx).Doughnut(alerts_doughnut_data);
