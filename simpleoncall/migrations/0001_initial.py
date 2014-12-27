@@ -69,6 +69,19 @@ class Migration(migrations.Migration):
             bases=(models.Model,),
         ),
         migrations.CreateModel(
+            name='ScheduleRule',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('rule', models.CharField(max_length=128, verbose_name=b'rule')),
+                ('is_active', models.BooleanField(default=True, verbose_name=b'is_active')),
+                ('date_added', models.DateTimeField(default=django.utils.timezone.now)),
+            ],
+            options={
+                'db_table': 'schedule_rule',
+            },
+            bases=(models.Model,),
+        ),
+        migrations.CreateModel(
             name='Team',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
@@ -110,6 +123,19 @@ class Migration(migrations.Migration):
             },
             bases=(models.Model,),
         ),
+        migrations.CreateModel(
+            name='TeamSchedule',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('starting_time', models.IntegerField(default=9, verbose_name=b'starting_time')),
+                ('date_added', models.DateTimeField(default=django.utils.timezone.now)),
+                ('team', models.ForeignKey(to='simpleoncall.Team')),
+            ],
+            options={
+                'db_table': 'team_schedule',
+            },
+            bases=(models.Model,),
+        ),
         migrations.AlterUniqueTogether(
             name='teammember',
             unique_together=set([('team', 'user'), ('team', 'email')]),
@@ -122,6 +148,12 @@ class Migration(migrations.Migration):
             model_name='team',
             name='users',
             field=models.ManyToManyField(related_name='team_users', through='simpleoncall.TeamMember', to=settings.AUTH_USER_MODEL),
+            preserve_default=True,
+        ),
+        migrations.AddField(
+            model_name='schedulerule',
+            name='schedule',
+            field=models.ForeignKey(to='simpleoncall.TeamSchedule'),
             preserve_default=True,
         ),
         migrations.AddField(
