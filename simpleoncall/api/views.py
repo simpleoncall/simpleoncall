@@ -25,7 +25,7 @@ def index(request):
 
 
 @requires_authentication()
-def get_oncall(request):
+def v1_get_oncall(request):
     team_members = TeamMember.objects.filter(team=request.api_key.team)
     oncall_member = random.choice(team_members)
     user = oncall_member.user
@@ -39,7 +39,7 @@ def get_oncall(request):
 
 @requires_authentication()
 @csrf_exempt
-def event_create(request):
+def v1_event_create(request):
     if not request.method == 'POST':
         return json_error('Invalid Request Method', status_code=405)
 
@@ -60,7 +60,7 @@ def event_create(request):
 
 @requires_authentication()
 @csrf_exempt
-def events_status(request, status=EventStatus.OPEN):
+def v1_events_status(request, status=EventStatus.OPEN):
     events = Event.objects.filter(status=status, team=request.api_key.team)
 
     results = {
