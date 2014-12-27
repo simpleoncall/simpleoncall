@@ -369,7 +369,7 @@ def event_resolve(request, event_id):
 
 @require_authentication()
 @require_selected_team()
-def event(request, event_id):
+def event_view(request, event_id):
     event = Event.objects.get(id=event_id, team=request.team)
     if not event:
         messages.error(request, 'Event %s was not found' % (event_id, ))

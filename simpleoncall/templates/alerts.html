@@ -27,7 +27,7 @@
         {% for event in alerts %}
         <tr class="{{ alert.status }}">
           <td>
-            <a href="{% url 'event' event.id %}">
+            <a href="{% url 'event_view' event.id %}">
               {{ event.title }}
             </a>
           </td>
