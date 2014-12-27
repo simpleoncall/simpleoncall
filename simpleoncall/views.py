@@ -23,31 +23,34 @@ from simpleoncall.models import APIKey, TeamMember, TeamInvite, User, Event, Eve
 @require_authentication()
 @require_selected_team()
 def dashboard(request):
+    end = timezone.now()
+    start = end - datetime.timedelta(hours=12)
+    date_added__range = (start, end)
+
     query = Q(team=request.team) | Q(user=request.user)
-    events = Event.objects.filter(query).order_by('-date_added')[:10]
+    events = Event.objects.filter(query, date_added__range=date_added__range).order_by('-date_added')[:10]
 
     event_statuses = Event.objects.filter(
         team=request.team, type=EventType.ALERT,
+        date_added__range=date_added__range
     ).values('status').annotate(total=Count('status'))
 
-    end = timezone.now()
-    start = end - datetime.timedelta(hours=1)
     event_times = Event.objects.filter(
         team=request.team, type=EventType.ALERT,
-        date_added__range=(start, end)
+        date_added__range=date_added__range
     ).values('date_added').annotate(total=Count('date_added')).order_by('-date_added')
 
     event_timeseries = {}
     while start <= end:
-        bucket = start - datetime.timedelta(minutes=start.minute % 5,
+        bucket = start - datetime.timedelta(minutes=start.minute % 60,
                                             seconds=start.second,
                                             microseconds=start.microsecond)
         event_timeseries[bucket.strftime('%s')] = 0
-        start += datetime.timedelta(minutes=5)
+        start += datetime.timedelta(minutes=60)
 
     for event in event_times:
         added = event['date_added']
-        bucket = added - datetime.timedelta(minutes=added.minute % 5,
+        bucket = added - datetime.timedelta(minutes=added.minute % 60,
                                             seconds=added.second,
                                             microseconds=added.microsecond)
         event_timeseries[bucket.strftime('%s')] += event['total']

@@ -34,7 +34,7 @@ document.addEventListener('DOMContentLoaded', function(){
     for(var bucket in timeseries){
         events_timeseries_data.datasets[0].data.push(timeseries[bucket]);
         var time = new Date(bucket * 1000.0);
-        var hours = (time.getHours() % 12);
+        var hours = time.getHours();
         if(hours < 10){
             hours = '0' + hours;
         }
