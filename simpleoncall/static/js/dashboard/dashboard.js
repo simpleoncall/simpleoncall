@@ -34,7 +34,7 @@ document.addEventListener('DOMContentLoaded', function(){
     for(var bucket in timeseries){
         events_timeseries_data.datasets[0].data.push(timeseries[bucket]);
         var time = new Date(bucket * 1000.0);
-        var label = ((time.getHours() + 1) % 12)+ ':' + time.getMinutes() + ':00';
+        var label = (time.getHours() % 12)+ ':' + time.getMinutes() + ':00';
         events_timeseries_data.labels.push(label);
     }
 
