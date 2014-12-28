@@ -6,6 +6,12 @@
 {% endif %}
 {% endblock %}
 
+{% block cw-sm-width %}
+{% if request.session.team %}
+{{ block.super }}
+{% endif %}
+{% endblock %}
+
 {% block content %}
 <article id="select-team">
   <section>

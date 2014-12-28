@@ -38,7 +38,7 @@
         {% include "partials/menu.html" %}
       </div>
       {% endblock %}
-      <div id="content-wrapper" class="pure-u-1 pure-u-sm-22-24">
+      <div id="content-wrapper" class="pure-u-1 {% block cw-sm-width %}pure-u-sm-22-24{% endblock %}">
         <div id="messages">
           {% include "partials/messages.html" %}
         </div>

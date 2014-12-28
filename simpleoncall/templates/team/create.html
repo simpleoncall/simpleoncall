@@ -1,9 +1,17 @@
 {% extends "layout.html" %}
+
 {% block menu %}
 {% if request.session.team %}
 {{ block.super }}
 {% endif %}
 {% endblock %}
+
+{% block cw-sm-width %}
+{% if request.session.team %}
+{{ block.super }}
+{% endif %}
+{% endblock %}
+
 {% block content %}
 <article id="create-team">
   <h3>Create New Team</h3>
