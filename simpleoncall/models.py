@@ -46,6 +46,9 @@ class User(AbstractBaseUser):
     def has_module_perms(self, app_label):
         return self.is_superuser
 
+    def get_alert_settings(self):
+        return AlertSetting.objects.filter(user=self)
+
 
 class TeamMember(models.Model):
     team = models.ForeignKey('simpleoncall.Team', related_name='team_set')
@@ -247,3 +250,35 @@ class ScheduleRule(models.Model):
     class Meta:
         app_label = 'simpleoncall'
         db_table = 'schedule_rule'
+
+
+class AlertType:
+    EMAIL = 'email'
+    SMS = 'sms'
+    VOICE = 'voice'
+
+    TYPES = (
+        (EMAIL, EMAIL),
+        (SMS, SMS),
+        (VOICE, VOICE),
+    )
+
+
+class AlertSetting(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL)
+    type = models.CharField(
+        'type', choices=AlertType.TYPES, null=False, blank=False,
+        default=AlertType.EMAIL, max_length=24
+    )
+    time = models.IntegerField('time', null=False, blank=False, default=0)
+    date_added = models.DateTimeField(default=timezone.now)
+    date_updated = models.DateTimeField(default=timezone.now)
+
+    class Meta:
+        app_label = 'simpleoncall'
+        db_table = 'alert_setting'
+        unique_together = (('type', 'time'), )
+
+    def save(self):
+        self.date_updated = timezone.now()
+        super(AlertSetting, self).save()
