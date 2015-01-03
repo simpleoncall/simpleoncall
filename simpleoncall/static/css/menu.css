@@ -1,3 +1,11 @@
+#menu .icon {
+    width: 2rem;
+    fill: rgb(238, 238, 238);
+}
+
+#menu .icon:hover {
+    fill: rgb(0, 102, 102);
+}
 
 #menu, #menu nav, #menu ul, #menu .menu-label {
     padding: 0;
@@ -28,7 +36,7 @@
         height: 100%;
     }
 
-    .icon, #menu ul {
+    #menu .icon, #menu ul {
         width: 3rem;
     }
 }
@@ -36,7 +44,7 @@
 
 /** MEDIUM **/
 @media screen and (min-width: 48em) {
-    .icon, #menu ul {
+    #menu .icon, #menu ul {
         width: 4rem;
     }
 
