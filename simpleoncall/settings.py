@@ -128,5 +128,8 @@ SCRIPTS = {
         'js/dashboard/Chart.min.js',
         'js/dashboard/dashboard.js',
     ),
+    'js/core.min.js': (
+        'js/es5-shim.js',
+    ),
 }
 HTML_MINIFY = True
