@@ -1,3 +1,4 @@
+from collections import defaultdict
 import datetime
 import json
 import random
@@ -184,6 +185,25 @@ def account(request):
         'change_password_form': change_password_form,
     }
     return render(request, 'account.html', context)
+
+
+@require_authentication()
+@require_selected_team()
+def save_alert_settings(request):
+    data = defaultdict(dict)
+    for key, value in request.POST.iteritems():
+        _, _, index = key.rpartition('_')
+        if index.isdigit():
+            index = int(index)
+        else:
+            index = None
+
+        if key.startswith('alert_type'):
+            data[index]['type'] = value
+        elif key.startswith('alert_time'):
+            data[index]['time'] = int(value)
+
+    return HttpResponseRedirect(reverse('account'))
 
 
 @require_authentication()

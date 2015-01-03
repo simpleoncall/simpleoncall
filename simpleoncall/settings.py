@@ -128,6 +128,9 @@ SCRIPTS = {
         'js/dashboard/Chart.min.js',
         'js/dashboard/dashboard.js',
     ),
+    'js/account.min.js': (
+        'js/account/account.js',
+    ),
     'js/core.min.js': (
         'js/es5-shim.js',
     ),

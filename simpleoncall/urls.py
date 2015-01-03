@@ -10,6 +10,7 @@ urlpatterns = patterns(
     url(r'^register', 'simpleoncall.views.register', name='register'),
     url(r'^logout', 'simpleoncall.views.logout', name='logout'),
     url(r'^settings', 'simpleoncall.views.settings', name='settings'),
+    url(r'^account/save/alert', 'simpleoncall.views.save_alert_settings', name='save-alert-settings'),
     url(r'^account', 'simpleoncall.views.account', name='account'),
     url(r'^schedule/edit', 'simpleoncall.views.edit_schedule', name='edit-schedule'),
     url(r'^schedule', 'simpleoncall.views.schedule', name='schedule'),

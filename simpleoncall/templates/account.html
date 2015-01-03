@@ -1,5 +1,6 @@
 {% extends "layout.html" %}
 {% load form %}
+{% load icons %}
 
 {% block content %}
 <article id="account">
@@ -22,11 +23,20 @@
   </section>
   <section>
     <h3>Alert Schedule</h3>
-    <form class="pure-form" action="{% url 'account' %}" method="POST">
+    <form class="pure-form" action="{% url 'save-alert-settings' %}" method="POST" id="alert-settings-form">
       {% csrf_token %}
       {% alert_setting_row 0 email 0 disabled %}
+      <div id="add-alert-row">
+        {% evil_icon ei-plus %}
+      </div>
       <input type="submit" value="Save" />
     </form>
   </section>
 </article>
+{% endblock %}
+
+{% block endjs %}
+{{ block.super}}
+{% load bundles %}
+{% script js/account.min.js %}
 {% endblock %}
