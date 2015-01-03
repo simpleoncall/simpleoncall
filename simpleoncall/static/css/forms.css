@@ -18,3 +18,9 @@ input[name="alert_time"] {
     width: 3rem;
     margin: 0 .5rem 0 .5rem;
 }
+
+@media only screen and (max-width : 480px) {
+    #alert-settings-form input {
+        display: inline-block;
+    }
+}
