@@ -9,3 +9,12 @@
 #login label, #register label {
     display: none
 }
+
+select[name="alert_type"] {
+    margin: 0 .5rem 0 0;
+}
+
+input[name="alert_time"] {
+    width: 3rem;
+    margin: 0 .5rem 0 .5rem;
+}

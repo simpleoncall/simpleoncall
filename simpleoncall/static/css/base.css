@@ -50,6 +50,10 @@ img.avatar {
     border-radius: .3rem;
 }
 
+.disabled {
+    display: none;
+}
+
 #select-team a.create-team {
     margin-top: 2rem;
 }

@@ -18,18 +18,18 @@ class AlertSettingRowNode(template.Node):
         'voice': 'Voice',
     }
 
-    def __init__(self, index, selected_type='email', selected_time=0, disabled=False):
-        self.index = index
+    def __init__(self, id, selected_type='email', selected_time=0, disabled=False):
+        self.id = id
         self.type = selected_type
         self.time = selected_time
         self.disabled = disabled
 
-    def render(self, context):
+    def render(self, context=None):
         disabled = 'disabled' if self.disabled else ''
         output = (
-            '<div class="alert-setting-row %s" data-index="%s">'
-            '<select name="alert_type_%s">'
-        ) % (disabled, self.index, self.index)
+            '<div class="alert-setting-row %s" data-id="%s">'
+            '<select name="alert_type">'
+        ) % (disabled, self.id)
 
         for value, label in self.TYPE_OPTIONS.iteritems():
             selected = 'selected' if value == self.type else ''
@@ -39,13 +39,13 @@ class AlertSettingRowNode(template.Node):
         output += (
             '</select>'
             'After'
-            '<input type="text" name="alert_time_%s" value="%s" />'
+            '<input type="text" name="alert_time" value="%s" maxlength="3" />'
             'Minutes'
-            '<span class="remove-alert-row" data-index="%s">'
+            '<span class="remove-alert-row">'
             '%s'
             '</span>'
             '</div>'
-        ) % (self.index, self.time, self.index, remove_icon.render())
+        ) % (self.time, remove_icon.render())
 
         return output
 
@@ -59,3 +59,8 @@ def alert_setting_row(parser, token):
     selected_time = pop_default(parts, 0)
     disabled = bool(pop_default(parts, 0))
     return AlertSettingRowNode(index, selected_type, selected_time, disabled)
+
+
+@register.filter('alert_setting_row')
+def alert_setting_filter(alert):
+    return AlertSettingRowNode(alert.id, alert.type, alert.time, 0).render()

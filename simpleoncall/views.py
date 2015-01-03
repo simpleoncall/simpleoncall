@@ -1,4 +1,3 @@
-from collections import defaultdict
 import datetime
 import json
 import random
@@ -8,7 +7,8 @@ from django.contrib.auth import logout as logout_user
 from django.contrib import messages
 from django.core.urlresolvers import reverse
 from django.forms.utils import ErrorList
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse
+from django.db import IntegrityError
 from django.db.models import Q, Count
 from django.shortcuts import render
 from django.utils import timezone
@@ -18,7 +18,8 @@ from simpleoncall.forms.auth import AuthenticationForm, RegistrationForm
 from simpleoncall.forms.account import EditAccountForm, ChangePasswordForm
 from simpleoncall.forms.team import CreateTeamForm, SelectTeamForm, InviteTeamForm
 from simpleoncall.decorators import require_authentication, require_selected_team
-from simpleoncall.models import APIKey, TeamMember, TeamInvite, User, Event, EventType, EventStatus
+from simpleoncall.models import APIKey, TeamMember, TeamInvite, User
+from simpleoncall.models import Event, EventType, EventStatus, AlertSetting, AlertType
 
 
 @require_authentication()
@@ -179,10 +180,17 @@ def account(request):
             errors = change_password_form._errors.setdefault('password_1', ErrorList())
             errors.append('Passwords do not match')
 
+    alerts = request.user.get_alert_settings()
+    if not alerts:
+        alerts = [
+            AlertSetting(id=0, type=AlertType.EMAIL, time=0)
+        ]
+
     context = {
         'title': 'Account',
         'edit_account_form': edit_account_form,
         'change_password_form': change_password_form,
+        'alerts': alerts,
     }
     return render(request, 'account.html', context)
 
@@ -190,20 +198,30 @@ def account(request):
 @require_authentication()
 @require_selected_team()
 def save_alert_settings(request):
-    data = defaultdict(dict)
-    for key, value in request.POST.iteritems():
-        _, _, index = key.rpartition('_')
-        if index.isdigit():
-            index = int(index)
-        else:
-            index = None
+    settings = json.loads(request.read())
+    success = True
 
-        if key.startswith('alert_type'):
-            data[index]['type'] = value
-        elif key.startswith('alert_time'):
-            data[index]['time'] = int(value)
+    for setting in settings:
+        alert = None
+        if setting['id']:
+            alert = AlertSetting.objects.get(id=setting['id'], user=request.user)
 
-    return HttpResponseRedirect(reverse('account'))
+        if not alert:
+            alert = AlertSetting(user=request.user)
+
+        changed = not setting['id'] or alert.type != setting['type'] or alert.time != setting['time']
+        if changed:
+            alert.type = setting['type']
+            alert.time = setting['time']
+            try:
+                alert.save()
+            except IntegrityError:
+                success = False
+
+    response_data = {
+        'success': success,
+    }
+    return HttpResponse(json.dumps(response_data), content_type='application/json')
 
 
 @require_authentication()

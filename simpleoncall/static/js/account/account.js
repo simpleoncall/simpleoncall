@@ -1,43 +1,49 @@
-var getNextIndex = function(){
-    var rows = document.querySelectorAll('.alert-setting-row');
-    return rows.length;
+var saveSettings = function(){
+    var data = collectSettings();
+    var csrf = document.querySelector('#alert-settings-form input[name="csrfmiddlewaretoken"]').value;
+    var xhr = new XMLHttpRequest();
+    xhr.responseType = "json";
+    xhr.open('POST', '/account/save/alert', true);
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.setRequestHeader("X-CSRFToken", csrf);
+    xhr.onreadystatechange = function(data){
+        if(xhr.response){
+            window.location.reload();
+        }
+    };
+    xhr.send(JSON.stringify(data));
 };
 
 var addNewRow = function(){
-    var index = getNextIndex();
-    var existing = document.querySelector('.alert-setting-row');
-    var newRow = existing.cloneNode(true);
-    newRow.className = 'alert-setting-row';
-    setIndex(newRow, index);
-    var addAlert = document.getElementById('add-alert-row');
-    var alertForm = document.getElementById('alert-settings-form');
-    alertForm.insertBefore(newRow, addAlert);
-};
-
-var setIndex = function(elm, index){
-    elm.dataset.index = index;
-    elm.getElementsByTagName('select')[0].name = 'alert_type_' + index;
-    elm.getElementsByTagName('input')[0].name = 'alert_time_' + index;
-    elm.getElementsByTagName('span')[0].dataset.index = index;
-};
-
-var removeRow = function(index){
-    var elm = document.querySelector('.alert-setting-row[data-index="' + index + '"]');
-    // do not remove disabled rows (like the first row)
-    if(elm.className.indexOf('disabled') < 0){
-        elm.remove();
+    var existing = document.querySelector('.alert-setting-row.disabled');
+    if(existing){
+        var newRow = existing.cloneNode(true);
+        newRow.className = 'alert-setting-row';
+        newRow.dataset.id = 0;
+        var addAlert = document.getElementById('add-alert-row');
+        var alertForm = document.getElementById('alert-settings-form');
+        alertForm.insertBefore(newRow, addAlert);
     }
-    rebalanceIndexes();
 };
 
-var rebalanceIndexes = function(){
-    var rows = document.querySelectorAll('.alert-setting-row');
+var collectSettings = function(){
+    var data = [];
+    var rows = document.querySelectorAll('#alert-settings-form .alert-setting-row');
     for(var i = 0; i < rows.length; ++i){
-        var elm = rows[i];
-        if(elm.dataset.index != i){
-            setIndex(elm, i);
-        }
+        var row = rows[i];
+        var id = row.dataset.id;
+        var selectedIndex = row.querySelector('select').selectedIndex;
+        var options = row.querySelectorAll('option');
+        var type = options[selectedIndex].value;
+        var time = row.querySelector('input[name=alert_time]').value;
+        data.push({
+            id: parseInt(id),
+            type: type,
+            time: parseInt(time),
+        });
     }
+
+    return data;
 };
 
 document.addEventListener('DOMContentLoaded', function(){
@@ -46,11 +52,15 @@ document.addEventListener('DOMContentLoaded', function(){
 
     var form = document.getElementById('alert-settings-form');
     form.addEventListener('click', function(e){
-        var parent = e.target.parentElement;
-        if(parent.className.indexOf('remove-alert-row') >= 0){
+        var target = e.target;
+        var parent = target.parentElement;
+        if(parent.classList.contains('remove-alert-row')){
             e.stopPropagation();
-            removeRow(parent.dataset.index);
+            parent.parentElement.remove();
+        } else if(target.classList.contains('alert-settings-submit')){
+            e.stopPropagation();
+            e.preventDefault();
+            saveSettings();
         }
-
     });
 });
