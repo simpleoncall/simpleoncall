@@ -18,7 +18,7 @@ class EvilIconNode(template.Node):
     def __init__(self, name):
         self.name = name
 
-    def render(self, context):
+    def render(self, context=None):
         return (
             '<svg viewBox="0 0 100 100" class="icon %(name)s-icon">'
             '<use xlink:href="#%(name)s-icon"></use>'
