@@ -1,5 +1,7 @@
 from django import template
 
+from simpleoncall.templatetags.icons import EvilIconNode
+
 register = template.Library()
 
 
@@ -25,27 +27,31 @@ class AlertSettingRowNode(template.Node):
     def render(self, context):
         disabled = 'disabled' if self.disabled else ''
         output = (
-            '<div class="alert-setting-row %s">'
-            '<select name="alert_type[%s]">'
-        ) % (disabled, self.index, )
+            '<div class="alert-setting-row %s" data-index="%s">'
+            '<select name="alert_type_%s">'
+        ) % (disabled, self.index, self.index)
 
         for value, label in self.TYPE_OPTIONS.iteritems():
             selected = 'selected' if value == self.type else ''
             output += '<option value="%s" %s>%s</option>' % (value, selected, label)
 
+        remove_icon = EvilIconNode('ei-minus')
         output += (
             '</select>'
             'After'
-            '<input type="text" name="alert_time[%s]" value="%s" />'
+            '<input type="text" name="alert_time_%s" value="%s" />'
             'Minutes'
+            '<span class="remove-alert-row" data-index="%s">'
+            '%s'
+            '</span>'
             '</div>'
-        ) % (self.index, self.time)
+        ) % (self.index, self.time, self.index, remove_icon.render())
 
         return output
 
 
 @register.tag('alert_setting_row')
-def evil_icon(parser, token):
+def alert_setting_row(parser, token):
     parts = token.split_contents()
     parts.pop(0)
     index = pop_default(parts, 0)
