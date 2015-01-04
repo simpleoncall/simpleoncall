@@ -30,6 +30,7 @@ a {
 #content-wrapper {
     min-height: 95vh;
     background-color: rgb(238, 238, 238);
+    overflow-x: hidden;
 }
 
 #content {
