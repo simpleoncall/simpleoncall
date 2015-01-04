@@ -7,3 +7,4 @@ dump.rb
 **/core.min.*
 **/dashboard.min.*
 docs/_*
+*.egg-info
