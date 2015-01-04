@@ -7,12 +7,12 @@ https://docs.djangoproject.com/en/1.7/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.7/ref/settings/
 """
-
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
 
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 SIMPLEONCALL_DIR = os.path.join(BASE_DIR, 'simpleoncall')
+SIMPLEONCALL_CONF = os.getenv('SIMPLEONCALL_CONF', '~/.simpleoncall/simpleoncall.py')
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.7/howto/deployment/checklist/
@@ -140,3 +140,10 @@ SCRIPTS = {
     ),
 }
 HTML_MINIFY = True
+
+if SIMPLEONCALL_CONF:
+    path = os.path.abspath(os.path.expanduser(SIMPLEONCALL_CONF))
+    if os.path.exists(path):
+        with open(path) as fp:
+            import imp
+            imp.load_module('simpleoncall.settings', fp, path, ('.py', 'r', 1))
