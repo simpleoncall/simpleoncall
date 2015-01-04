@@ -8,3 +8,4 @@ dump.rb
 **/dashboard.min.*
 docs/_*
 *.egg-info
+dist
