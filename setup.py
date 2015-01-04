@@ -25,6 +25,11 @@ setup(
     long_description=README,
     license='MIT',
     url='https://github.com/simpleoncall/simpleoncall',
+    entry_points={
+        'console_scripts': [
+            'simpleoncall = simpleoncall.runner:main',
+        ],
+    },
     classifiers=[
         'Environment :: Web Environment',
         'Framework :: Django',
