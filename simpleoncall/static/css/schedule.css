@@ -2,66 +2,64 @@
     font-weight: 300;
 }
 
-#schedule table .oncall {
+#schedule .oncall {
     background-color: rgba(160, 250, 160, .3);
 }
 
-#schedule table .free {
+#schedule .free {
     background-color: rgba(250, 160, 160, .3);
 }
 
-#schedule table .standby {
+#schedule .standby {
     background-color: rgba(255, 255, 150, .3);
 }
 
-#schedule table th {
-    text-align: center;
-    font-size: .75rem;
+#schedule .schedule-calendar-day {
+    height: 6rem;
+    position: relative;
+    border-right: solid 1px rgb(34, 34, 34);
 }
 
-#schedule table th, #schedule table td {
-    padding: 0;
-    margin: 0;
-    min-width: 2rem;
+#schedule .schedule-calendar-day:first-child {
+    border-left: solid 1px rgb(34, 34, 34);
 }
 
-#schedule table .user-info {
-    padding-right: .5rem;
+#schedule .schedule-calendar-week:last-child .schedule-calendar-day {
+    border-bottom: solid 1px rgb(34, 34, 34);
 }
 
-#schedule table .long-name {
-    display: none;
+#schedule .schedule-calendar-overlay {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(168, 168, 168, .5);
 }
 
-#schedule table .user-full-name, #schedule table .user-email {
+#schedule .schedule-calendar-date{
+    background-color: rgb(34, 34, 34);
+    color: rgb(238, 238, 238);
+}
+
+#schedule .schedule-calendar-data .avatar {
+    width: .75rem;
+    height: .75rem;
+    display: inline;
+    border-radius: .25rem;
+}
+
+#schedule .schedule-calendar-data .name {
+    display: inline;
     font-size: .5rem;
 }
 
-/** MEDIUM **/
-@media screen and (min-width: 48em) {
-
-    #schedule table .long-name {
-        display: inline;
+/** SMALL **/
+@media screen and (min-width: 35.5em) {
+    #schedule .schedule-calendar-data .avatar {
+        width: 1.5rem;
+        height: 1.5rem;
+    }
+    #schedule .schedule-calendar-data .name {
+        font-size: .75rem;
     }
 
-    #schedule table .short-name {
-        display: none;
-    }
-
-    #schedule table th {
-        font-size: 1rem;
-    }
-
-    #schedule table th, #schedule table td {
-        padding: .25rem;
-        min-width: 6rem;
-    }
-}
-
-
-/** LARGE **/
-@media screen and (min-width: 64em) {
-    #schedule table .user-full-name, #schedule table .user-email {
-        font-size: 1rem;
-    }
 }

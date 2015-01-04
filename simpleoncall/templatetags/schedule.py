@@ -1,120 +1,67 @@
+import calendar
+
 from django import template
+from django.utils import timezone
 
 from simpleoncall.templatetags.gravatar import gravatar_url
 
 register = template.Library()
 
 
-class ScheduleTableNode(template.Node):
-    def __init__(self, schedule):
+class ScheduleCalendarDayNode(template.Node):
+    def __init__(self, schedule, day, now=None):
         self.schedule = schedule
-
-    def open_table(self):
-        return '<table class="pure-table pure-table pure-table-bordered pure-table-striped">'
-
-    def close_table(self):
-        return '</table>'
+        self.day = day
+        self.now = now or timezone.now()
 
     def render(self, context=None):
-        output = self.open_table()
-
-        output += ScheduleHeaderNode(self.schedule.get('labels', [])).render()
-        output += ScheduleUsersNode(self.schedule.get('users', [])).render()
-
-        output += self.close_table()
+        data = self.schedule['users'][0]
+        status = data['schedule'][self.day.day % 7]
+        output = '<div class="schedule-calendar-day pure-u-3-24 pure-g" data-day="%s">' % (self.day.day, )
+        if self.now.month != self.day.month:
+            output += '<div class="schedule-calendar-overlay"></div>'
+        output += '<div class="schedule-calendar-date pure-u-1">%s</div>' % (self.day.day, )
+        output += '<div class="schedule-calendar-data pure-u-1 %s">' % (status, )
+        output += '%s' % (gravatar_url(data['user'].email), )
+        output += '<span class="name">%s</span>' % (data['user'].get_full_name(), )
+        output += '</div>'
+        output += '</div>'
         return output
 
 
-class ScheduleHeaderNode(template.Node):
-    def __init__(self, labels):
-        self.labels = labels
-
-    def open_header(self):
-        return '<thead><tr>'
-
-    def close_header(self):
-        return '</tr></thead>'
-
-    def header_cell(self, short_name, long_name):
-        return ''.join([
-            '<th>',
-            '<span class="short-name">', short_name, '</span>',
-            '<span class="long-name">', long_name, '</span>',
-            '</th>',
-        ])
-
-    def render(self, context=None):
-        output = self.open_header()
-
-        # add an empty header for the user info
-        output += self.header_cell('', '')
-        for label in self.labels:
-            output += self.header_cell(**label)
-
-        output += self.close_header()
-        return output
-
-
-class ScheduleUsersNode(template.Node):
-    def __init__(self, users):
-        self.users = users
-
-    def open_body(self):
-        return '<tbody>'
-
-    def close_body(self):
-        return '</tbody>'
-
-    def render(self, context=None):
-        output = self.open_body()
-
-        for user_data in self.users:
-            output += ScheduleUserRowNode(**user_data).render()
-
-        output += self.close_body()
-        return output
-
-
-class ScheduleUserRowNode(template.Node):
-    def __init__(self, user, schedule):
-        self.user = user
+class ScheduleCalendarWeekNode(template.Node):
+    def __init__(self, schedule, week_data, week_num, now=None):
         self.schedule = schedule
-
-    def open_row(self):
-        return '<tr>'
-
-    def close_row(self):
-        return '</tr>'
-
-    def user_info(self):
-        return ''.join([
-            '<td>',
-            '<div class="pure-g user-info">',
-            '<div class="pure-u-1 pure-u-lg-1-5">', gravatar_url(self.user.email), '</div>',
-            '<div class="pure-u-1 pure-u-lg-4-5">',
-            '<div class="user-full-name pure-u-1 pure-u-lg-4-5">', self.user.get_full_name(), '</div>',
-            '<div class="user-email pure-u-1 pure-u-lg-4-5">', self.user.email, '</div>',
-            '</div>',
-            '</div>',
-            '</td>',
-        ])
-
-    def schedule_cell(self, class_name):
-        return '<td class="%s"></td>' % (class_name, )
+        self.week_num = week_num
+        self.week_data = week_data
+        self.now = now or timezone.now()
 
     def render(self, context=None):
-        output = self.open_row()
-
-        output += self.user_info()
-
-        for class_name in self.schedule:
-            output += self.schedule_cell(class_name)
-
-        output += self.close_row()
+        output = '<div class="schedule-calendar-week pure-u-7-8 pure-g" data-week-id="%s">' % (self.week_num, )
+        for day in self.week_data:
+            output += ScheduleCalendarDayNode(self.schedule, day).render()
+        output += '</div>'
         return output
 
 
-@register.filter('schedule_table')
-def schedule_table(schedule):
-    table_node = ScheduleTableNode(schedule)
-    return table_node.render()
+class ScheduleCalendarNode(calendar.HTMLCalendar, template.Node):
+    def __init__(self, schedule, now=None):
+        self.schedule = schedule
+        self.now = now or timezone.now()
+        super(ScheduleCalendarNode, self).__init__()
+
+    def render(self, context=None):
+        month_calendar = self.monthdatescalendar(self.now.year, self.now.month)
+        output = '<div class="schedule-calendar pure-u-1 pure-g" data-year="%s" data-month="%s">' % (
+            self.now.year, self.now.month
+        )
+        for num, week in enumerate(month_calendar):
+            output += ScheduleCalendarWeekNode(self.schedule, week, num, now=self.now).render()
+
+        output += '</div>'
+        return output
+
+
+@register.filter('schedule_calendar')
+def schedule_calendar(schedule):
+    return ScheduleCalendarNode(schedule).render()

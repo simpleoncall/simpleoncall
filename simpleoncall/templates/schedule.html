@@ -11,7 +11,7 @@
     <a class="pure-button secondary-button" href="{% url 'edit-schedule' %}">
       Edit Schedule
     </a>
-    {{ schedule|schedule_table|safe }}
+    {{ schedule|schedule_calendar|safe }}
   </section>
 </article>
 {% endblock %}
