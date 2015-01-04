@@ -2,6 +2,7 @@ import uuid
 
 from django.conf import settings
 from django.contrib.auth.models import AbstractBaseUser, UserManager
+from django.core.exceptions import ObjectDoesNotExist
 from django.core.urlresolvers import reverse
 from django.db import models
 from django.utils import timezone
@@ -77,7 +78,13 @@ class Team(models.Model):
         db_table = 'team'
 
     def get_schedule(self):
-        return TeamSchedule.objects.filter(team=self)
+        try:
+            schedule = TeamSchedule.objects.get(team=self)
+        except ObjectDoesNotExist:
+            # doesn't exist, lets create one for them
+            schedule = TeamSchedule(team=self)
+            schedule.save()
+        return schedule
 
 
 class APIKey(models.Model):
@@ -238,7 +245,20 @@ class TeamSchedule(models.Model):
         db_table = 'team_schedule'
 
     def get_rules(self):
-        return ScheduleRule.objects.filter(schedule=self, is_active=True)
+        return ScheduleRule.objects.filter(schedule=self)
+
+    def get_user_rules(self, user):
+        return ScheduleRule.objects.filter(schedule=self, user=user)
+
+    def get_currently_on_call(self, now=None):
+        now = now or timezone.now()
+        year, week_num, day_num = now.isocalendar()
+        try:
+            rule = ScheduleRule.objects.get(schedule=self, day_num=day_num, week_num=week_num)
+            return rule.user
+        except ObjectDoesNotExist:
+            pass
+        return None
 
 
 class ScheduleRule(models.Model):
