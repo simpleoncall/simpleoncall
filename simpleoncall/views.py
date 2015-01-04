@@ -240,57 +240,11 @@ def alerts(request):
 @require_authentication()
 @require_selected_team()
 def schedule(request):
-    oncall_schedule = {
-        'labels': [
-            {
-                'short_name': 'Mon',
-                'long_name': 'Monday',
-            },
-            {
-                'short_name': 'Tue',
-                'long_name': 'Tuesday',
-            },
-            {
-                'short_name': 'Wed',
-                'long_name': 'Wednesday',
-            },
-            {
-                'short_name': 'Thu',
-                'long_name': 'Thursday',
-            },
-            {
-                'short_name': 'Fri',
-                'long_name': 'Friday',
-            },
-            {
-                'short_name': 'Sat',
-                'long_name': 'Saturday',
-            },
-            {
-                'short_name': 'Sun',
-                'long_name': 'Sunday',
-            }
-        ],
-        'users': []
-    }
-
-    users = TeamMember.objects.filter(team=request.team)
-    for user in users:
-        data = {'user': user.user, 'schedule': []}
-        for _ in oncall_schedule['labels']:
-            status = random.randint(1, 3)
-            if status == 1:
-                status = 'oncall'
-            elif status == 2:
-                status = 'standby'
-            else:
-                status = 'free'
-            data['schedule'].append(status)
-        oncall_schedule['users'].append(data)
-
+    schedule = request.team.get_schedule()
     context = {
         'title': 'Schedule',
-        'schedule': oncall_schedule,
+        'schedule': schedule,
+        'oncall': schedule.get_currently_on_call(),
     }
     return render(request, 'schedule.html', context)
 

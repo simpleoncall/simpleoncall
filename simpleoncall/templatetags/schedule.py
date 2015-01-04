@@ -15,15 +15,16 @@ class ScheduleCalendarDayNode(template.Node):
         self.now = now or timezone.now()
 
     def render(self, context=None):
-        data = self.schedule['users'][0]
-        status = data['schedule'][self.day.day % 7]
+        oncall = self.schedule.get_currently_on_call(self.day)
+        status = 'oncall' if oncall else ''
         output = '<div class="schedule-calendar-day pure-u-3-24 pure-g" data-day="%s">' % (self.day.day, )
         if self.now.month != self.day.month:
             output += '<div class="schedule-calendar-overlay"></div>'
         output += '<div class="schedule-calendar-date pure-u-1">%s</div>' % (self.day.day, )
         output += '<div class="schedule-calendar-data pure-u-1 %s">' % (status, )
-        output += '%s' % (gravatar_url(data['user'].email), )
-        output += '<span class="name">%s</span>' % (data['user'].get_full_name(), )
+        if oncall:
+            output += '%s' % (gravatar_url(oncall.email), )
+            output += '<span class="name">%s</span>' % (oncall.get_full_name(), )
         output += '</div>'
         output += '</div>'
         return output
