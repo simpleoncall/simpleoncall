@@ -87,8 +87,8 @@ class Migration(migrations.Migration):
             name='ScheduleRule',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('rule', models.CharField(max_length=128, verbose_name=b'rule')),
-                ('is_active', models.BooleanField(default=True, verbose_name=b'is_active')),
+                ('week_num', models.IntegerField(verbose_name=b'week_num')),
+                ('day_num', models.IntegerField(verbose_name=b'day_num')),
                 ('date_added', models.DateTimeField(default=django.utils.timezone.now)),
             ],
             options={
@@ -170,6 +170,16 @@ class Migration(migrations.Migration):
             name='schedule',
             field=models.ForeignKey(to='simpleoncall.TeamSchedule'),
             preserve_default=True,
+        ),
+        migrations.AddField(
+            model_name='schedulerule',
+            name='user',
+            field=models.ForeignKey(to=settings.AUTH_USER_MODEL),
+            preserve_default=True,
+        ),
+        migrations.AlterUniqueTogether(
+            name='schedulerule',
+            unique_together=set([('schedule', 'week_num', 'day_num')]),
         ),
         migrations.AddField(
             model_name='event',
