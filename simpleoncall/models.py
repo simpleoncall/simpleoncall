@@ -243,13 +243,15 @@ class TeamSchedule(models.Model):
 
 class ScheduleRule(models.Model):
     schedule = models.ForeignKey('simpleoncall.TeamSchedule')
-    rule = models.CharField('rule', max_length=128)
-    is_active = models.BooleanField('is_active', default=True)
+    week_num = models.IntegerField('week_num')
+    day_num = models.IntegerField('day_num')
+    user = models.ForeignKey(settings.AUTH_USER_MODEL)
     date_added = models.DateTimeField(default=timezone.now)
 
     class Meta:
         app_label = 'simpleoncall'
         db_table = 'schedule_rule'
+        unique_together = (('schedule', 'week_num', 'day_num'), )
 
 
 class AlertType:
