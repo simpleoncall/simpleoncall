@@ -6,3 +6,4 @@ dump.rb
 *.pyc
 **/core.min.*
 **/dashboard.min.*
+docs/_*
