@@ -50,7 +50,7 @@ img.avatar {
     border-radius: .3rem;
 }
 
-.disabled {
+.disabled, .hidden {
     display: none;
 }
 

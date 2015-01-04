@@ -3,55 +3,50 @@
 <article id="alerts">
   <section>
     <h3>Alerts</h3>
-    <table class="pure-table pure-table-horizontal pure-table-striped">
-      <thead>
-        <tr>
-          <th>
-            Event Title
-          </th>
-          <th>
-            Updated By
-          </th>
-          <th>
-            Updated At
-          </th>
-          <th>
-            Status
-          </th>
-          <th>
-            Actions
-          </th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for event in alerts %}
-        <tr class="{{ alert.status }}">
-          <td>
-            <a href="{% url 'event_view' event.id %}">
-              {{ event.title }}
-            </a>
-          </td>
-          <td>
-            {{ event.last_updater }}
-          </td>
-          <td>
-            {{ event.date_updated }}
-          </td>
-          <td>
-            {{ event.status }}
-          </td>
-          <td>
-            <a class="pure-button secondary-button" href="{% url 'event-ack' event.id %}">
-              Acknowledge
-            </a>
-            <a class="pure-button secondary-button" href="{% url 'event-resolve' event.id %}">
-              Resolve
-            </a>
-          </td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
+    {% for event in alerts %}
+    <div class="pure-u-1 pure-g alert {{ event.status }}">
+      <div class="pure-g header">
+        <div class="title pure-u-10-24 pure-u-lg-3-5">
+          {{ event.title }}
+        </div>
+        <div class="status pure-u-7-24 pure-u-lg-1-5">
+          {{ event.status }}
+        </div>
+        <div class="date pure-u-7-24 pure-u-lg-1-5">
+          {{ event.date_updated }}
+        </div>
+      </div>
+      <div class="details hidden pure-u-1 pure-g">
+        <div class="pure-u-1 pure-u-lg-3-5">
+          {{ event.body }}
+        </div>
+        <div class="pure-u-1 pure-u-lg-2-5">
+          <ul>
+            <li>
+              Created By: {{ event.creator }}
+            </li>
+            <li>
+              Last Updater: {{ event.last_updater }}
+            </li>
+            <li>
+              <a class="pure-button secondary-button" href="{% url 'event-ack' event.id %}">
+                Acknowledge
+              </a>
+              <a class="pure-button secondary-button" href="{% url 'event-resolve' event.id %}">
+                Resolve
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
   </section>
 </article>
+{% endblock %}
+
+{% block endjs %}
+{{ block.super}}
+{% load bundles %}
+{% script js/alerts.min.js %}
 {% endblock %}

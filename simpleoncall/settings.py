@@ -121,6 +121,7 @@ STYLESHEETS = {
         'css/buttons.css',
         'css/settings.css',
         'css/messages.css',
+        'css/alerts.css',
     ),
 }
 SCRIPTS = {
@@ -130,6 +131,9 @@ SCRIPTS = {
     ),
     'js/account.min.js': (
         'js/account/account.js',
+    ),
+    'js/alerts.min.js': (
+        'js/alerts/alerts.js',
     ),
     'js/core.min.js': (
         'js/es5-shim.js',

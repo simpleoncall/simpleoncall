@@ -1,0 +1,40 @@
+#alerts .alert {
+    margin-right: 1rem;
+}
+
+#alerts .details {
+    border: solid 1px rgb(34, 34, 34);
+    padding: .5rem;
+}
+
+#alerts .details ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+#alerts .details li {
+    margin: .5rem;
+}
+
+#alerts .header {
+    color: rgb(34, 34, 34);
+    border-top: 1px solid rgb(238, 238, 238);
+    padding: .5rem;
+}
+
+#alerts .open .header {
+    background-color: rgb(250, 160, 160);
+}
+
+#alerts .resolved .header {
+    background-color: rgb(160, 250, 160);
+}
+
+#alerts .acknowledged .header {
+    background-color: rgb(255, 255, 150);
+}
+
+#alerts .header:hover {
+    background-color: rgb(0, 102, 102);
+}
