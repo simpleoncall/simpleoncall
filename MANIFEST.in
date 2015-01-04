@@ -1,5 +1,3 @@
 include LICENSE
 include README.md
 recursive-include simpleoncall *
-recursive-include docs *
-recursive-exclude docs/_build *

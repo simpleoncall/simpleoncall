@@ -35,14 +35,3 @@ runserver: migrate
 
 migrate:
 	$(PYTHON) manage.py migrate
-
-doc-deps:
-	pip install -r docs-requirements.txt
-
-docs:
-	cd ./docs && make html
-
-docs-server: docs
-	cd ./docs/_build/html && python -m SimpleHTTPServer
-
-.PHONY: docs
