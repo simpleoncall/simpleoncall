@@ -6,6 +6,7 @@ from django.contrib.auth import login as login_user, authenticate
 from django.contrib.auth import logout as logout_user
 from django.contrib import messages
 from django.core.urlresolvers import reverse
+from django.core.exceptions import ObjectDoesNotExist
 from django.forms.utils import ErrorList
 from django.http import HttpResponseRedirect, HttpResponse
 from django.db import IntegrityError
@@ -16,9 +17,10 @@ from django.utils.http import urlencode, urlquote
 
 from simpleoncall.forms.auth import AuthenticationForm, RegistrationForm
 from simpleoncall.forms.account import EditAccountForm, ChangePasswordForm
+from simpleoncall.forms.schedule import TeamScheduleForm
 from simpleoncall.forms.team import CreateTeamForm, SelectTeamForm, InviteTeamForm
 from simpleoncall.decorators import require_authentication, require_selected_team
-from simpleoncall.models import APIKey, TeamMember, TeamInvite, User
+from simpleoncall.models import APIKey, TeamMember, TeamInvite, User, TeamSchedule
 from simpleoncall.models import Event, EventType, EventStatus, AlertSetting, AlertType
 
 
@@ -240,11 +242,14 @@ def alerts(request):
 @require_authentication()
 @require_selected_team()
 def schedule(request):
-    schedule = request.team.get_schedule()
+    schedule = request.team.get_active_schedule()
+    oncall = None
+    if schedule:
+        oncall = schedule.get_currently_on_call()
     context = {
         'title': 'Schedule',
         'schedule': schedule,
-        'oncall': schedule.get_currently_on_call(),
+        'oncall': oncall,
     }
     return render(request, 'schedule.html', context)
 
@@ -311,7 +316,10 @@ def invite_accept(request):
 
     user = User.objects.get(email=email)
     if user:
-        team_member = TeamMember.objects.get(team=invite.team, user=user)
+        try:
+            team_member = TeamMember.objects.get(team=invite.team, user=user)
+        except ObjectDoesNotExist:
+            team_member = None
         if team_member:
             messages.warning(request, 'already a member of team %s' % (invite.team.name, ))
         else:
@@ -380,7 +388,40 @@ def event_view(request, event_id):
 @require_authentication()
 @require_selected_team()
 def edit_schedule(request):
+    msg = None
+    schedule_id = None
+    if 'schedule_id' in request.POST:
+        schedule_id = int(request.POST['schedule_id'])
+
+    dummy_schedule = TeamSchedule(team=request.team)
+    data = None if schedule_id else request.POST or None
+    new_schedule_form = TeamScheduleForm(request.team, data, instance=dummy_schedule)
+    saved = False
+    if request.method == 'POST' and not schedule_id:
+        if new_schedule_form.is_valid():
+            new_schedule_form.save()
+            saved = True
+            msg = 'New Schedule Added'
+
+    schedule_forms = []
+    for schedule in request.team.get_schedules():
+        data = None
+        if schedule.id == schedule_id:
+            data = request.POST
+        schedule_form = TeamScheduleForm(request.team, data, instance=schedule)
+        if data and schedule_form.is_valid():
+            schedule_form.save()
+            msg = 'Schedule Updated'
+        schedule_forms.append(schedule_form)
+
+    if msg:
+        messages.success(request, msg)
+
     context = {
         'title': 'Edit Schedule',
+        'active_schedule': request.team.get_active_schedule(),
+        'schedule_forms': schedule_forms,
+        'new_schedule_form': new_schedule_form,
+        'hidden_schedule_form': not saved or request.method != 'POST',
     }
     return render(request, 'edit_schedule.html', context)

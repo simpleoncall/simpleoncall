@@ -1,4 +1,5 @@
 import calendar
+import datetime
 
 from django import template
 from django.utils import timezone
@@ -11,11 +12,14 @@ register = template.Library()
 class ScheduleCalendarDayNode(template.Node):
     def __init__(self, schedule, day, now=None):
         self.schedule = schedule
-        self.day = day
+        starting_time = schedule.starting_time if schedule else 0
+        self.day = datetime.datetime(day.year, day.month, day.day, starting_time, tzinfo=timezone.utc)
         self.now = now or timezone.now()
 
     def render(self, context=None):
-        oncall = self.schedule.get_currently_on_call(self.day)
+        oncall = None
+        if self.schedule:
+            oncall = self.schedule.get_currently_on_call(self.day)
         status = 'oncall' if oncall else ''
         output = '<div class="schedule-calendar-day pure-u-3-24 pure-g" data-day="%s">' % (self.day.day, )
         if self.now.month != self.day.month:

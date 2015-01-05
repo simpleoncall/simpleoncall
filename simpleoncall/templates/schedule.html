@@ -7,7 +7,7 @@
     <h3> On-Call Now: <span class="on-call-now">{{ oncall.email }}</span> </h3>
   </section>
   <section>
-    <h3>Current Schedule</h3>
+    <h3>Active Schedule: <span class="active-schedule-name">{{ schedule.name }}</span></h3>
     <a class="pure-button secondary-button" href="{% url 'edit-schedule' %}">
       Edit Schedule
     </a>

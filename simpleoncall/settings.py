@@ -135,6 +135,9 @@ SCRIPTS = {
     'js/alerts.min.js': (
         'js/alerts/alerts.js',
     ),
+    'js/schedule.min.js': (
+        'js/schedule/schedule.js',
+    ),
     'js/core.min.js': (
         'js/es5-shim.js',
     ),

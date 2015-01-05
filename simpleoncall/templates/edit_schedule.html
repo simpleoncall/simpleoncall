@@ -2,7 +2,33 @@
 {% block content %}
 <article id="edit-schedule">
   <section>
-    <h3>Edit Schedule</h3>
+    <h3>Active Schedule: <span class="active-schedule-name">{{ active_schedule.name }}</h3>
+    <a class="add-new-schedule pure-button secondary-button" href="#">Add New Schedule</a>
+    <div id="new-schedule-form" class="{% if hidden_schedule_form %}hidden{% endif %}">
+      <section>
+        <form action="{% url 'edit-schedule' %}" method="POST" class="pure-form pure-form-stacked">
+          {% csrf_token %}
+          {{ new_schedule_form }}
+          <input type="submit" value="Add" />
+        </form>
+      </section>
+    </div>
   </section>
+  {% for schedule_form in schedule_forms %}
+  <section>
+    <form action="{% url 'edit-schedule' %}" method="POST" class="pure-form pure-form-stacked">
+      {% csrf_token %}
+      <input type="hidden" name="schedule_id" value="{{ schedule_form.instance.id }}" />
+      {{ schedule_form }}
+      <input type="submit" value="Save" />
+    </form>
+  </section>
+  {% endfor %}
 </article>
+{% endblock %}
+
+{% block endjs %}
+{{ block.super}}
+{% load bundles %}
+{% script js/schedule.min.js %}
 {% endblock %}
