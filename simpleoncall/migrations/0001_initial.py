@@ -84,19 +84,6 @@ class Migration(migrations.Migration):
             bases=(models.Model,),
         ),
         migrations.CreateModel(
-            name='ScheduleRule',
-            fields=[
-                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('week_num', models.IntegerField(verbose_name=b'week_num')),
-                ('day_num', models.IntegerField(verbose_name=b'day_num')),
-                ('date_added', models.DateTimeField(default=django.utils.timezone.now)),
-            ],
-            options={
-                'db_table': 'schedule_rule',
-            },
-            bases=(models.Model,),
-        ),
-        migrations.CreateModel(
             name='Team',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
@@ -142,14 +129,23 @@ class Migration(migrations.Migration):
             name='TeamSchedule',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('name', models.CharField(max_length=128, verbose_name=b'name')),
                 ('starting_time', models.IntegerField(default=9, verbose_name=b'starting_time')),
+                ('rotation_duration', models.IntegerField(default=7, verbose_name=b'rotation_duration')),
+                ('start_date', models.DateTimeField(default=django.utils.timezone.now)),
                 ('date_added', models.DateTimeField(default=django.utils.timezone.now)),
+                ('is_active', models.BooleanField(default=False, verbose_name=b'active')),
                 ('team', models.ForeignKey(to='simpleoncall.Team')),
+                ('users', models.ManyToManyField(related_name='schedule_users', to=settings.AUTH_USER_MODEL)),
             ],
             options={
                 'db_table': 'team_schedule',
             },
             bases=(models.Model,),
+        ),
+        migrations.AlterUniqueTogether(
+            name='teamschedule',
+            unique_together=set([('team', 'name')]),
         ),
         migrations.AlterUniqueTogether(
             name='teammember',
@@ -164,22 +160,6 @@ class Migration(migrations.Migration):
             name='users',
             field=models.ManyToManyField(related_name='team_users', through='simpleoncall.TeamMember', to=settings.AUTH_USER_MODEL),
             preserve_default=True,
-        ),
-        migrations.AddField(
-            model_name='schedulerule',
-            name='schedule',
-            field=models.ForeignKey(to='simpleoncall.TeamSchedule'),
-            preserve_default=True,
-        ),
-        migrations.AddField(
-            model_name='schedulerule',
-            name='user',
-            field=models.ForeignKey(to=settings.AUTH_USER_MODEL),
-            preserve_default=True,
-        ),
-        migrations.AlterUniqueTogether(
-            name='schedulerule',
-            unique_together=set([('schedule', 'week_num', 'day_num')]),
         ),
         migrations.AddField(
             model_name='event',
