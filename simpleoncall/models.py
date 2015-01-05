@@ -1,3 +1,4 @@
+import math
 import uuid
 
 from django.conf import settings
@@ -77,14 +78,14 @@ class Team(models.Model):
         app_label = 'simpleoncall'
         db_table = 'team'
 
-    def get_schedule(self):
+    def get_schedules(self):
+        return TeamSchedule.objects.filter(team=self)
+
+    def get_active_schedule(self):
         try:
-            schedule = TeamSchedule.objects.get(team=self)
+            return TeamSchedule.objects.get(team=self, is_active=True)
         except ObjectDoesNotExist:
-            # doesn't exist, lets create one for them
-            schedule = TeamSchedule(team=self)
-            schedule.save()
-        return schedule
+            return None
 
 
 class APIKey(models.Model):
@@ -237,41 +238,35 @@ class Event(models.Model):
 
 class TeamSchedule(models.Model):
     team = models.ForeignKey('simpleoncall.team')
+    name = models.CharField('name', max_length=128)
     starting_time = models.IntegerField('starting_time', default=9)
+    rotation_duration = models.IntegerField('rotation_duration', default=7)
+    users = models.ManyToManyField(
+        settings.AUTH_USER_MODEL, related_name='schedule_users'
+    )
+    start_date = models.DateTimeField(default=timezone.now)
     date_added = models.DateTimeField(default=timezone.now)
+    is_active = models.BooleanField('active', default=False)
 
     class Meta:
         app_label = 'simpleoncall'
         db_table = 'team_schedule'
-
-    def get_rules(self):
-        return ScheduleRule.objects.filter(schedule=self)
-
-    def get_user_rules(self, user):
-        return ScheduleRule.objects.filter(schedule=self, user=user)
+        unique_together = (('team', 'name'), )
 
     def get_currently_on_call(self, now=None):
         now = now or timezone.now()
-        year, week_num, day_num = now.isocalendar()
-        try:
-            rule = ScheduleRule.objects.get(schedule=self, day_num=day_num, week_num=week_num)
-            return rule.user
-        except ObjectDoesNotExist:
-            pass
-        return None
+        offset = (now - self.start_date).days
+        offset = int(math.floor(offset / self.rotation_duration))
+        index = offset % self.users.count()
+        return self.users.all()[index]
 
-
-class ScheduleRule(models.Model):
-    schedule = models.ForeignKey('simpleoncall.TeamSchedule')
-    week_num = models.IntegerField('week_num')
-    day_num = models.IntegerField('day_num')
-    user = models.ForeignKey(settings.AUTH_USER_MODEL)
-    date_added = models.DateTimeField(default=timezone.now)
-
-    class Meta:
-        app_label = 'simpleoncall'
-        db_table = 'schedule_rule'
-        unique_together = (('schedule', 'week_num', 'day_num'), )
+    def save(self):
+        if self.is_active:
+            active_schedules = TeamSchedule.objects.filter(team=self.team, is_active=True)
+            for schedule in active_schedules:
+                schedule.is_active = False
+                schedule.save()
+        super(TeamSchedule, self).save()
 
 
 class AlertType:
