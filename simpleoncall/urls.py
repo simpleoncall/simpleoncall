@@ -13,6 +13,7 @@ urlpatterns = patterns(
     url(r'^account/save/alert', 'simpleoncall.views.save_alert_settings', name='save-alert-settings'),
     url(r'^account', 'simpleoncall.views.account', name='account'),
     url(r'^schedule/edit', 'simpleoncall.views.edit_schedule', name='edit-schedule'),
+    url(r'^schedule/delete', 'simpleoncall.views.delete_schedule', name='delete-schedule'),
     url(r'^schedule', 'simpleoncall.views.schedule', name='schedule'),
     url(r'^alerts', 'simpleoncall.views.alerts', name='alerts'),
     url(r'^team/create', 'simpleoncall.views.create_team', name='create-team'),

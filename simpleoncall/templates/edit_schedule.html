@@ -9,7 +9,7 @@
         <form action="{% url 'edit-schedule' %}" method="POST" class="pure-form pure-form-stacked">
           {% csrf_token %}
           {{ new_schedule_form }}
-          <input type="submit" value="Add" />
+          <input class="pure-button secondary-button" type="submit" value="Add" />
         </form>
       </section>
     </div>
@@ -20,7 +20,9 @@
       {% csrf_token %}
       <input type="hidden" name="schedule_id" value="{{ schedule_form.instance.id }}" />
       {{ schedule_form }}
-      <input type="submit" value="Save" />
+      <br />
+      <input class="pure-button secondary-button" type="submit" value="Save" />
+      <a class="pure-button secondary-button" href="{% url 'delete-schedule' %}?id={{ schedule_form.instance.id }}">Delete</a>
     </form>
   </section>
   {% endfor %}

@@ -425,3 +425,16 @@ def edit_schedule(request):
         'hidden_schedule_form': not saved or request.method != 'POST',
     }
     return render(request, 'edit_schedule.html', context)
+
+
+@require_authentication()
+@require_selected_team()
+def delete_schedule(request):
+    id = request.GET.get('id')
+    if id:
+        schedule = TeamSchedule.objects.get(team=request.team, id=id)
+        schedule.delete()
+        messages.success(request, 'Schedule %s Deleted' % (schedule.name, ))
+    else:
+        messages.error(request, 'Unknown Schedule Id')
+    return HttpResponseRedirect(reverse('edit-schedule'))
