@@ -42,6 +42,11 @@ class User(AbstractBaseUser):
     def get_short_name(self):
         return self.username
 
+    def get_display_name(self):
+        if self.first_name and self.last_name:
+            return self.get_full_name()
+        return self.get_short_name()
+
     def has_perm(self, perm_name):
         return self.is_superuser
 

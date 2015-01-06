@@ -28,7 +28,7 @@ class ScheduleCalendarDayNode(template.Node):
         output += '<div class="schedule-calendar-data pure-u-1 %s">' % (status, )
         if oncall:
             output += '%s' % (gravatar_url(oncall.email), )
-            output += '<span class="name">%s</span>' % (oncall.get_full_name(), )
+            output += '<span class="name">%s</span>' % (oncall.get_display_name(), )
         output += '</div>'
         output += '</div>'
         return output
