@@ -1,7 +1,6 @@
 import datetime
 import json
 
-from django.contrib.auth import login as login_user, authenticate
 from django.contrib.auth import logout as logout_user
 from django.contrib import messages
 from django.core.urlresolvers import reverse
