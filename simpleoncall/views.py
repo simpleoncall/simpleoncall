@@ -8,10 +8,11 @@ from django.contrib import messages
 from django.core.urlresolvers import reverse
 from django.core.exceptions import ObjectDoesNotExist
 from django.forms.utils import ErrorList
-from django.http import HttpResponseRedirect, HttpResponse
+from django.http import HttpResponseRedirect, HttpResponse, JsonResponse
 from django.db import IntegrityError
 from django.db.models import Q, Count
 from django.shortcuts import render
+from django.template.loader import render_to_string
 from django.utils import timezone
 from django.utils.http import urlencode, urlquote
 
@@ -438,3 +439,15 @@ def delete_schedule(request):
     else:
         messages.error(request, 'Unknown Schedule Id')
     return HttpResponseRedirect(reverse('edit-schedule'))
+
+
+@require_authentication()
+@require_selected_team()
+def partial(request, partial):
+    context = {
+        'request': request,
+        'user': request.user,
+        'team': request.team,
+    }
+    html = render_to_string('partials/%s.html' % (partial, ), context)
+    return JsonResponse({'html': html})

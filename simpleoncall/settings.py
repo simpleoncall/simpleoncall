@@ -140,6 +140,8 @@ SCRIPTS = {
     ),
     'js/core.min.js': (
         'js/es5-shim.js',
+        'js/scant.min.js',
+        'js/simpleoncall.js',
     ),
 }
 HTML_MINIFY = True
