@@ -73,21 +73,8 @@ def login(request):
     if request.user.is_authenticated():
         return HttpResponseRedirect(reverse('dashboard'))
 
-    login_form = AuthenticationForm(request.POST or None)
-    if login_form.is_valid():
-        user_cache = authenticate(
-            username=login_form.cleaned_data['username'],
-            password=login_form.cleaned_data['password']
-        )
-        if user_cache:
-            login_user(request, user_cache)
-            return HttpResponseRedirect(reverse('dashboard'))
-        else:
-            errors = login_form._errors.setdefault('username', ErrorList())
-            errors.append('Incorrect Username or Password')
-
     context = {
-        'login_form': login_form,
+        'login_form': AuthenticationForm(),
         'register_form': RegistrationForm(),
         'login': True,
         'title': 'Login',
@@ -99,21 +86,9 @@ def register(request):
     if request.user.is_authenticated():
         return HttpResponseRedirect(reverse('dashboard'))
 
-    register_form = RegistrationForm(request.POST or None)
-    if register_form.is_valid():
-        from django.conf import settings
-        user = register_form.save()
-        user.backend = settings.AUTHENTICATION_BACKENDS[0]
-        login_user(request, user)
-
-        redirect = reverse('dashboard')
-        if request.GET.get('next'):
-            redirect = request.GET.get('next')
-        return HttpResponseRedirect(redirect)
-
     context = {
         'login_form': AuthenticationForm(),
-        'register_form': register_form,
+        'register_form': RegistrationForm(),
         'register': True,
         'title': 'Register',
         'next': urlquote(request.GET.get('next')),

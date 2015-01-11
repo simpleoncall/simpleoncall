@@ -18,28 +18,10 @@
   </ul>
 
   <section id="login" class="pure-u-1 {% if login %} selected {% endif %}">
-    <p>
-      Login to your SimpleOnCall account.
-    </p>
-    <form class="pure-form pure-form-stacked" action="{% url 'login' %}" method="POST">
-      {% csrf_token %}
-      <fieldset class="pure-group">
-        {{ login_form }}
-      </fieldset>
-      <input type="submit" value="Login" />
-    </form>
+    {% include "auth/login-form.html" %}
   </section>
   <section id="register" class="pure-u-1 {% if register %} selected {% endif %}">
-    <p>
-      Register for a SimpleOnCall account.
-    </p>
-    <form class="pure-form pure-form-stacked" action="{% url 'register' %}{% if next %}?next={{ next|safe }}{% endif %}" method="POST">
-      {% csrf_token %}
-      <fieldset class="pure-group">
-        {{ register_form }}
-      </fieldset>
-      <input type="submit" value="Register" />
-    </form>
+    {% include "auth/register-form.html" %}
   </section>
 </article>
 {% endblock %}
