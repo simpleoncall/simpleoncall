@@ -135,27 +135,6 @@ def create_key(request):
 
 @require_authentication()
 def account(request):
-    password_form = request.POST and request.POST.get('password_form') is not None
-    change_password_form_data = request.POST if password_form else None
-    edit_account_form_data = request.POST if not password_form else None
-
-    edit_account_form = EditAccountForm(edit_account_form_data or None, instance=request.user)
-    change_password_form = ChangePasswordForm(change_password_form_data or None, instance=request.user)
-
-    if edit_account_form.is_valid():
-        edit_account_form.save()
-        messages.success(request, 'Account info saved')
-    elif change_password_form.is_valid():
-        if change_password_form.cleaned_data['password_1'] == change_password_form.cleaned_data['password_2']:
-            from django.conf import settings
-            user = change_password_form.save()
-            user.backend = settings.AUTHENTICATION_BACKENDS[0]
-            login_user(request, user)
-            messages.success(request, 'Password successfully changed')
-        else:
-            errors = change_password_form._errors.setdefault('password_1', ErrorList())
-            errors.append('Passwords do not match')
-
     alerts = request.user.get_alert_settings()
     if not alerts:
         alerts = [
@@ -164,8 +143,8 @@ def account(request):
 
     context = {
         'title': 'Account',
-        'edit_account_form': edit_account_form,
-        'change_password_form': change_password_form,
+        'edit_account_form': EditAccountForm(instance=request.user),
+        'change_password_form': ChangePasswordForm(instance=request.user),
         'alerts': alerts,
     }
     return render(request, 'account.html', context)
