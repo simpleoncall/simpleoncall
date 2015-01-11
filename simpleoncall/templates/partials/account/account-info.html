@@ -1,0 +1,6 @@
+<h3>Account Info</h3>
+<form class="pure-form pure-form-stacked" action="{% url 'account' %}" method="POST">
+  {% csrf_token %}
+  {{ edit_account_form }}
+  <input type="submit" value="Save" />
+</form>

@@ -4,36 +4,14 @@
 
 {% block content %}
 <article id="account">
-  <section>
-    <h3>Account Info</h3>
-    <form class="pure-form pure-form-stacked" action="{% url 'account' %}" method="POST">
-      {% csrf_token %}
-      {{ edit_account_form }}
-      <input type="submit" value="Save" />
-    </form>
+  <section id="account-info">
+    {% include "partials/account/account-info.html" %}
   </section>
-  <section>
-    <h3>Change Password</h3>
-    <form class="pure-form pure-form-stacked" action="{% url 'account' %}" method="POST">
-      {% csrf_token %}
-      <input type="hidden" name="password_form" value="1" />
-      {{ change_password_form }}
-      <input type="submit" value="Save" />
-    </form>
+  <section id="change-password">
+    {% include "partials/account/change-password.html" %}
   </section>
-  <section>
-    <h3>Alert Schedule</h3>
-    {% alert_setting_row 0 email 0 disabled %}
-    <form class="pure-form" id="alert-settings-form">
-      {% csrf_token %}
-      {% for alert in alerts %}
-      {{ alert|alert_setting_row|safe }}
-      {% endfor %}
-      <div id="add-alert-row">
-        {% evil_icon ei-plus %}
-      </div>
-      <input class="alert-settings-submit" type="submit" value="Save" />
-    </form>
+  <section id="alert-schedule">
+    {% include "partials/account/alert-schedule.html" %}
   </section>
 </article>
 {% endblock %}
