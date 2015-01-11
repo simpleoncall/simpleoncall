@@ -1,4 +1,4 @@
-(function($){
+var SimpleOnCall = (function($){
     var simpleoncall = {};
 
     simpleoncall.fetchPartial = function(partial, callback){
@@ -63,16 +63,30 @@
     };
     $.on('submit', 'form', simpleoncall.formHandler);
 
-    $.on('form-response', '#login form', function(evt){
-        if(evt.detail && evt.detail.html){
-            $('#login')[0].innerHTML = evt.detail.html;
-        }
-    });
 
-    $.on('form-response', '#register form', function(evt){
-        if(evt.detail && evt.detail.html){
-            $('#register')[0].innerHTML = evt.detail.html;
+    simpleoncall.registeredForms = [];
+    simpleoncall.registerForm = function(id, handler){
+        if(id in simpleoncall.registeredForms){
+            return false;
         }
-    });
 
+        if(typeof handler !== 'function'){
+            handler = function(evt){
+                if(evt.detail && evt.detail.html){
+                    $(id)[0].innerHTML = evt.detail.html;
+                }
+            };
+        }
+        $.on('form-response', id + ' form', handler);
+        simpleoncall.registeredForms.push(id);
+        return true;
+    };
+
+    // forms which follow the default behavior
+    simpleoncall.registerForm('#login');
+    simpleoncall.registerForm('#register');
+    simpleoncall.registerForm('#change-password');
+    simpleoncall.registerForm('#account-info');
+
+    return simpleoncall;
 })(window.Scant);
