@@ -30,7 +30,7 @@ def require_authentication(require_team=True, internal=False):
     return wrapped
 
 
-def require_selected_team():
+def require_selected_team(internal=False):
     def wrapped(func):
         @wraps(func)
         def _wrapped(request, *args, **kwargs):
@@ -41,13 +41,18 @@ def require_selected_team():
                         'id': teams[0].team.id,
                         'name': teams[0].team.name,
                     }
+                elif internal:
+                    return InternalResponse(redirect=reverse('select-team'))
                 else:
                     return HttpResponseRedirect(reverse('select-team'))
 
             team_id, team_name = request.session['team'].values()
             teams = TeamMember.objects.filter(user=request.user, team_id=team_id)
             if not teams:
-                return HttpResponseRedirect(reverse('select-team'))
+                if internal:
+                    return InternalResponse(redirect=reverse('select-team'))
+                else:
+                    return HttpResponseRedirect(reverse('select-team'))
 
             setattr(request, 'team', teams[0].team)
 
