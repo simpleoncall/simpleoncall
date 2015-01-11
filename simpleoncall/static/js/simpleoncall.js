@@ -14,6 +14,23 @@
         });
     };
 
+    $.fn.fetchPartial = function(name, callback){
+        if(typeof callback !== 'function'){
+            callback = function(){};
+        }
+        simpleoncall.fetchPartial(name, function(err, html){
+            if(err || !html){
+                return callback(false);
+            }
+
+            this.forEach(function(elm){
+                elm.innerHTML = html;
+            }.bind(this));
+
+            callback(true);
+        }.bind(this));
+    };
+
     simpleoncall.formHandler = function(evt){
         evt.preventDefault();
         var form = evt.target;
