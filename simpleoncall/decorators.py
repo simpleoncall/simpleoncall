@@ -5,6 +5,7 @@ import json
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 
+from simpleoncall.api import APIResponse
 from simpleoncall.models import TeamMember, APIKey
 from simpleoncall.internal import InternalResponse
 
@@ -84,7 +85,7 @@ def requires_api_key():
         def _wrapped(request, *args, **kwargs):
             auth = request.META.get('HTTP_AUTHORIZATION')
             if not auth:
-                pass
+                return APIResponse(error='Not Authorized', status_code=401)
 
             _, auth = auth.split(' ')
             username, password = base64.b64decode(auth).split(':')
