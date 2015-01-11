@@ -8,4 +8,5 @@ urlpatterns = patterns(
     url(r'^account/password$', 'simpleoncall.internal.views.account_password', name='account-password'),
     url(r'^account/alerts$', 'simpleoncall.internal.views.account_alerts', name='account-alerts'),
     url(r'^team/invite$', 'simpleoncall.internal.views.team_invite', name='team-invite'),
+    url(r'^api-key/create$', 'simpleoncall.internal.views.api_key_create', name='api-key-create'),
 )

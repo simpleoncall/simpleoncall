@@ -1,0 +1,31 @@
+<h3>API Keys</h3>
+{% include "partials/messages.html" %}
+<a id="api-key-create" class="pure-button button-secondary" href="{% url 'internal:api-key-create' %}">Create New Key</a>
+<div class="pure-g">
+  {% for api_key in api_keys %}
+  <div class="api-key pure-u-1" data-api-key-id="{{ api_key.id }}">
+    <div class="info pure-u-1 pure-u-lg-16-24">
+      <div class="name pure-u-1">
+        {{ api_key.get_name }}
+      </div>
+      <div class="api-url pure-u-1 {% if not api_key.is_active %}deactive{% endif %}">
+        <small>{{ api_key.get_api_url }}</small>
+      </div>
+    </div>
+    <div class="pure-u-4-5 pure-u-lg-4-24">
+      <a href="">
+        Edit
+      </a>
+      {% if api_key.is_active %}
+      <a href="">
+        Deactivate
+      </a>
+      {% else %}
+      <a href="">
+        Activate
+      </a>
+      {% endif %}
+    </div>
+  </div>
+  {% endfor %}
+</div>

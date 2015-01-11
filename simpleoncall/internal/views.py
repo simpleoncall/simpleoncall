@@ -11,7 +11,8 @@ from simpleoncall.forms.account import ChangePasswordForm, EditAccountForm
 from simpleoncall.forms.auth import AuthenticationForm, RegistrationForm
 from simpleoncall.forms.team import InviteTeamForm
 from simpleoncall.internal import InternalResponse
-from simpleoncall.models import AlertSetting, AlertType
+from simpleoncall.models import AlertSetting, AlertType, APIKey
+from simpleoncall.models import Event, EventType, EventStatus
 
 
 @parse_body()
@@ -161,4 +162,30 @@ def team_invite(request):
         'invite_team_form': invite_team_form,
     })
     html = render_to_string('partials/team/invite.html', context)
+    return InternalResponse(html=html)
+
+
+@require_authentication(internal=True)
+@require_selected_team(internal=True)
+def api_key_create(request):
+    api_key = APIKey(
+        team=request.team,
+        created_by=request.user,
+    )
+    api_key.save()
+    event = Event(
+        title='API key %s created' % (api_key.get_name(), ),
+        type=EventType.AUDIT,
+        status=EventStatus.RESOLVED,
+        team=request.team,
+        created_by_user=request.user,
+    )
+    event.save(user=request.user)
+    messages.success(request, event.title)
+
+    api_keys = APIKey.objects.filter(team=request.team)
+    context = RequestContext(request, {
+        'api_keys': api_keys,
+    })
+    html = render_to_string('partials/team/api-keys.html', context)
     return InternalResponse(html=html)

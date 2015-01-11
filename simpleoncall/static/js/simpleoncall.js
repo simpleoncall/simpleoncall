@@ -141,3 +141,16 @@ $.on('click', '#add-alert-row .icon', function(evt){
 $.on('click', '.remove-alert-row .icon', function(evt){
     evt.target.parentElement.parentElement.remove();
 });
+
+$.on('click', '#api-key-create', function(evt){
+    evt.preventDefault();
+    evt.stopPropagation();
+    $.ajax({
+        url: evt.target.href,
+        responseType: 'json',
+    }, function(err, request){
+        if(!err && request.response && request.response.html){
+            $('#api-keys')[0].innerHTML = request.response.html;
+        }
+    });
+});

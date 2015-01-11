@@ -113,26 +113,6 @@ def settings(request):
 
 
 @require_authentication()
-@require_selected_team()
-def create_key(request):
-    api_key = APIKey(
-        team=request.team,
-        created_by=request.user,
-    )
-    api_key.save()
-    event = Event(
-        title='API key %s created' % (api_key.get_name(), ),
-        type=EventType.AUDIT,
-        status=EventStatus.RESOLVED,
-        team=request.team,
-        created_by_user=request.user,
-    )
-    event.save(user=request.user)
-    messages.success(request, event.title)
-    return HttpResponseRedirect(reverse('settings'))
-
-
-@require_authentication()
 def account(request):
     alerts = request.user.get_alert_settings()
     if not alerts:
