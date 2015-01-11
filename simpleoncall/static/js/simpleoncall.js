@@ -1,4 +1,4 @@
-var SimpleOnCall = (function(){
+(function($){
     var simpleoncall = {};
 
     simpleoncall.fetchPartial = function(partial, callback){
@@ -44,21 +44,18 @@ var SimpleOnCall = (function(){
             evt.target.dispatchEvent(newEvent);
         });
     };
+    $.on('submit', 'form', SimpleOnCall.formHandler);
 
-    return simpleoncall;
-})();
-window.soc === undefined && (window.soc = SimpleOnCall);
+    $.on('form-response', '#login form', function(evt){
+        if(evt.detail && evt.detail.html){
+            $('#login')[0].innerHTML = evt.detail.html;
+        }
+    });
 
-$.on('submit', 'form', SimpleOnCall.formHandler);
+    $.on('form-response', '#register form', function(evt){
+        if(evt.detail && evt.detail.html){
+            $('#register')[0].innerHTML = evt.detail.html;
+        }
+    });
 
-$.on('form-response', '#login form', function(evt){
-    if(evt.detail && evt.detail.html){
-        $('#login')[0].innerHTML = evt.detail.html;
-    }
-});
-
-$.on('form-response', '#register form', function(evt){
-    if(evt.detail && evt.detail.html){
-        $('#register')[0].innerHTML = evt.detail.html;
-    }
-});
+})(window.Scant);
