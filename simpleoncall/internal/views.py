@@ -6,9 +6,10 @@ from django.forms.utils import ErrorList
 from django.template import RequestContext
 from django.template.loader import render_to_string
 
-from simpleoncall.decorators import parse_body, require_authentication
+from simpleoncall.decorators import parse_body, require_authentication, require_selected_team
 from simpleoncall.forms.account import ChangePasswordForm, EditAccountForm
 from simpleoncall.forms.auth import AuthenticationForm, RegistrationForm
+from simpleoncall.forms.team import InviteTeamForm
 from simpleoncall.internal import InternalResponse
 from simpleoncall.models import AlertSetting, AlertType
 
@@ -137,4 +138,27 @@ def account_alerts(request):
         'alerts': alerts,
     })
     html = render_to_string('partials/account/alert-schedule.html', context)
+    return InternalResponse(html=html)
+
+
+@require_authentication(internal=True)
+@require_selected_team(internal=True)
+@parse_body()
+def team_invite(request):
+    invite_team_form = InviteTeamForm(request.data)
+    if invite_team_form.is_valid():
+        sent, existing, failed = invite_team_form.save(request)
+        if sent:
+            messages.success(request, '%s invites sent' % (sent, ))
+        if existing:
+            messages.warning(request, '%s users already added' % (existing, ))
+        if failed:
+            messages.error(request, '%s invites failed to send' % (failed, ))
+        if sent and not existing and not failed:
+            invite_team_form = InviteTeamForm()
+
+    context = RequestContext(request, {
+        'invite_team_form': invite_team_form,
+    })
+    html = render_to_string('partials/team/invite.html', context)
     return InternalResponse(html=html)

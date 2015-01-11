@@ -97,6 +97,7 @@ var SimpleOnCall = (function($){
     simpleoncall.registerForm('#change-password');
     simpleoncall.registerForm('#account-info');
     simpleoncall.registerForm('#alert-schedule');
+    simpleoncall.registerForm('#invite-members');
 
     return simpleoncall;
 })(window.Scant);

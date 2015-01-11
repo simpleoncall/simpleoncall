@@ -1,0 +1,17 @@
+<div id="invite-members">
+  {% include "partials/team/invite.html" %}
+</div>
+<div id="existing-members">
+  <h3>Existing Members</h3>
+  <table class="pure-table pure-table-horizontal pure-table-striped">
+    <tbody>
+      {% for member in members %}
+      <tr>
+        <td>
+          {{ member.user.get_short_name }}
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>

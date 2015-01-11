@@ -1,0 +1,7 @@
+<h3>Invite Members</h3>
+{% include "partials/messages.html" %}
+<form class="pure-form pure-form-stacked" action="{% url 'internal:team-invite' %}" method="POST">
+  {% csrf_token %}
+  {{ invite_team_form }}
+  <input type="submit" value="Invite Users" />
+</form>

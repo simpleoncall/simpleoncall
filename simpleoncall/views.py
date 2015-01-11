@@ -6,7 +6,6 @@ from django.contrib import messages
 from django.core.urlresolvers import reverse
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponseRedirect, JsonResponse
-from django.db import IntegrityError
 from django.db.models import Q, Count
 from django.shortcuts import render
 from django.template.loader import render_to_string
@@ -17,7 +16,7 @@ from simpleoncall.forms.auth import AuthenticationForm, RegistrationForm
 from simpleoncall.forms.account import EditAccountForm, ChangePasswordForm
 from simpleoncall.forms.schedule import TeamScheduleForm
 from simpleoncall.forms.team import CreateTeamForm, SelectTeamForm, InviteTeamForm
-from simpleoncall.decorators import require_authentication, require_selected_team, parse_body
+from simpleoncall.decorators import require_authentication, require_selected_team
 from simpleoncall.models import APIKey, TeamMember, TeamInvite, User, TeamSchedule
 from simpleoncall.models import Event, EventType, EventStatus, AlertSetting, AlertType
 
@@ -108,6 +107,7 @@ def settings(request):
         'title': '%s Settings' % (request.team.name, ),
         'api_keys': api_keys,
         'members': members,
+        'invite_team_form': InviteTeamForm(),
     }
     return render(request, 'settings.html', context)
 
@@ -205,26 +205,6 @@ def select_team(request):
         'select_team_form': select_team_form,
     }
     return render(request, 'team/select.html', context)
-
-
-@require_authentication()
-@require_selected_team()
-def invite_team(request):
-    invite_team_form = InviteTeamForm(request.POST or None)
-    if invite_team_form.is_valid():
-        sent, existing, failed = invite_team_form.save(request)
-        if sent:
-            messages.success(request, '%s invites sent' % (sent, ))
-        if existing:
-            messages.warning(request, '%s users already added' % (existing, ))
-        if failed:
-            messages.error(request, '%s invites failed to send' % (failed, ))
-        return HttpResponseRedirect(reverse('settings'))
-    context = {
-        'title': 'Invite Members',
-        'invite_team_form': invite_team_form,
-    }
-    return render(request, 'team/invite.html', context)
 
 
 def invite_accept(request):
