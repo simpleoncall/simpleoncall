@@ -61,7 +61,7 @@
             evt.target.dispatchEvent(newEvent);
         });
     };
-    $.on('submit', 'form', SimpleOnCall.formHandler);
+    $.on('submit', 'form', simpleoncall.formHandler);
 
     $.on('form-response', '#login form', function(evt){
         if(evt.detail && evt.detail.html){
