@@ -4,7 +4,7 @@ import random
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 
-from simpleoncall.api.decorators import requires_authentication
+from simpleoncall.decorators import requires_api_key
 from simpleoncall.models import TeamMember, Event, EventStatus
 
 
@@ -19,12 +19,12 @@ def json_error(error_message, status_code=400):
     }, status_code=status_code)
 
 
-@requires_authentication()
+@requires_api_key()
 def index(request):
     return json_response({'team': request.api_key.team.name})
 
 
-@requires_authentication()
+@requires_api_key()
 def v1_get_oncall(request):
     team_members = TeamMember.objects.filter(team=request.api_key.team)
     oncall_member = random.choice(team_members)
@@ -37,7 +37,7 @@ def v1_get_oncall(request):
     })
 
 
-@requires_authentication()
+@requires_api_key()
 @csrf_exempt
 def v1_event_create(request):
     if not request.method == 'POST':
@@ -58,7 +58,7 @@ def v1_event_create(request):
     })
 
 
-@requires_authentication()
+@requires_api_key()
 @csrf_exempt
 def v1_events_status(request, status=EventStatus.OPEN):
     events = Event.objects.filter(status=status, team=request.api_key.team)

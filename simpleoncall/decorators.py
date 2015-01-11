@@ -1,10 +1,11 @@
 from functools import wraps
+import base64
 import json
 
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 
-from simpleoncall.models import TeamMember
+from simpleoncall.models import TeamMember, APIKey
 from simpleoncall.internal import InternalResponse
 
 
@@ -72,6 +73,28 @@ def parse_body():
                     data = json.loads(data)
 
             request.data = data
+            return func(request, *args, **kwargs)
+        return _wrapped
+    return wrapped
+
+
+def requires_api_key():
+    def wrapped(func):
+        @wraps(func)
+        def _wrapped(request, *args, **kwargs):
+            auth = request.META.get('HTTP_AUTHORIZATION')
+            if not auth:
+                pass
+
+            _, auth = auth.split(' ')
+            username, password = base64.b64decode(auth).split(':')
+
+            api_key = APIKey.objects.get(username=username, password=password)
+            if not api_key:
+                pass
+
+            setattr(request, 'api_key', api_key)
+
             return func(request, *args, **kwargs)
         return _wrapped
     return wrapped
