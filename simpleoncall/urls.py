@@ -25,5 +25,5 @@ urlpatterns = patterns(
     url(r'^partial/(?P<partial>[a-z]+)', 'simpleoncall.views.partial', name='partial'),
     url(r'^internal/', include(internal.urls.urlpatterns, namespace='internal')),
     url(r'^admin/', include(admin.site.urls)),
-    url(r'^api/', include(api.urlpatterns, namespace='api')),
+    url(r'^api/', include(api.urls.urlpatterns, namespace='api')),
 )
