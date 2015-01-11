@@ -6,7 +6,7 @@ from django.contrib import messages
 from django.core.urlresolvers import reverse
 from django.core.exceptions import ObjectDoesNotExist
 from django.forms.utils import ErrorList
-from django.http import HttpResponseRedirect, HttpResponse, JsonResponse
+from django.http import HttpResponseRedirect, JsonResponse
 from django.db import IntegrityError
 from django.db.models import Q, Count
 from django.shortcuts import render
@@ -18,7 +18,7 @@ from simpleoncall.forms.auth import AuthenticationForm, RegistrationForm
 from simpleoncall.forms.account import EditAccountForm, ChangePasswordForm
 from simpleoncall.forms.schedule import TeamScheduleForm
 from simpleoncall.forms.team import CreateTeamForm, SelectTeamForm, InviteTeamForm
-from simpleoncall.decorators import require_authentication, require_selected_team
+from simpleoncall.decorators import require_authentication, require_selected_team, parse_body
 from simpleoncall.models import APIKey, TeamMember, TeamInvite, User, TeamSchedule
 from simpleoncall.models import Event, EventType, EventStatus, AlertSetting, AlertType
 
@@ -173,8 +173,9 @@ def account(request):
 
 @require_authentication()
 @require_selected_team()
+@parse_body()
 def save_alert_settings(request):
-    settings = json.loads(request.read())
+    settings = request.data or {}
     success = True
 
     for setting in settings:
@@ -197,7 +198,7 @@ def save_alert_settings(request):
     response_data = {
         'success': success,
     }
-    return HttpResponse(json.dumps(response_data), content_type='application/json')
+    return JsonResponse(response_data)
 
 
 @require_authentication()
