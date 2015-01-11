@@ -1,4 +1,5 @@
 from functools import wraps
+import json
 
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
@@ -42,6 +43,22 @@ def require_selected_team():
 
             setattr(request, 'team', teams[0].team)
 
+            return func(request, *args, **kwargs)
+        return _wrapped
+    return wrapped
+
+
+def parse_body():
+    def wrapped(func):
+        @wraps(func)
+        def _wrapped(request, *args, **kwargs):
+            data = None
+            if request.method == 'POST':
+                data = request.read()
+                if data:
+                    data = json.loads(data)
+
+            request.data = data
             return func(request, *args, **kwargs)
         return _wrapped
     return wrapped
