@@ -1,6 +1,5 @@
 import datetime
 import json
-import random
 
 from django.contrib.auth import login as login_user, authenticate
 from django.contrib.auth import logout as logout_user
