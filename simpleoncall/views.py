@@ -5,7 +5,6 @@ from django.contrib.auth import logout as logout_user
 from django.contrib import messages
 from django.core.urlresolvers import reverse
 from django.core.exceptions import ObjectDoesNotExist
-from django.forms.utils import ErrorList
 from django.http import HttpResponseRedirect, JsonResponse
 from django.db import IntegrityError
 from django.db.models import Q, Count
@@ -148,36 +147,6 @@ def account(request):
         'alerts': alerts,
     }
     return render(request, 'account.html', context)
-
-
-@require_authentication()
-@require_selected_team()
-@parse_body()
-def save_alert_settings(request):
-    settings = request.data or {}
-    success = True
-
-    for setting in settings:
-        alert = None
-        if setting['id']:
-            alert = AlertSetting.objects.get(id=setting['id'], user=request.user)
-
-        if not alert:
-            alert = AlertSetting(user=request.user)
-
-        changed = not setting['id'] or alert.type != setting['type'] or alert.time != setting['time']
-        if changed:
-            alert.type = setting['type']
-            alert.time = setting['time']
-            try:
-                alert.save()
-            except IntegrityError:
-                success = False
-
-    response_data = {
-        'success': success,
-    }
-    return JsonResponse(response_data)
 
 
 @require_authentication()

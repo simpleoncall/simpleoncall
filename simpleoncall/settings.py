@@ -129,9 +129,6 @@ SCRIPTS = {
         'js/dashboard/Chart.min.js',
         'js/dashboard/dashboard.js',
     ),
-    'js/account.min.js': (
-        'js/account/account.js',
-    ),
     'js/alerts.min.js': (
         'js/alerts/alerts.js',
     ),

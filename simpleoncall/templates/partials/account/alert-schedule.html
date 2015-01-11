@@ -2,8 +2,9 @@
 {% load icons %}
 
 <h3>Alert Schedule</h3>
+{% include "partials/messages.html" %}
 {% alert_setting_row 0 email 0 disabled %}
-<form class="pure-form" id="alert-settings-form">
+<form id="alert-settings-form" class="pure-form" action="{% url 'internal:account-alerts' %}" method="POST">
   {% csrf_token %}
   {% for alert in alerts %}
   {{ alert|alert_setting_row|safe }}

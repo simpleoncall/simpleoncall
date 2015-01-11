@@ -1,6 +1,7 @@
 from django.contrib import messages
 from django.contrib.auth import login as login_user, authenticate
 from django.core.urlresolvers import reverse
+from django.db import IntegrityError
 from django.forms.utils import ErrorList
 from django.template import RequestContext
 from django.template.loader import render_to_string
@@ -9,6 +10,7 @@ from simpleoncall.decorators import parse_body, require_authentication
 from simpleoncall.forms.account import ChangePasswordForm, EditAccountForm
 from simpleoncall.forms.auth import AuthenticationForm, RegistrationForm
 from simpleoncall.internal import InternalResponse
+from simpleoncall.models import AlertSetting, AlertType
 
 
 @parse_body()
@@ -100,4 +102,39 @@ def account_password(request):
 @require_authentication(internal=True)
 @parse_body()
 def account_alerts(request):
-    return InternalResponse()
+    data = request.data or {}
+    settings = data.get('settings', [])
+
+    success = True
+    for setting in settings:
+        alert = None
+        if setting['id']:
+            alert = AlertSetting.objects.get(id=setting['id'], user=request.user)
+
+        if not alert:
+            alert = AlertSetting(user=request.user)
+
+        changed = not setting['id'] or alert.type != setting['type'] or alert.time != setting['time']
+        if changed:
+            alert.type = setting['type']
+            alert.time = setting['time']
+            try:
+                alert.save()
+            except IntegrityError:
+                success = False
+                messages.error(request, 'There was an error saving alert %s:%s' % (alert.type, alert.time))
+
+    if success:
+        messages.success(request, 'Alerts where saved successfully')
+
+    alerts = request.user.get_alert_settings()
+    if not alerts:
+        alerts = [
+            AlertSetting(id=0, type=AlertType.EMAIL, time=0)
+        ]
+
+    context = RequestContext(request, {
+        'alerts': alerts,
+    })
+    html = render_to_string('partials/account/alert-schedule.html', context)
+    return InternalResponse(html=html)
