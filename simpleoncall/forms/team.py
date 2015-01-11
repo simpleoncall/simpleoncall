@@ -95,7 +95,7 @@ class InviteTeamForm(forms.Form):
             if user:
                 team_member = TeamMember.objects.filter(user=user, team=request.team)
                 if team_member:
-                    existing_invite += 1
+                    existing_invites += 1
                     continue
 
             invite = TeamInvite(team=request.team, email=email, created_by=request.user)
