@@ -1,21 +1,12 @@
 from django.contrib.auth import login as login_user, authenticate
 from django.core.urlresolvers import reverse
 from django.forms.utils import ErrorList
-from django.http import JsonResponse
 from django.template import RequestContext
 from django.template.loader import render_to_string
 
-from simpleoncall.decorators import parse_body
+from simpleoncall.decorators import parse_body, require_authentication
 from simpleoncall.forms.auth import AuthenticationForm, RegistrationForm
-
-
-class InternalResponse(JsonResponse):
-    def __init__(self, redirect=None, error=None, html=None):
-        super(InternalResponse, self).__init__({
-            'redirect': redirect,
-            'error': error,
-            'html': html,
-        })
+from simpleoncall.internal import InternalResponse
 
 
 @parse_body()
