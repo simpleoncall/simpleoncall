@@ -5,18 +5,26 @@ from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 
 from simpleoncall.models import TeamMember
+from simpleoncall.internal import InternalResponse
 
 
-def require_authentication(require_team=True):
+def require_authentication(require_team=True, internal=False):
     def wrapped(func):
         @wraps(func)
         def _wrapped(request, *args, **kwargs):
+            redirect = None
             if not request.user.is_authenticated():
-                return HttpResponseRedirect(reverse('login'))
-            if require_team:
+                redirect = reverse('login')
+            elif require_team:
                 teams = TeamMember.objects.filter(user=request.user)
                 if not teams:
-                    return HttpResponseRedirect(reverse('create-team'))
+                    redirect = reverse('create-team')
+
+            if redirect:
+                if internal:
+                    return InternalResponse(redirect=redirect)
+                return HttpResponseRedirect(redirect)
+
             return func(request, *args, **kwargs)
         return _wrapped
     return wrapped
