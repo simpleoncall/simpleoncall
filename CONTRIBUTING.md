@@ -8,6 +8,10 @@ All bugs, feature requests and pull requests are triaged, assigned and can be
 monitored via the project's
 [waffle board](https://waffle.io/simpleoncall/simpleoncall).
 
+[![Stories in Backlog](https://badge.waffle.io/simpleoncall/simpleoncall.svg?label=backlog&title=Backlog)](http://waffle.io/simpleoncall/simpleoncall)
+[![Stories in Ready](https://badge.waffle.io/simpleoncall/simpleoncall.svg?label=ready&title=Ready)](http://waffle.io/simpleoncall/simpleoncall)
+[![Stories in Progress](https://badge.waffle.io/simpleoncall/simpleoncall.svg?label=in%20progress&title=In%20Progress)](http://waffle.io/simpleoncall/simpleoncall)
+
 <a name="bug-reporting"></a>
 ## Bug Reporting
 
