@@ -143,3 +143,9 @@ $.on('click', '#api-key-create', function(evt){
         }
     });
 });
+
+$.on('keyup', '#login #id_username, #register #id_username', function(evt){
+    var username = evt.target.value;
+    var otherForm = (evt.target.form.parentElement.id === 'login')? '#register' : '#login';
+    $(otherForm + ' #id_username').value(username);
+});
