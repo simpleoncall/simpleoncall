@@ -1,7 +1,7 @@
 <p>
   Register for a SimpleOnCall account.
 </p>
-<form class="pure-form pure-form-stacked" action="{% url 'internal:register' %}{% if next %}?next={{ next|safe }}{% endif %}" method="POST">
+<form class="pure-form pure-form-stacked" action="{% url 'internal:register' %}{% if next %}?next={{ next|safe }}{% endif %}" method="POST" data-ajax-submit data-ajax-response="register">
   {% csrf_token %}
   <fieldset class="pure-group">
     {{ register_form }}

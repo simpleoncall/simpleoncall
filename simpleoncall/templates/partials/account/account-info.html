@@ -1,6 +1,6 @@
 <h3>Account Info</h3>
 {% include "partials/messages.html" %}
-<form class="pure-form pure-form-stacked" action="{% url 'internal:account-info' %}" method="POST">
+<form class="pure-form pure-form-stacked" action="{% url 'internal:account-info' %}" method="POST" data-ajax-submit data-ajax-response="account-info">
   {% csrf_token %}
   {{ edit_account_form }}
   <input type="submit" value="Save" />

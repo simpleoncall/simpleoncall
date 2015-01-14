@@ -1,7 +1,7 @@
 <p>
   Login to your SimpleOnCall account.
 </p>
-<form class="pure-form pure-form-stacked" action="{% url 'internal:login' %}" method="POST">
+<form class="pure-form pure-form-stacked" action="{% url 'internal:login' %}" method="POST" data-ajax-submit data-ajax-response="login">
   {% csrf_token %}
   <fieldset class="pure-group">
     {{ login_form }}
