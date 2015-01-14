@@ -66,38 +66,19 @@ var SimpleOnCall = (function($){
         }, handler);
     };
 
-    $.on('submit', 'form', function(evt){
+    $.on('submit', 'form[data-ajax-submit]', function(evt){
         evt.preventDefault();
         var form = evt.target;
         var data = $(form).serialize();
         simpleoncall.sendFormData(form, data);
     });
 
-    simpleoncall.registeredForms = [];
-    simpleoncall.registerForm = function(id, handler){
-        if(id in simpleoncall.registeredForms){
-            return false;
+    $.on('form-response', 'form[data-ajax-response]', function(evt){
+        if(evt.detail && evt.detail.html){
+            var id = '#' + evt.target.dataset.ajaxResponse;
+            $(id)[0].innerHTML = evt.detail.html;
         }
-
-        if(typeof handler !== 'function'){
-            handler = function(evt){
-                if(evt.detail && evt.detail.html){
-                    $(id)[0].innerHTML = evt.detail.html;
-                }
-            };
-        }
-        $.on('form-response', id + ' form', handler);
-        simpleoncall.registeredForms.push(id);
-        return true;
-    };
-
-    // forms which follow the default behavior
-    simpleoncall.registerForm('#login');
-    simpleoncall.registerForm('#register');
-    simpleoncall.registerForm('#change-password');
-    simpleoncall.registerForm('#account-info');
-    simpleoncall.registerForm('#alert-schedule');
-    simpleoncall.registerForm('#invite-members');
+    });
 
     return simpleoncall;
 })(window.Scant);
