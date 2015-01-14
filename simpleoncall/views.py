@@ -75,7 +75,7 @@ def login(request):
         'login': True,
         'title': 'Login',
     }
-    return render(request, 'auth/login.html', context)
+    return render(request, 'login.html', context)
 
 
 def register(request):
@@ -89,7 +89,7 @@ def register(request):
         'title': 'Register',
         'next': urlquote(request.GET.get('next')),
     }
-    return render(request, 'auth/login.html', context)
+    return render(request, 'login.html', context)
 
 
 def logout(request):
