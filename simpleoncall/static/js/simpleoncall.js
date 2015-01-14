@@ -14,6 +14,14 @@ var SimpleOnCall = (function($){
         });
     };
 
+    $.fn.value = function(value){
+        this.forEach(function(elm){
+            if(elm.hasOwnProperty('value')){
+                elm.value = value;
+            }
+        }.bind(this));
+    };
+
     $.fn.fetchPartial = function(name, callback){
         if(typeof callback !== 'function'){
             callback = function(){};
