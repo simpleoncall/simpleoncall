@@ -6,6 +6,7 @@ from django.contrib.auth.models import AbstractBaseUser, UserManager
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.urlresolvers import reverse
 from django.db import models
+from django.db import IntegrityError
 from django.utils import timezone
 from django.utils.http import urlencode
 
@@ -183,6 +184,8 @@ class Alert(models.Model):
         db_table = 'alert'
 
     def save(self, user=None, api_key=None):
+        if self.status not in EventStatus.STATUSES:
+            raise IntegrityError('Invalid Alert status %r' % (self.status, ))
         self.updated_by_api_key = api_key
         self.updated_by_user = user
         self.date_updated = timezone.now()
