@@ -53,3 +53,33 @@ def alert_create(request):
 
     return APIResponse(result={'id': alert.id}, status_code=201)
 
+
+@requires_api_key()
+@csrf_exempt
+@parse_body()
+def alert_update(request):
+    if not request.method == 'POST':
+        return APIResponse(error='Invalid Request Method', status_code=405)
+
+    if not isinstance(request.data, dict):
+        return APIResponse(error='Invalid Request Data', status_code=400)
+
+    alert_id = request.data.get('id')
+    if not alert_id:
+        return APIResponse(error='Alert "id" property is required', status_code=400)
+
+    alert = Alert.objects.get(id=alert_id)
+    if not alert:
+        return APIResponse(error='Alert with id %r not found' % (alert_id, ), status_code=404)
+
+    status = request.data.get('status')
+    if not EventStatus.valid(status):
+        return APIResponse(error='Unknown Alert status %r' % (status, ), status_code=400)
+    alert.status = status
+
+    try:
+        alert.save(api_key=request.api_key)
+    except IntegrityError:
+        return APIResponse(error='Error while saving alert %s' % (alert.id, ), status_code=400)
+
+    return APIResponse(result=alert.to_dict(), status_code=200)
