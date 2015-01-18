@@ -51,4 +51,5 @@ def alert_create(request):
     except IntegrityError:
         return APIResponse(error='Error while saving alert', status_code=400)
 
-    return APIResponse(result={'id': alert.id}, status_code=202)
+    return APIResponse(result={'id': alert.id}, status_code=201)
+
