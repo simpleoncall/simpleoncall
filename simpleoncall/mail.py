@@ -35,7 +35,7 @@ class AlertStatusEmailMessage(mail.EmailMultiAlternatives):
         subject = 'New Alert %s' % (alert.title, )
         text_body = render_to_string('mail/alert.txt', {'alert': alert})
         html_body = render_to_string('mail/alert.html', {'alert': alert})
-        super(InviteEmailMessage, self).__init__(
+        super(AlertStatusEmailMessage, self).__init__(
             subject, text_body, settings.EMAIL_FROM_ADDRESS, [recipient]
         )
         self.attach_alternative(html_body, 'text/html')
