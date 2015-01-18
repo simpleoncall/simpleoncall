@@ -143,6 +143,12 @@ SCRIPTS = {
 }
 HTML_MINIFY = True
 
+BROKER_URL = 'redis://127.0.0.1:6379/0'
+CELERY_RESULT_BACKEND = 'redis://127.0.0.1:6379/0'
+CELERY_ACCEPT_CONTENT = ['json', 'msgpack', 'yaml']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+
 if SIMPLEONCALL_CONF:
     path = os.path.abspath(os.path.expanduser(SIMPLEONCALL_CONF))
     if os.path.exists(path):
