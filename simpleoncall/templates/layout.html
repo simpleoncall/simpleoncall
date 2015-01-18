@@ -2,6 +2,7 @@
 <html lang="en">
   <head>
     {% load bundles %}
+    {% load compress %}
     {% block meta %}
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -15,11 +16,18 @@
 
     {% block css %}
     <link href="http://fonts.googleapis.com/css?family=Lato:100,300,400,700,900" rel="stylesheet" type="text/css" />
-    {% stylesheet css/core.min.css %}
+    <link rel="stylesheet" href="//yui.yahooapis.com/combo?pure/0.5.0/base-min.css&pure/0.5.0/grids-min.css&pure/0.5.0/forms-min.css">
     <!--[if lte IE 8]>
-        <link rel="stylesheet" href="/static/css/pure//grids-responsive-old-ie-min.css" />
+        <link rel="stylesheet" href="//yui.yahooapis.com/pure/0.5.0/grids-responsive-old-ie-min.css">
         <![endif]-->
+    <!--[if gt IE 8]><!-->
+        <link rel="stylesheet" href="//yui.yahooapis.com/pure/0.5.0/grids-responsive-min.css">
+        <!--<![endif]-->
+    {% compress css %}
+    <link rel="stylesheet" type="text/x-scss" href="/static/css/main.scss" />
+    {% endcompress %}
     {% endblock %}
+
   </head>
   <body>
     {% block body %}

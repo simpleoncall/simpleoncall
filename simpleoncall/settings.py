@@ -39,6 +39,7 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'compressor',
     'simpleoncall',
 )
 
@@ -103,9 +104,18 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.7/howto/static-files/
-
+STATICFILES_FINDERS = (
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+    'compressor.finders.CompressorFinder',
+)
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(SIMPLEONCALL_DIR, 'static')
+COMPRESS_PRECOMPILERS = (
+    ('text/x-scss', 'django_libsass.SassCompiler'),
+)
+LIBSASS_OUTPUT_STYLE = 'nested' if DEBUG else 'compressed'
+
 USE_BUNDLES = False
 STYLESHEETS = {
     'css/core.min.css': (
