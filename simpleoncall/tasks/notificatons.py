@@ -1,11 +1,14 @@
-from __future__ import absolute_import
-
 from celery import shared_task
+
+from simpleoncall.models import Alert, User
+from simpleoncall.mail import send_alert_mail
 
 
 @shared_task
 def send_email_notification(user_id, alert_id):
-    pass
+    user = User.objects.get(id=user_id)
+    alert = Alert.objects.get(id=alert_id)
+    return send_alert_mail(alert, user.email)
 
 
 @shared_task
