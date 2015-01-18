@@ -10,3 +10,4 @@ docs/_*
 *.egg-info
 dist
 */static/CACHE
+dump.rdb
