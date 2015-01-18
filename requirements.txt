@@ -1,5 +1,6 @@
 Django==1.7.1
-django-htmlmin==0.7.0
-logan==0.5.10
 celery==3.1.17
+django-htmlmin==0.7.0
+django-libsass==0.2
+logan==0.5.10
 redis==2.10.3
