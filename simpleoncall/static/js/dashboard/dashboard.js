@@ -57,17 +57,17 @@ document.addEventListener('DOMContentLoaded', function(){
     var alert_count = document.getElementById('alert_count');
     var data = [
         {
-            value: parseInt(alert_count.dataset.openCount),
+            value: parseInt(alert_count.dataset.openCount) || 0,
             label: 'Open',
             color: 'rgb(250, 160, 160)',
         },
         {
-            value: parseInt(alert_count.dataset.resolvedCount),
+            value: parseInt(alert_count.dataset.resolvedCount) || 0,
             label: 'Resolved',
             color: 'rgb(160, 250, 160)',
         },
         {
-            value: parseInt(alert_count.dataset.ackCount),
+            value: parseInt(alert_count.dataset.ackCount) || 0,
             label: 'Acknowledged',
             color: 'rgb(255, 255, 150)',
         }
