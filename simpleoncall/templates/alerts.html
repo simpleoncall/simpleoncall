@@ -3,36 +3,36 @@
 <article id="alerts">
   <section>
     <h3>Alerts</h3>
-    {% for event in alerts %}
-    <div class="pure-u-1 pure-g alert {{ event.status }}">
+    {% for alert in alerts %}
+    <div class="pure-u-1 pure-g alert {{ alert.status }}">
       <div class="pure-g header">
         <div class="title pure-u-10-24 pure-u-lg-3-5">
-          {{ event.title }}
+          {{ alert.title }}
         </div>
         <div class="status pure-u-7-24 pure-u-lg-1-5">
-          {{ event.status }}
+          {{ alert.status }}
         </div>
         <div class="date pure-u-7-24 pure-u-lg-1-5">
-          {{ event.date_updated }}
+          {{ alert.date_updated }}
         </div>
       </div>
       <div class="details hidden pure-u-1 pure-g">
         <div class="pure-u-1 pure-u-lg-3-5">
-          {{ event.body }}
+          {{ alert.body }}
         </div>
         <div class="pure-u-1 pure-u-lg-2-5">
           <ul>
             <li>
-              Created By: {{ event.creator }}
+              Created By: {{ alert.created_by_api_key.get_name }}
             </li>
             <li>
-              Last Updater: {{ event.last_updater }}
+              Last Updater: {{ alert.last_updater }}
             </li>
             <li>
-              <a class="pure-button secondary-button" href="{% url 'event-ack' event.id %}">
+              <a class="pure-button secondary-button" href="{% url 'event-ack' alert.id %}">
                 Acknowledge
               </a>
-              <a class="pure-button secondary-button" href="{% url 'event-resolve' event.id %}">
+              <a class="pure-button secondary-button" href="{% url 'event-resolve' alert.id %}">
                 Resolve
               </a>
             </li>

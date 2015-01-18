@@ -151,18 +151,6 @@ class TeamInvite(models.Model):
         return super(TeamInvite, self).save()
 
 
-class EventType:
-    UNKNOWN = 'unknown'
-    ALERT = 'alert'
-    AUDIT = 'audit'
-
-    TYPES = (
-        (UNKNOWN, UNKNOWN),
-        (ALERT, ALERT),
-        (AUDIT, AUDIT),
-    )
-
-
 class EventStatus:
     OPEN = 'open'
     RESOLVED = 'resolved'
@@ -175,22 +163,14 @@ class EventStatus:
     )
 
 
-class Event(models.Model):
+class Alert(models.Model):
+    team = models.ForeignKey('simpleoncall.team')
     title = models.CharField('title', max_length=128)
     body = models.TextField('body', null=True, blank=True)
-    type = models.CharField(
-        'type', choices=EventType.TYPES, null=False, blank=False,
-        default=EventType.UNKNOWN, max_length=24
-    )
     status = models.CharField(
         'status', choices=EventStatus.STATUSES, null=False, blank=False,
         default=EventStatus.OPEN, max_length=24
     )
-
-    team = models.ForeignKey('simpleoncall.Team', null=True)
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, null=True)
-
-    created_by_user = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, related_name='created_by_user')
     created_by_api_key = models.ForeignKey('simpleoncall.APIKey', null=True, related_name='created_by_api_key')
     date_added = models.DateTimeField(default=timezone.now)
 
@@ -200,22 +180,19 @@ class Event(models.Model):
 
     class Meta:
         app_label = 'simpleoncall'
-        db_table = 'event'
+        db_table = 'alert'
+
+    def save(self, user=None, api_key=None):
+        self.updated_by_api_key = api_key
+        self.updated_by_user = user
+        self.date_updated = timezone.now()
+        super(Alert, self).save()
 
     def last_updater(self):
         if self.updated_by_user:
             return self.updated_by_user.email
         elif self.updated_by_api_key:
             return self.updated_by_api_key.get_name()
-        elif self.created_by_user:
-            return self.created_by_user.email
-        elif self.created_by_api_key:
-            return self.created_by_api_key.get_name()
-        return 'Unknown'
-
-    def creator(self):
-        if self.created_by_user:
-            return self.created_by_user.email
         elif self.created_by_api_key:
             return self.created_by_api_key.get_name()
         return 'Unknown'
@@ -224,21 +201,14 @@ class Event(models.Model):
         data = {
             'title': self.title,
             'body': self.body,
-            'type': self.type,
             'status': self.status,
             'created': self.date_added.isoformat(),
-            'created_by': self.creator(),
+            'created_by': self.created_by_api_key.get_name(),
             'updated': self.date_updated.isoformat(),
             'updated_by': self.last_updater(),
         }
 
         return data
-
-    def save(self, user=None, api_key=None):
-        self.updated_by_api_key = api_key
-        self.updated_by_user = user
-        self.date_updated = timezone.now()
-        super(Event, self).save()
 
 
 class TeamSchedule(models.Model):

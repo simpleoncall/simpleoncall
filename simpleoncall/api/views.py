@@ -5,7 +5,7 @@ from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 
 from simpleoncall.decorators import requires_api_key
-from simpleoncall.models import TeamMember, Event, EventStatus
+from simpleoncall.models import TeamMember, Alert, EventStatus
 
 
 def json_response(context, status_code=200):
@@ -39,31 +39,31 @@ def v1_get_oncall(request):
 
 @requires_api_key()
 @csrf_exempt
-def v1_event_create(request):
+def v1_alert_create(request):
     if not request.method == 'POST':
         return json_error('Invalid Request Method', status_code=405)
 
     data = json.loads(request.body)
-    event = Event(
+    alert = Alert(
         team=request.api_key.team,
         created_by_api_key=request.api_key
     )
     for key, value in data.iteritems():
-        if hasattr(event, key):
-            setattr(event, key, value)
+        if hasattr(alert, key):
+            setattr(alert, key, value)
 
-    event.save(api_key=request.api_key)
+    alert.save(api_key=request.api_key)
     return json_response({
-        'result': event.id,
+        'result': alert.id,
     })
 
 
 @requires_api_key()
 @csrf_exempt
-def v1_events_status(request, status=EventStatus.OPEN):
-    events = Event.objects.filter(status=status, team=request.api_key.team)
+def v1_alerts_status(request, status=EventStatus.OPEN):
+    alerts = Alert.objects.filter(status=status, team=request.api_key.team)
 
     results = {
-        'results': [event.to_dict() for event in events],
+        'results': [alert.to_dict() for alert in alerts],
     }
     return json_response(results)

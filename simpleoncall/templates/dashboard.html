@@ -28,21 +28,21 @@
         </tr>
       </thead>
       <tbody>
-        {% for event in events %}
-        <tr class="{{ event.status }}">
+        {% for alert in alert %}
+        <tr class="{{ alert.status }}">
           <td>
-            <a href="{% url 'event_view' event.id %}">
-              {{ event.title }}
+            <a href="{% url 'alert-view' alert.id %}">
+              {{ alert.title }}
             </a>
           </td>
           <td>
-            {{ event.last_updater }}
+            {{ alert.last_updater }}
           </td>
           <td>
-            {{ event.date_updated }}
+            {{ alert.date_updated }}
           </td>
           <td>
-            {{ event.status }}
+            {{ alert.status }}
           </td>
         </tr>
         {% endfor %}

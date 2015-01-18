@@ -12,7 +12,6 @@ from simpleoncall.forms.auth import AuthenticationForm, RegistrationForm
 from simpleoncall.forms.team import InviteTeamForm
 from simpleoncall.internal import InternalResponse
 from simpleoncall.models import AlertSetting, AlertType, APIKey
-from simpleoncall.models import Event, EventType, EventStatus
 
 
 @parse_body()
@@ -173,15 +172,7 @@ def api_key_create(request):
         created_by=request.user,
     )
     api_key.save()
-    event = Event(
-        title='API key %s created' % (api_key.get_name(), ),
-        type=EventType.AUDIT,
-        status=EventStatus.RESOLVED,
-        team=request.team,
-        created_by_user=request.user,
-    )
-    event.save(user=request.user)
-    messages.success(request, event.title)
+    messages.success(request, 'API key %s created' % (api_key.get_name(), ))
 
     api_keys = APIKey.objects.filter(team=request.team)
     context = RequestContext(request, {

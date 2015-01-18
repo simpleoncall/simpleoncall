@@ -6,7 +6,7 @@ from django.contrib import messages
 from django.core.urlresolvers import reverse
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponseRedirect, JsonResponse
-from django.db.models import Q, Count
+from django.db.models import Count
 from django.shortcuts import render
 from django.template.loader import render_to_string
 from django.utils import timezone
@@ -18,7 +18,7 @@ from simpleoncall.forms.schedule import TeamScheduleForm
 from simpleoncall.forms.team import CreateTeamForm, SelectTeamForm, InviteTeamForm
 from simpleoncall.decorators import require_authentication, require_selected_team
 from simpleoncall.models import APIKey, TeamMember, TeamInvite, User, TeamSchedule
-from simpleoncall.models import Event, EventType, EventStatus, AlertSetting, AlertType
+from simpleoncall.models import Alert, EventStatus, AlertSetting, AlertType
 
 
 @require_authentication()
@@ -28,39 +28,35 @@ def dashboard(request):
     start = end - datetime.timedelta(hours=12)
     date_added__range = (start, end)
 
-    query = Q(team=request.team) | Q(user=request.user)
-    events = Event.objects.filter(query, date_added__range=date_added__range).order_by('-date_added')[:10]
-
-    event_statuses = Event.objects.filter(
-        team=request.team, type=EventType.ALERT,
-        date_added__range=date_added__range
+    alerts = Alert.objects.filter(team=request.team, date_added__range=date_added__range).order_by('-date_added')[:10]
+    alert_statuses = Alert.objects.filter(
+        team=request.team, date_added__range=date_added__range
     ).values('status').annotate(total=Count('status'))
 
-    event_times = Event.objects.filter(
-        team=request.team, type=EventType.ALERT,
-        date_added__range=date_added__range
+    alert_times = Alert.objects.filter(
+        team=request.team, date_added__range=date_added__range
     ).values('date_added').annotate(total=Count('date_added')).order_by('-date_added')
 
-    event_timeseries = {}
+    alert_timeseries = {}
     while start <= end:
         bucket = start - datetime.timedelta(minutes=start.minute % 60,
                                             seconds=start.second,
                                             microseconds=start.microsecond)
-        event_timeseries[bucket.strftime('%s')] = 0
+        alert_timeseries[bucket.strftime('%s')] = 0
         start += datetime.timedelta(minutes=60)
 
-    for event in event_times:
-        added = event['date_added']
+    for alert in alert_times:
+        added = alert['date_added']
         bucket = added - datetime.timedelta(minutes=added.minute % 60,
                                             seconds=added.second,
                                             microseconds=added.microsecond)
-        event_timeseries[bucket.strftime('%s')] += event['total']
+        alert_timeseries[bucket.strftime('%s')] += alert['total']
 
     context = {
         'title': 'Dashboard',
-        'events': events,
-        'statuses': dict((e['status'], e['total']) for e in event_statuses),
-        'timeseries': json.dumps(event_timeseries),
+        'alerts': alerts,
+        'statuses': dict((a['status'], a['total']) for a in alert_statuses),
+        'timeseries': json.dumps(alert_timeseries),
     }
     return render(request, 'dashboard.html', context)
 
@@ -132,8 +128,8 @@ def account(request):
 @require_authentication()
 @require_selected_team()
 def alerts(request):
-    alert_count = Event.objects.filter(team=request.team, type=EventType.ALERT).count()
-    alerts = Event.objects.filter(team=request.team, type=EventType.ALERT).order_by('-date_updated')[:10]
+    alert_count = Alert.objects.filter(team=request.team).count()
+    alerts = Alert.objects.filter(team=request.team).order_by('-date_updated')[:10]
     context = {
         'title': 'Alerts',
         'alert_count': alert_count,
@@ -223,49 +219,49 @@ def invite_accept(request):
 
 @require_authentication()
 @require_selected_team()
-def event_ack(request, event_id):
-    event = Event.objects.get(id=event_id)
-    if not event:
-        messages.error(request, 'Event %s was not found' % (event_id, ))
-    elif event.status == EventStatus.ACKNOWLEDGED:
-        messages.warning(request, 'Event %s already acknowledged' % (event_id, ))
+def alert_ack(request, alert_id):
+    alert = Alert.objects.get(id=alert_id)
+    if not alert:
+        messages.error(request, 'Alert %s was not found' % (alert_id, ))
+    elif alert.status == EventStatus.ACKNOWLEDGED:
+        messages.warning(request, 'Alert %s already acknowledged' % (alert_id, ))
     else:
-        event.status = EventStatus.ACKNOWLEDGED
-        event.save(user=request.user)
-        messages.success(request, 'Event %s was acknowledged' % (event_id, ))
+        alert.status = EventStatus.ACKNOWLEDGED
+        alert.save(user=request.user)
+        messages.success(request, 'Alert %s was acknowledged' % (alert_id, ))
 
     return HttpResponseRedirect(reverse('alerts'))
 
 
 @require_authentication()
 @require_selected_team()
-def event_resolve(request, event_id):
-    event = Event.objects.get(id=event_id, team=request.team)
-    if not event:
-        messages.error(request, 'Event %s was not found' % (event_id, ))
-    elif event.status == EventStatus.RESOLVED:
-        messages.warning(request, 'Event %s already resolved' % (event_id, ))
+def alert_resolve(request, alert_id):
+    alert = Alert.objects.get(id=alert_id, team=request.team)
+    if not alert:
+        messages.error(request, 'Alert %s was not found' % (alert_id, ))
+    elif alert.status == EventStatus.RESOLVED:
+        messages.warning(request, 'Alert %s already resolved' % (alert_id, ))
     else:
-        event.status = EventStatus.RESOLVED
-        event.save(user=request.user)
-        messages.success(request, 'Event %s was resolved' % (event_id, ))
+        alert.status = EventStatus.RESOLVED
+        alert.save(user=request.user)
+        messages.success(request, 'Alert %s was resolved' % (alert_id, ))
 
     return HttpResponseRedirect(reverse('alerts'))
 
 
 @require_authentication()
 @require_selected_team()
-def event_view(request, event_id):
-    event = Event.objects.get(id=event_id, team=request.team)
-    if not event:
-        messages.error(request, 'Event %s was not found' % (event_id, ))
+def alert_view(request, alert_id):
+    alert = Alert.objects.get(id=alert_id, team=request.team)
+    if not alert:
+        messages.error(request, 'Alert %s was not found' % (alert_id, ))
         return HttpResponseRedirect(reverse('dashboard'))
 
     context = {
-        'title': event.title,
-        'event': event,
+        'title': alert.title,
+        'event': alert,
     }
-    return render(request, 'event.html', context)
+    return render(request, 'alert.html', context)
 
 
 @require_authentication()
