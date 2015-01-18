@@ -163,6 +163,10 @@ class EventStatus:
         (ACKNOWLEDGED, ACKNOWLEDGED),
     )
 
+    @staticmethod
+    def valid(status):
+        return status in [s[0] for s in EventStatus.STATUSES]
+
 
 class Alert(models.Model):
     team = models.ForeignKey('simpleoncall.team')
@@ -184,7 +188,7 @@ class Alert(models.Model):
         db_table = 'alert'
 
     def save(self, user=None, api_key=None):
-        if self.status not in EventStatus.STATUSES:
+        if not EventStatus.valid(self.status):
             raise IntegrityError('Invalid Alert status %r' % (self.status, ))
         self.updated_by_api_key = api_key
         self.updated_by_user = user

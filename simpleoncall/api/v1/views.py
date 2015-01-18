@@ -43,7 +43,7 @@ def alert_create(request):
     alert = Alert(team=request.api_key.team, created_by_api_key=request.api_key, title=title)
     alert.body = request.data.get('body')
     alert.status = request.data.get('status', EventStatus.OPEN)
-    if alert.status not in EventStatus.STATUSES:
+    if not EventStatus.valid(alert.status):
         return APIResponse(error='Unknown Alert status %r' % (alert.status, ), status_code=400)
 
     try:
