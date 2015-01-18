@@ -28,7 +28,7 @@
         </tr>
       </thead>
       <tbody>
-        {% for alert in alert %}
+        {% for alert in alerts %}
         <tr class="{{ alert.status }}">
           <td>
             <a href="{% url 'alert-view' alert.id %}">

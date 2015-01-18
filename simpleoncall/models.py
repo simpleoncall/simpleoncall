@@ -191,6 +191,9 @@ class Alert(models.Model):
         self.date_updated = timezone.now()
         super(Alert, self).save()
 
+    def get_body(self):
+        return self.body or 'No Body'
+
     def last_updater(self):
         if self.updated_by_user:
             return self.updated_by_user.email
