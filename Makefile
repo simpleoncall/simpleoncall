@@ -2,6 +2,7 @@ STATIC=./simpleoncall/static
 CLEANCSS=./node_modules/.bin/cleancss --s0 --source-map --output
 UGLIFYJS=./node_modules/.bin/uglifyjs --source-map
 PYTHON=/usr/bin/env python
+CELERY=`which celery`
 
 deps:
 	pip install -r requirements.txt
@@ -35,3 +36,6 @@ runserver: migrate
 
 migrate:
 	$(PYTHON) manage.py migrate
+
+worker:
+	$(CELERY) -A simpleoncall worker -l info
