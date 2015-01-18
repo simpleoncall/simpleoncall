@@ -4,6 +4,7 @@ from django.views.decorators.csrf import csrf_exempt
 from simpleoncall.decorators import requires_api_key, parse_body
 from simpleoncall.api import APIResponse
 from simpleoncall.models import Alert, EventStatus
+from simpleoncall.tasks.notificatons import send_email_notification
 
 
 @requires_api_key()
@@ -50,6 +51,12 @@ def alert_create(request):
         alert.save(api_key=request.api_key)
     except IntegrityError:
         return APIResponse(error='Error while saving alert', status_code=400)
+
+    schedule = request.api_key.team.get_active_schedule()
+    if schedule:
+        oncall = schedule.get_currently_on_call()
+        if oncall:
+            send_email_notification.apply_async((oncall.id, alert.id), countdown=10)
 
     return APIResponse(result={'id': alert.id}, status_code=201)
 

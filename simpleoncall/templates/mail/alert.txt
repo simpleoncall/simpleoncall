@@ -1,0 +1,7 @@
+A new alert has occurred
+
+Title: {{ alert.title }}
+Status: {{ alert.status }}
+Last Updated By: {{ alert.last_updater }}
+Updated: {{ alert.date_updated }}
+Body: {{ alert.get_body }}
