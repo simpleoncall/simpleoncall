@@ -9,3 +9,4 @@ dump.rb
 docs/_*
 *.egg-info
 dist
+*/static/CACHE
