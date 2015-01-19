@@ -50,21 +50,6 @@ class Migration(migrations.Migration):
             bases=(models.Model,),
         ),
         migrations.CreateModel(
-            name='AlertSetting',
-            fields=[
-                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('type', models.CharField(default=b'email', max_length=24, verbose_name=b'type', choices=[(b'email', b'email'), (b'sms', b'sms'), (b'voice', b'voice')])),
-                ('time', models.IntegerField(default=0, verbose_name=b'time')),
-                ('date_added', models.DateTimeField(default=django.utils.timezone.now)),
-                ('date_updated', models.DateTimeField(default=django.utils.timezone.now)),
-                ('user', models.ForeignKey(to=settings.AUTH_USER_MODEL)),
-            ],
-            options={
-                'db_table': 'alert_setting',
-            },
-            bases=(models.Model,),
-        ),
-        migrations.CreateModel(
             name='APIKey',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
@@ -77,6 +62,21 @@ class Migration(migrations.Migration):
             ],
             options={
                 'db_table': 'api_key',
+            },
+            bases=(models.Model,),
+        ),
+        migrations.CreateModel(
+            name='NotificationSetting',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('type', models.CharField(default=b'email', max_length=24, verbose_name=b'type', choices=[(b'email', b'email'), (b'sms', b'sms'), (b'voice', b'voice')])),
+                ('time', models.IntegerField(default=0, verbose_name=b'time')),
+                ('date_added', models.DateTimeField(default=django.utils.timezone.now)),
+                ('date_updated', models.DateTimeField(default=django.utils.timezone.now)),
+                ('user', models.ForeignKey(to=settings.AUTH_USER_MODEL)),
+            ],
+            options={
+                'db_table': 'notification_setting',
             },
             bases=(models.Model,),
         ),
@@ -158,6 +158,10 @@ class Migration(migrations.Migration):
             field=models.ManyToManyField(related_name='team_users', through='simpleoncall.TeamMember', to=settings.AUTH_USER_MODEL),
             preserve_default=True,
         ),
+        migrations.AlterUniqueTogether(
+            name='notificationsetting',
+            unique_together=set([('type', 'time')]),
+        ),
         migrations.AddField(
             model_name='apikey',
             name='team',
@@ -167,10 +171,6 @@ class Migration(migrations.Migration):
         migrations.AlterUniqueTogether(
             name='apikey',
             unique_together=set([('username', 'password')]),
-        ),
-        migrations.AlterUniqueTogether(
-            name='alertsetting',
-            unique_together=set([('type', 'time')]),
         ),
         migrations.AddField(
             model_name='alert',
