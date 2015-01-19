@@ -11,7 +11,7 @@ from simpleoncall.forms.account import ChangePasswordForm, EditAccountForm
 from simpleoncall.forms.auth import AuthenticationForm, RegistrationForm
 from simpleoncall.forms.team import InviteTeamForm
 from simpleoncall.internal import InternalResponse
-from simpleoncall.models import AlertSetting, AlertType, APIKey
+from simpleoncall.models import NotificationSetting, NotificationType, APIKey
 
 
 @parse_body()
@@ -108,34 +108,36 @@ def account_alerts(request):
 
     success = True
     for setting in settings:
-        alert = None
+        notification = None
         if setting['id']:
-            alert = AlertSetting.objects.get(id=setting['id'], user=request.user)
+            notification = NotificationSetting.objects.get(id=setting['id'], user=request.user)
 
-        if not alert:
-            alert = AlertSetting(user=request.user)
+        if not notification:
+            notification = NotificationSetting(user=request.user)
 
-        changed = not setting['id'] or alert.type != setting['type'] or alert.time != setting['time']
+        changed = not setting['id'] or notification.type != setting['type'] or notification.time != setting['time']
         if changed:
-            alert.type = setting['type']
-            alert.time = setting['time']
+            notification.type = setting['type']
+            notification.time = setting['time']
             try:
-                alert.save()
+                notification.save()
             except IntegrityError:
                 success = False
-                messages.error(request, 'There was an error saving alert %s:%s' % (alert.type, alert.time))
+                messages.error(
+                    request, 'There was an error saving notification %s:%s' % (notification.type, notification.time)
+                )
 
     if success:
-        messages.success(request, 'Alerts where saved successfully')
+        messages.success(request, 'Notifications where saved successfully')
 
-    alerts = request.user.get_alert_settings()
-    if not alerts:
-        alerts = [
-            AlertSetting(id=0, type=AlertType.EMAIL, time=0)
+    notifications = request.user.get_notification_settings()
+    if not notifications:
+        notifications = [
+            NotificationSetting(id=0, type=NotificationType.EMAIL, time=0)
         ]
 
     context = RequestContext(request, {
-        'alerts': alerts,
+        'alerts': notifications,
     })
     html = render_to_string('partials/account/alert-schedule.html', context)
     return InternalResponse(html=html)

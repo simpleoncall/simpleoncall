@@ -54,8 +54,8 @@ class User(AbstractBaseUser):
     def has_module_perms(self, app_label):
         return self.is_superuser
 
-    def get_alert_settings(self):
-        return AlertSetting.objects.filter(user=self)
+    def get_notification_settings(self):
+        return NotificationSetting.objects.filter(user=self)
 
 
 class TeamMember(models.Model):
@@ -255,7 +255,7 @@ class TeamSchedule(models.Model):
         super(TeamSchedule, self).save()
 
 
-class AlertType:
+class NotificationType:
     EMAIL = 'email'
     SMS = 'sms'
     VOICE = 'voice'
@@ -267,11 +267,11 @@ class AlertType:
     )
 
 
-class AlertSetting(models.Model):
+class NotificationSetting(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL)
     type = models.CharField(
-        'type', choices=AlertType.TYPES, null=False, blank=False,
-        default=AlertType.EMAIL, max_length=24
+        'type', choices=NotificationType.TYPES, null=False, blank=False,
+        default=NotificationType.EMAIL, max_length=24
     )
     time = models.IntegerField('time', null=False, blank=False, default=0)
     date_added = models.DateTimeField(default=timezone.now)
@@ -279,9 +279,9 @@ class AlertSetting(models.Model):
 
     class Meta:
         app_label = 'simpleoncall'
-        db_table = 'alert_setting'
+        db_table = 'notification_setting'
         unique_together = (('type', 'time'), )
 
     def save(self):
         self.date_updated = timezone.now()
-        super(AlertSetting, self).save()
+        super(NotificationSetting, self).save()

@@ -22,7 +22,7 @@ from simpleoncall.forms.schedule import TeamScheduleForm
 from simpleoncall.forms.team import CreateTeamForm, SelectTeamForm, InviteTeamForm
 from simpleoncall.decorators import require_authentication, require_selected_team
 from simpleoncall.models import APIKey, TeamMember, TeamInvite, User, TeamSchedule
-from simpleoncall.models import Alert, EventStatus, AlertSetting, AlertType
+from simpleoncall.models import Alert, EventStatus, NotificationSetting, NotificationType
 
 
 @require_authentication()
@@ -114,10 +114,10 @@ def settings(request):
 
 @require_authentication()
 def account(request):
-    alerts = request.user.get_alert_settings()
+    alerts = request.user.get_notification_settings()
     if not alerts:
         alerts = [
-            AlertSetting(id=0, type=AlertType.EMAIL, time=0)
+            NotificationSetting(id=0, type=NotificationType.EMAIL, time=0)
         ]
 
     context = {

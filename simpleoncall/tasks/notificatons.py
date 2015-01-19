@@ -3,7 +3,7 @@ import logging
 from celery import shared_task
 from django.conf import settings
 
-from simpleoncall.models import Alert, User, AlertSetting, AlertType, EventStatus
+from simpleoncall.models import Alert, User, NotificationSetting, NotificationType, EventStatus
 from simpleoncall.mail import send_alert_mail
 
 logger = logging.getLogger(__name__)
@@ -16,19 +16,19 @@ def send_alert_notifications(user, alert):
     if alert.status != EventStatus.OPEN:
         return False
 
-    alert_settings = AlertSetting.objects.filter(user=user)
-    if not alert_settings:
-        setting = AlertSetting(time=0, type=AlertType.EMAIL, user=user)
+    notification_settings = NotificationSetting.objects.filter(user=user)
+    if not notification_settings:
+        setting = NotificationSetting(time=0, type=NotificationType.EMAIL, user=user)
         setting.save()
-        alert_settings = [setting]
+        notification_settings = [setting]
 
-    for setting in alert_settings:
+    for setting in notification_settings:
         time = setting.time * 60
-        if setting.type == AlertType.EMAIL:
+        if setting.type == NotificationType.EMAIL:
             send_email_notification.apply_async((user.id, alert.id), countdown=time)
-        elif setting.type == AlertType.SMS:
+        elif setting.type == NotificationType.SMS:
             send_sms_notification.apply_async((user.id, alert.id), countdown=time)
-        elif setting.type == AlertType.VOICE:
+        elif setting.type == NotificationType.VOICE:
             send_voice_notification.apply_async((user.id, alert.id), countdown=time)
 
 

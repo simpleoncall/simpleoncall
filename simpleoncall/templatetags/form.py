@@ -11,7 +11,7 @@ def pop_default(l, d):
     return d
 
 
-class AlertSettingRowNode(template.Node):
+class NotificationSettingRowNode(template.Node):
     TYPE_OPTIONS = {
         'email': 'E-Mail',
         'sms': 'SMS',
@@ -50,17 +50,17 @@ class AlertSettingRowNode(template.Node):
         return output
 
 
-@register.tag('alert_setting_row')
-def alert_setting_row(parser, token):
+@register.tag('notification_setting_row')
+def notification_setting_row(parser, token):
     parts = token.split_contents()
     parts.pop(0)
     index = pop_default(parts, 0)
     selected_type = pop_default(parts, 'email')
     selected_time = pop_default(parts, 0)
     disabled = bool(pop_default(parts, 0))
-    return AlertSettingRowNode(index, selected_type, selected_time, disabled)
+    return NotificationSettingRowNode(index, selected_type, selected_time, disabled)
 
 
-@register.filter('alert_setting_row')
-def alert_setting_filter(alert):
-    return AlertSettingRowNode(alert.id, alert.type, alert.time, 0).render()
+@register.filter('notification_setting_row')
+def notification_setting_filter(alert):
+    return NotificationSettingRowNode(alert.id, alert.type, alert.time, 0).render()

@@ -3,11 +3,11 @@
 
 <h3>Alert Schedule</h3>
 {% include "partials/messages.html" %}
-{% alert_setting_row 0 email 0 disabled %}
+{% notification_setting_row 0 email 0 disabled %}
 <form id="alert-settings-form" class="pure-form" action="{% url 'internal:account-alerts' %}" method="POST" data-ajax-response="alert-schedule">
   {% csrf_token %}
   {% for alert in alerts %}
-  {{ alert|alert_setting_row|safe }}
+  {{ alert|notification_setting_row|safe }}
   {% endfor %}
   <div id="add-alert-row">
     {% evil_icon ei-plus %}
