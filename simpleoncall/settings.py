@@ -117,23 +117,6 @@ COMPRESS_PRECOMPILERS = (
 LIBSASS_OUTPUT_STYLE = 'nested' if DEBUG else 'compressed'
 
 USE_BUNDLES = False
-STYLESHEETS = {
-    'css/core.min.css': (
-        'css/pure/pure.css',
-        'css/pure/grids-responsive.css',
-        'css/base.css',
-        'css/menu.css',
-        'css/header.css',
-        'css/forms.css',
-        'css/tabs.css',
-        'css/graphs.css',
-        'css/schedule.css',
-        'css/buttons.css',
-        'css/settings.css',
-        'css/messages.css',
-        'css/alerts.css',
-    ),
-}
 SCRIPTS = {
     'js/dashboard.min.js': (
         'js/dashboard/Chart.min.js',
