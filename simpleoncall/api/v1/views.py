@@ -107,6 +107,9 @@ def alerts_list(request):
     end_date = request.GET.get('end', timezone.now() + datetime.timedelta(days=1))
     query = query & Q(date_updated__range=(start_date, end_date))
 
+    if request.GET.get('id'):
+        query = Q(id=request.GET.get('id'))
+
     try:
         alerts = Alert.objects.filter(query)
     except ValidationError:
