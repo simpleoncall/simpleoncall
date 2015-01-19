@@ -209,6 +209,7 @@ class Alert(models.Model):
 
     def to_dict(self):
         data = {
+            'id': self.id,
             'title': self.title,
             'body': self.body,
             'status': self.status,
