@@ -1,5 +1,10 @@
+import datetime
+
+from django.core.exceptions import ValidationError
 from django.db import IntegrityError
+from django.db.models import Q
 from django.views.decorators.csrf import csrf_exempt
+from django.utils import timezone
 
 from simpleoncall.decorators import requires_api_key, parse_body
 from simpleoncall.api import APIResponse
@@ -90,3 +95,23 @@ def alert_update(request):
         return APIResponse(error='Error while saving alert %s' % (alert.id, ), status_code=400)
 
     return APIResponse(result=alert.to_dict(), status_code=200)
+
+
+@requires_api_key()
+def alerts_list(request):
+    query = ~Q(status=EventStatus.RESOLVED)
+    if request.GET.get('status'):
+        query = Q(status=request.GET.get('status'))
+
+    start_date = request.GET.get('start', timezone.now() - datetime.timedelta(days=1))
+    end_date = request.GET.get('end', timezone.now() + datetime.timedelta(days=1))
+    query = query & Q(date_updated__range=(start_date, end_date))
+
+    try:
+        alerts = Alert.objects.filter(query)
+    except ValidationError:
+        return APIResponse(error='Invalid request format', status_code=400)
+
+    results = [a.to_dict() for a in alerts]
+
+    return APIResponse(result=results, status_code=200)
