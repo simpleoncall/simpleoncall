@@ -3,13 +3,13 @@
 <article id="edit-schedule">
   <section>
     <h3>Active Schedule: <span class="active-schedule-name">{{ active_schedule.name }}</h3>
-    <a class="add-new-schedule pure-button secondary-button" href="#">Add New Schedule</a>
+    <a class="add-new-schedule pure-button button-secondary" href="#">Add New Schedule</a>
     <div id="new-schedule-form" class="{% if hidden_schedule_form %}hidden{% endif %}">
       <section>
         <form action="{% url 'edit-schedule' %}" method="POST" class="pure-form pure-form-stacked">
           {% csrf_token %}
           {{ new_schedule_form }}
-          <input class="pure-button secondary-button" type="submit" value="Add" />
+          <input class="" type="submit" value="Add" />
         </form>
       </section>
     </div>
@@ -21,8 +21,8 @@
       <input type="hidden" name="schedule_id" value="{{ schedule_form.instance.id }}" />
       {{ schedule_form }}
       <br />
-      <input class="pure-button secondary-button" type="submit" value="Save" />
-      <a class="pure-button secondary-button" href="{% url 'delete-schedule' %}?id={{ schedule_form.instance.id }}">Delete</a>
+      <input class="" type="submit" value="Save" />
+      <a class="pure-button button-secondary" href="{% url 'delete-schedule' %}?id={{ schedule_form.instance.id }}">Delete</a>
     </form>
   </section>
   {% endfor %}
