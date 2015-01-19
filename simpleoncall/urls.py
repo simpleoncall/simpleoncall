@@ -18,6 +18,7 @@ urlpatterns = patterns(
     url(r'^alerts', 'simpleoncall.views.alerts', name='alerts'),
     url(r'^team/create', 'simpleoncall.views.create_team', name='create-team'),
     url(r'^team/select', 'simpleoncall.views.select_team', name='select-team'),
+    url(r'^team/calendar.ics', 'simpleoncall.views.team_calendar', name='team-calendar'),
     url(r'^invite/accept', 'simpleoncall.views.invite_accept', name='invite-accept'),
     url(r'^alert/ack/(?P<event_id>[0-9a-z]+)', 'simpleoncall.views.alert_ack', name='alert-ack'),
     url(r'^alert/resolve/(?P<event_id>[0-9a-z]+)', 'simpleoncall.views.alert_resolve', name='alert-resolve'),

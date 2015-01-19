@@ -11,6 +11,9 @@
     <a class="pure-button secondary-button" href="{% url 'edit-schedule' %}">
       Edit Schedule
     </a>
+    <a class="pure-button secondary-button" target="_blank" href="{% url 'team-calendar' %}">
+      Download iCal
+    </a>
     {{ schedule|schedule_calendar|safe }}
   </section>
 </article>
