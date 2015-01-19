@@ -8,10 +8,10 @@
   </section>
   <section>
     <h3>Active Schedule: <span class="active-schedule-name">{{ schedule.name }}</span></h3>
-    <a class="pure-button secondary-button" href="{% url 'edit-schedule' %}">
+    <a class="pure-button button-secondary" href="{% url 'edit-schedule' %}">
       Edit Schedule
     </a>
-    <a class="pure-button secondary-button" target="_blank" href="{% url 'team-calendar' %}">
+    <a class="pure-button button-secondary" target="_blank" href="{% url 'team-calendar' %}">
       Download iCal
     </a>
     {{ schedule|schedule_calendar|safe }}
