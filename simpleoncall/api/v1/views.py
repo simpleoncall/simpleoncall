@@ -9,7 +9,7 @@ from django.utils import timezone
 from simpleoncall.decorators import requires_api_key, parse_body
 from simpleoncall.api import APIResponse
 from simpleoncall.models import Alert, EventStatus
-from simpleoncall.tasks.notificatons import send_email_notification
+from simpleoncall.tasks.notificatons import send_alert_notifications
 
 
 @requires_api_key()
@@ -60,8 +60,7 @@ def alert_create(request):
     schedule = request.api_key.team.get_active_schedule()
     if schedule:
         oncall = schedule.get_currently_on_call()
-        if oncall:
-            send_email_notification.apply_async((oncall.id, alert.id), countdown=10)
+        send_alert_notifications(oncall, alert)
 
     return APIResponse(result={'id': alert.id}, status_code=201)
 
