@@ -18,7 +18,7 @@ The following are the necessary commands needed to get started running a
 development version of SimpleOnCall, using the default sqlite db backend for
 Django.
 
-`pip` and `npm` will both be required.
+`pip` is required.
 
 ```bash
 git clone git://github.com/simpleoncall/simpleoncall.git
