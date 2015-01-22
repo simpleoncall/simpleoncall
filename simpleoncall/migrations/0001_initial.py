@@ -81,6 +81,22 @@ class Migration(migrations.Migration):
             bases=(models.Model,),
         ),
         migrations.CreateModel(
+            name='ServiceData',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('service', models.CharField(max_length=24, verbose_name=b'service', choices=[(b'datadog', b'datadog')])),
+                ('service_id', models.CharField(max_length=64, verbose_name=b'service_id')),
+                ('data', models.TextField(null=True, verbose_name=b'data', blank=True)),
+                ('date_added', models.DateTimeField(default=django.utils.timezone.now)),
+                ('date_updated', models.DateTimeField(default=django.utils.timezone.now)),
+                ('updated_by', models.ForeignKey(related_name='updated_by', to='simpleoncall.APIKey', null=True)),
+            ],
+            options={
+                'db_table': 'service_data',
+            },
+            bases=(models.Model,),
+        ),
+        migrations.CreateModel(
             name='Team',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
@@ -159,6 +175,10 @@ class Migration(migrations.Migration):
             preserve_default=True,
         ),
         migrations.AlterUniqueTogether(
+            name='servicedata',
+            unique_together=set([('service', 'service_id')]),
+        ),
+        migrations.AlterUniqueTogether(
             name='notificationsetting',
             unique_together=set([('type', 'time')]),
         ),
@@ -176,6 +196,12 @@ class Migration(migrations.Migration):
             model_name='alert',
             name='created_by_api_key',
             field=models.ForeignKey(related_name='created_by_api_key', to='simpleoncall.APIKey', null=True),
+            preserve_default=True,
+        ),
+        migrations.AddField(
+            model_name='alert',
+            name='service_data',
+            field=models.ForeignKey(related_name='service_data', to='simpleoncall.ServiceData', null=True),
             preserve_default=True,
         ),
         migrations.AddField(
