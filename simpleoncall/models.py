@@ -176,6 +176,8 @@ class Alert(models.Model):
         'status', choices=EventStatus.STATUSES, null=False, blank=False,
         default=EventStatus.OPEN, max_length=24
     )
+    service_data = models.ForeignKey('simpleoncall.ServiceData', null=True, related_name='service_data')
+
     created_by_api_key = models.ForeignKey('simpleoncall.APIKey', null=True, related_name='created_by_api_key')
     date_added = models.DateTimeField(default=timezone.now)
 
@@ -220,6 +222,35 @@ class Alert(models.Model):
         }
 
         return data
+
+
+class Services:
+    DATADOG = 'datadog'
+
+    ALL_SERVICES = (
+        (DATADOG, DATADOG),
+    )
+
+
+class ServiceData(models.Model):
+    service = models.CharField(
+        'service', choices=Services.ALL_SERVICES, null=False, blank=False, max_length=24
+    )
+    service_id = models.CharField('service_id', max_length=64)
+    data = models.TextField('data', null=True, blank=True)
+    date_added = models.DateTimeField(default=timezone.now)
+    date_updated = models.DateTimeField(default=timezone.now)
+    updated_by = models.ForeignKey('simpleoncall.APIKey', null=True, related_name='updated_by')
+
+    class Meta:
+        app_label = 'simpleoncall'
+        db_table = 'service_data'
+        unique_together = (('service', 'service_id'), )
+
+    def save(self, api_key=None):
+        self.date_updated = timezone.now()
+        self.updated_by = api_key
+        super(ServiceData, self).save()
 
 
 class TeamSchedule(models.Model):
