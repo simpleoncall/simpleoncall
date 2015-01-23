@@ -112,6 +112,11 @@ def account_alerts(request):
         if setting['id']:
             notification = NotificationSetting.objects.get(id=setting['id'], user=request.user)
 
+        if setting['remove']:
+            if notification:
+                notification.delete()
+            continue
+
         if not notification:
             notification = NotificationSetting(user=request.user)
 
@@ -127,14 +132,14 @@ def account_alerts(request):
                     request, 'There was an error saving notification %s:%s' % (notification.type, notification.time)
                 )
 
-    if success:
-        messages.success(request, 'Notifications where saved successfully')
-
     notifications = request.user.get_notification_settings()
     if not notifications:
         notifications = [
             NotificationSetting(id=0, type=NotificationType.EMAIL, time=0)
         ]
+        messages.warning(request, 'You must have at least 1 notification setting')
+    elif success:
+        messages.success(request, 'Notifications were saved successfully')
 
     context = RequestContext(request, {
         'alerts': notifications,

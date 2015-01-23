@@ -99,6 +99,7 @@ var getAlertSettings = function(){
             id: parseInt(elm.dataset.id),
             type: $elm.find('[name=alert_type]')[0].value,
             time: $elm.find('[name=alert_time]')[0].value,
+            remove: $elm.find('[name=delete]').length,
         }
     });
 };
@@ -128,7 +129,13 @@ $.on('click', '#add-alert-row .icon', function(evt){
 });
 
 $.on('click', '.remove-alert-row .icon', function(evt){
-    evt.target.parentElement.parentElement.remove();
+    var parent = evt.target.parentElement.parentElement;
+    var hidden = document.createElement('input');
+    hidden.type = 'hidden';
+    hidden.name = 'delete';
+    hidden.value = parent.dataset.id;
+    parent.insertBefore(hidden, evt.target.parentElement);
+    parent.classList.add('hidden');
 });
 
 $.on('click', '#api-key-create', function(evt){
