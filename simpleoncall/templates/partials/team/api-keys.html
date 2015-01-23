@@ -2,12 +2,11 @@
 {% include "partials/messages.html" %}
 <a id="api-key-create" class="pure-button button-secondary" href="{% url 'internal:api-key-create' %}">Create New Key</a>
 <div class="pure-g">
+  {% csrf_token %}
   {% for api_key in api_keys %}
-  <div class="api-key pure-u-1" data-api-key-id="{{ api_key.id }}">
+  <div class="api-key pure-u-1" data-api-key-id="{{ api_key.id }}" data-update-url="{% url 'internal:api-key-update' %}">
     <div class="info pure-u-1 pure-u-lg-16-24">
-      <div class="name pure-u-1">
-        {{ api_key.get_name }}
-      </div>
+      <div class="name pure-u-1">{{ api_key.get_name }}</div>
       <div class="api-url pure-u-1 {% if not api_key.is_active %}deactive{% endif %}">
         <small>{{ api_key.get_api_url }}</small>
       </div>

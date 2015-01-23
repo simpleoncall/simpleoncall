@@ -156,3 +156,39 @@ $.on('keyup', '#login #id_username, #register #id_username', function(evt){
     var otherForm = (evt.target.form.parentElement.id === 'login')? '#register' : '#login';
     $(otherForm + ' #id_username').value(username);
 });
+
+$.on('click', '.api-key .name', function(evt){
+    var innerText = evt.target.textContent;
+    var input = document.createElement('input');
+    input.type = 'text';
+    input.name = 'api-key';
+    input.value = innerText;
+    evt.target.textContent = '';
+    evt.target.appendChild(input);
+    input.focus();
+    input.onblur = function(){
+        if(innerText == input.value || input.value == ''){
+            evt.target.textContent = innerText;
+        } else {
+            var parent = evt.target.parentElement.parentElement;
+            var data = {
+                id: parent.dataset.apiKeyId,
+                name: input.value,
+                csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]')[0].value
+            };
+            $.ajax({
+                url: parent.dataset.updateUrl,
+                data: JSON.stringify(data),
+                method: 'POST',
+                responseType: 'json',
+                headers: {
+                    'X-CSRFToken': data.csrfmiddlewaretoken,
+                }
+            }, function(err, request){
+                if(!err && request.response && request.response.html){
+                    $('#api-keys')[0].innerHTML = request.response.html;
+                }
+            });
+        }
+    };
+});

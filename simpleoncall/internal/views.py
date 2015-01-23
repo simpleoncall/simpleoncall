@@ -187,3 +187,22 @@ def api_key_create(request):
     })
     html = render_to_string('partials/team/api-keys.html', context)
     return InternalResponse(html=html)
+
+
+@require_authentication(internal=True)
+@require_selected_team(internal=True)
+@parse_body()
+def api_key_update(request):
+    data = request.data or {}
+    id = data.get('id')
+    api_key = APIKey.objects.get(id=id, team=request.team)
+    if api_key and 'name' in data:
+        api_key.name = data['name']
+        api_key.save()
+
+    api_keys = APIKey.objects.filter(team=request.team)
+    context = RequestContext(request, {
+        'api_keys': api_keys,
+    })
+    html = render_to_string('partials/team/api-keys.html', context)
+    return InternalResponse(html=html)
