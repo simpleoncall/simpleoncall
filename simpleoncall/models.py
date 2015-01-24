@@ -290,11 +290,13 @@ class NotificationType:
     EMAIL = 'email'
     SMS = 'sms'
     VOICE = 'voice'
+    PUSHBULLET = 'pushbullet'
 
     TYPES = (
         (EMAIL, EMAIL),
         (SMS, SMS),
         (VOICE, VOICE),
+        (PUSHBULLET, PUSHBULLET),
     )
 
 

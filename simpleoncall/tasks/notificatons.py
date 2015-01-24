@@ -5,6 +5,7 @@ from django.conf import settings
 
 from simpleoncall.models import Alert, User, NotificationSetting, NotificationType, EventStatus
 from simpleoncall.mail import send_alert_mail
+from simpleoncall.push import send_alert_pushbullet
 
 logger = logging.getLogger(__name__)
 
@@ -30,6 +31,8 @@ def send_alert_notifications(user, alert):
             send_sms_notification.apply_async((user.id, alert.id), countdown=time)
         elif setting.type == NotificationType.VOICE:
             send_voice_notification.apply_async((user.id, alert.id), countdown=time)
+        elif setting.type == NotificationType.PUSHBULLET:
+            send_pushbullet_notification.apply_async((user.id, alert.id), countdown=time)
 
 
 @shared_task
@@ -51,3 +54,13 @@ def send_voice_notification(user_id, alert_id):
     if not settings.ALLOW_VOICE:
         logger.warning('Voice Notifications are disabled')
         return
+
+
+@shared_task
+def send_pushbullet_notification(user_id, alert_id):
+    if not settings.PUSHBULLET_ACCESS_TOKEN:
+        logger.warning('Pushbullet Notifications are disabled')
+        return
+    user = User.objects.get(id=user_id)
+    alert = Alert.objects.get(id=alert_id)
+    return send_alert_pushbullet(alert, user.email)

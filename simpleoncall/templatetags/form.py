@@ -1,5 +1,6 @@
 from django import template
 
+from simpleoncall.models import NotificationType
 from simpleoncall.templatetags.icons import EvilIconNode
 
 register = template.Library()
@@ -13,9 +14,10 @@ def pop_default(l, d):
 
 class NotificationSettingRowNode(template.Node):
     TYPE_OPTIONS = {
-        'email': 'E-Mail',
-        'sms': 'SMS',
-        'voice': 'Voice',
+        NotificationType.EMAIL: 'E-Mail',
+        NotificationType.SMS: 'SMS',
+        NotificationType.VOICE: 'Voice',
+        NotificationType.PUSHBULLET: 'Pushbullet',
     }
 
     def __init__(self, id, selected_type='email', selected_time=0, disabled=False):
