@@ -103,7 +103,7 @@ USE_TZ = True
 
 ALLOW_SMS = False
 ALLOW_VOICE = False
-
+PUSHBULLET_ACCESS_TOKEN = None
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.7/howto/static-files/
