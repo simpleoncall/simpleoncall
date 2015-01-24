@@ -316,3 +316,35 @@ class NotificationSetting(models.Model):
     def save(self):
         self.date_updated = timezone.now()
         super(NotificationSetting, self).save()
+
+
+class AuditType:
+    API_KEY_ADDED = 'api_key_added'
+    PASSWORD_CHANGED = 'password_changed'
+    NOTIFICATION_SETTINGS_CHANGED = 'notification_settings_changed'
+    SCHEDULE_UPDATED = 'schedule_updated'
+    SCHEDULE_ADDED = 'schedule_added'
+    UNKNOWN = 'unknown'
+
+    TYPES = (
+        (API_KEY_ADDED, API_KEY_ADDED),
+        (PASSWORD_CHANGED, PASSWORD_CHANGED),
+        (NOTIFICATION_SETTINGS_CHANGED, NOTIFICATION_SETTINGS_CHANGED),
+        (SCHEDULE_ADDED, SCHEDULE_ADDED),
+        (SCHEDULE_UPDATED, SCHEDULE_UPDATED),
+        (UNKNOWN, UNKNOWN),
+    )
+
+
+class AuditEvent(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, null=True)
+    team = models.ForeignKey('simpleoncall.Team', null=True)
+    type = models.CharField(
+        'type', choices=AuditType.TYPES, null=False, blank=False,
+        default=AuditType.UNKNOWN, max_length=32
+    )
+    date_added = models.DateTimeField(default=timezone.now)
+
+    class Meta:
+        app_label = 'simpleoncall'
+        db_table = 'audit_log'
