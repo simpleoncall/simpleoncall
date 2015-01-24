@@ -115,7 +115,7 @@ class APIKey(models.Model):
         return uuid.uuid4().hex
 
     def get_api_url(self):
-        return '%s:%s@%s/api/' % (self.username, self.password, settings.BASE_URL)
+        return '%s:%s@%s/api/v1/' % (self.username, self.password, settings.BASE_URL)
 
     def save(self):
         if not self.username:
