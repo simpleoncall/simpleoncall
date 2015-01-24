@@ -11,7 +11,7 @@ from simpleoncall.forms.account import ChangePasswordForm, EditAccountForm
 from simpleoncall.forms.auth import AuthenticationForm, RegistrationForm
 from simpleoncall.forms.team import InviteTeamForm
 from simpleoncall.internal import InternalResponse
-from simpleoncall.models import NotificationSetting, NotificationType, APIKey
+from simpleoncall.models import NotificationSetting, NotificationType, APIKey, AuditType, AuditEvent
 
 
 @parse_body()
@@ -88,6 +88,7 @@ def account_password(request):
             user = change_password_form.save()
             user.backend = settings.AUTHENTICATION_BACKENDS[0]
             login_user(request, user)
+            AuditEvent(type=AuditType.PASSWORD_CHANGED, user=request.user).save()
             messages.success(request, 'Password Changed Successfully')
         else:
             errors = change_password_form._errors.setdefault('password_1', ErrorList())
@@ -179,6 +180,7 @@ def api_key_create(request):
         created_by=request.user,
     )
     api_key.save()
+    AuditEvent(type=AuditType.API_KEY_ADDED, user=request.user, team=request.team).save()
     messages.success(request, 'API key %s created' % (api_key.get_name(), ))
 
     api_keys = APIKey.objects.filter(team=request.team)
