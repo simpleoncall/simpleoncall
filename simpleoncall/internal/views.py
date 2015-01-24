@@ -201,6 +201,8 @@ def api_key_update(request):
     if api_key and 'name' in data:
         api_key.name = data['name']
         api_key.save()
+        AuditEvent(type=AuditType.API_KEY_UPDATED, user=request.user, team=request.team).save()
+        messages.success(request, 'API key %s updated' % (api_key.get_name(), ))
 
     api_keys = APIKey.objects.filter(team=request.team)
     context = RequestContext(request, {

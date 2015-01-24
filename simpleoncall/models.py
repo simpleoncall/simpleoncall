@@ -320,6 +320,7 @@ class NotificationSetting(models.Model):
 
 class AuditType:
     API_KEY_ADDED = 'api_key_added'
+    API_KEY_UPDATED = 'api_key_updated'
     PASSWORD_CHANGED = 'password_changed'
     NOTIFICATION_SETTINGS_CHANGED = 'notification_settings_changed'
     SCHEDULE_UPDATED = 'schedule_updated'
@@ -328,6 +329,7 @@ class AuditType:
 
     TYPES = (
         (API_KEY_ADDED, API_KEY_ADDED),
+        (API_KEY_UPDATED, API_KEY_UPDATED),
         (PASSWORD_CHANGED, PASSWORD_CHANGED),
         (NOTIFICATION_SETTINGS_CHANGED, NOTIFICATION_SETTINGS_CHANGED),
         (SCHEDULE_ADDED, SCHEDULE_ADDED),
