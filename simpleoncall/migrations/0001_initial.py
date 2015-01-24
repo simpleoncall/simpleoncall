@@ -69,7 +69,7 @@ class Migration(migrations.Migration):
             name='AuditEvent',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('type', models.CharField(default=b'unknown', max_length=32, verbose_name=b'type', choices=[(b'api_key_added', b'api_key_added'), (b'password_changed', b'password_changed'), (b'notification_settings_changed', b'notification_settings_changed'), (b'schedule_added', b'schedule_added'), (b'schedule_updated', b'schedule_updated'), (b'unknown', b'unknown')])),
+                ('type', models.CharField(default=b'unknown', max_length=32, verbose_name=b'type', choices=[(b'api_key_added', b'api_key_added'), (b'api_key_updated', b'api_key_updated'), (b'password_changed', b'password_changed'), (b'notification_settings_changed', b'notification_settings_changed'), (b'schedule_added', b'schedule_added'), (b'schedule_updated', b'schedule_updated'), (b'unknown', b'unknown')])),
                 ('date_added', models.DateTimeField(default=django.utils.timezone.now)),
             ],
             options={
@@ -81,7 +81,7 @@ class Migration(migrations.Migration):
             name='NotificationSetting',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('type', models.CharField(default=b'email', max_length=24, verbose_name=b'type', choices=[(b'email', b'email'), (b'sms', b'sms'), (b'voice', b'voice')])),
+                ('type', models.CharField(default=b'email', max_length=24, verbose_name=b'type', choices=[(b'email', b'email'), (b'sms', b'sms'), (b'voice', b'voice'), (b'pushbullet', b'pushbullet')])),
                 ('time', models.IntegerField(default=0, verbose_name=b'time')),
                 ('date_added', models.DateTimeField(default=django.utils.timezone.now)),
                 ('date_updated', models.DateTimeField(default=django.utils.timezone.now)),
