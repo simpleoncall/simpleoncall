@@ -10,4 +10,6 @@ urlpatterns = patterns(
     url(r'^team/invite$', 'simpleoncall.internal.views.team_invite', name='team-invite'),
     url(r'^api-key/create$', 'simpleoncall.internal.views.api_key_create', name='api-key-create'),
     url(r'^api-key/update$', 'simpleoncall.internal.views.api_key_update', name='api-key-update'),
+    url(r'^api-key/deactivate$', 'simpleoncall.internal.views.api_key_deactivate', name='api-key-deactivate'),
+    url(r'^api-key/activate$', 'simpleoncall.internal.views.api_key_activate', name='api-key-activate'),
 )

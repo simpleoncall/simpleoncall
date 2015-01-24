@@ -192,3 +192,15 @@ $.on('click', '.api-key .name', function(evt){
         }
     };
 });
+
+$.on('click', '.api-key a', function(evt){
+    evt.preventDefault();
+    $.ajax({
+        url: evt.target.href,
+        responseType: 'json'
+    }, function(err, request){
+        if(!err && request.response && request.response.html){
+            $('#api-keys')[0].innerHTML = request.response.html;
+        }
+    });
+});

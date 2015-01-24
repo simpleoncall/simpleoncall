@@ -210,3 +210,41 @@ def api_key_update(request):
     })
     html = render_to_string('partials/team/api-keys.html', context)
     return InternalResponse(html=html)
+
+
+@require_authentication(internal=True)
+@require_selected_team(internal=True)
+def api_key_deactivate(request):
+    id = request.GET.get('id')
+    api_key = APIKey.objects.get(id=id, team=request.team)
+    if api_key:
+        api_key.is_active = False
+        api_key.save()
+        AuditEvent(type=AuditType.API_KEY_UPDATED, user=request.user, team=request.team).save()
+        messages.success(request, 'API key %s deactivated' % (api_key.get_name(), ))
+
+    api_keys = APIKey.objects.filter(team=request.team)
+    context = RequestContext(request, {
+        'api_keys': api_keys,
+    })
+    html = render_to_string('partials/team/api-keys.html', context)
+    return InternalResponse(html=html)
+
+
+@require_authentication(internal=True)
+@require_selected_team(internal=True)
+def api_key_activate(request):
+    id = request.GET.get('id')
+    api_key = APIKey.objects.get(id=id, team=request.team)
+    if api_key:
+        api_key.is_active = True
+        api_key.save()
+        AuditEvent(type=AuditType.API_KEY_UPDATED, user=request.user, team=request.team).save()
+        messages.success(request, 'API key %s activated' % (api_key.get_name(), ))
+
+    api_keys = APIKey.objects.filter(team=request.team)
+    context = RequestContext(request, {
+        'api_keys': api_keys,
+    })
+    html = render_to_string('partials/team/api-keys.html', context)
+    return InternalResponse(html=html)
