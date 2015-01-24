@@ -66,6 +66,18 @@ class Migration(migrations.Migration):
             bases=(models.Model,),
         ),
         migrations.CreateModel(
+            name='AuditEvent',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('type', models.CharField(default=b'unknown', max_length=32, verbose_name=b'type', choices=[(b'api_key_added', b'api_key_added'), (b'password_changed', b'password_changed'), (b'notification_settings_changed', b'notification_settings_changed'), (b'schedule_added', b'schedule_added'), (b'schedule_updated', b'schedule_updated'), (b'unknown', b'unknown')])),
+                ('date_added', models.DateTimeField(default=django.utils.timezone.now)),
+            ],
+            options={
+                'db_table': 'audit_log',
+            },
+            bases=(models.Model,),
+        ),
+        migrations.CreateModel(
             name='NotificationSetting',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
@@ -181,6 +193,18 @@ class Migration(migrations.Migration):
         migrations.AlterUniqueTogether(
             name='notificationsetting',
             unique_together=set([('type', 'time')]),
+        ),
+        migrations.AddField(
+            model_name='auditevent',
+            name='team',
+            field=models.ForeignKey(to='simpleoncall.Team', null=True),
+            preserve_default=True,
+        ),
+        migrations.AddField(
+            model_name='auditevent',
+            name='user',
+            field=models.ForeignKey(to=settings.AUTH_USER_MODEL, null=True),
+            preserve_default=True,
         ),
         migrations.AddField(
             model_name='apikey',
